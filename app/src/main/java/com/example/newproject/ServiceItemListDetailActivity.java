@@ -25,7 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class ServiceItemListDetailActivity extends AppCompatActivity {
 
-    private String itemkey;
+    private String itemkey, secondkey;
     private ImageView imageurl;
     private TextView textname, localname, address, service, datelimit, extratext;
 
@@ -34,6 +34,9 @@ public class ServiceItemListDetailActivity extends AppCompatActivity {
     private FirebaseUser user;
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
+
+    private FirebaseDatabase second_database;
+    private DatabaseReference second_databaseReference;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,6 +48,10 @@ public class ServiceItemListDetailActivity extends AppCompatActivity {
         findViewById(R.id.btn_clear).setOnClickListener(onClickListener);
 
         itemkey = getIntent().getStringExtra("itemkey");
+        secondkey = getIntent().getStringExtra("secondkey");
+        first = getIntent().getStringExtra("first");
+        second = getIntent().getStringExtra("second");
+        third = getIntent().getStringExtra("third");
         //userid = getIntent().getStringExtra("userid");   //글 올린사람의 id
         imageurl = (ImageView) findViewById(R.id.imageurl);
         textname = (TextView) findViewById(R.id.textname);
@@ -54,24 +61,23 @@ public class ServiceItemListDetailActivity extends AppCompatActivity {
         datelimit = (TextView) findViewById(R.id.datelimit);
         extratext = (TextView) findViewById(R.id.extratext);
         finduserinfo();
-        findservice();
     }
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.btn_update:    //변화된게 없다면 고대로 다시 저장
-                    getitemkey("update");
+                    update();
                     startToast("게시물이 수정되었습니다.");
                     //startfunction();
                     break;
                 case R.id.btn_delete:    //db에서 해당 글 모두 삭제
-                    getitemkey("delete");
+                    delete();
                     startToast("게시물이 삭제되었습니다.");
                     //startfunction();
                     break;
                 case R.id.btn_clear:     //state를 close로 변화 + 리스트에 나타낼때 state가 close인 경우 회색으로 표시
-                    getitemkey("clear");
+                    itemclear_basicdb();
                     startToast("게시물이 거래완료 되었습니다.");
                     //startfunction();
                     break;
@@ -79,9 +85,9 @@ public class ServiceItemListDetailActivity extends AppCompatActivity {
         }
     };
 
-    public void findservice() {
-        database = FirebaseDatabase.getInstance("https://newproject-ab6cb-write.firebaseio.com/");
-        databaseReference = database.getReference(user.getUid()).child("service").child(itemkey);
+    public void findservice(String first, String second, String third) {
+        database = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
+        databaseReference = database.getReference("service").child(first).child(second).child(third).child(itemkey);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -121,63 +127,27 @@ public class ServiceItemListDetailActivity extends AppCompatActivity {
                         first = userLocationInfo.getFirst();
                         second = userLocationInfo.getSecond();
                         third = userLocationInfo.getThird();
+                        findservice(first, second, third);
                     }
                 }
             }
         });
     }
-
-    public void getitemkey(final String type) {
-        final String[] s_key = new String[1];
+    public void itemclear_basicdb() {
         user = FirebaseAuth.getInstance().getCurrentUser();
-        database = FirebaseDatabase.getInstance("https://newproject-ab6cb-write.firebaseio.com/");
-        databaseReference = database.getReference(user.getUid()).child("service").child(itemkey);
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ServiceItemInfo serviceItemInfo = snapshot.getValue(ServiceItemInfo.class);
-                s_key[0] = serviceItemInfo.getKey();    //stuff db에 저장되어있는 키값
-                if (type == "clear") {            //거래완료
-                    itemclear();
-                    itemclear_basicdb(s_key[0]);
-                    //미리 key값을 받아놓고 두 군데서 제거하기
-                } else if (type == "delete") {     //삭제 시
-                    delete();
-                    delete_clear(s_key[0]);
-                } else if (type == "update") {
-                    update(s_key[0]);
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-    public void itemclear() {    //두개의 db에 모두 접근하여 state정보 수정
-        //먼저 내 글 db에 접근해서 바꾸고, 여기서 key값을 가지고 해당 문서를 찾아가서 state 수정
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        database = FirebaseDatabase.getInstance("https://newproject-ab6cb-write.firebaseio.com/");
-        database.getReference(user.getUid()).child("service").child(itemkey).child("state").setValue("close");    //수정
-    }
-    public void itemclear_basicdb(String item_key) {
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        database = FirebaseDatabase.getInstance("https://newproject-ab6cb-service.firebaseio.com/");
-        database.getReference(first).child(second).child(third).child(item_key).child("state").setValue("close");
+        database = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
+        database.getReference("service").child(first).child(second).child(third).child(itemkey).child("state").setValue("close");
     }
 
     public void delete() {
         user = FirebaseAuth.getInstance().getCurrentUser();
         database = FirebaseDatabase.getInstance("https://newproject-ab6cb-write.firebaseio.com/");
-        database.getReference(user.getUid()).child("service").child(itemkey).removeValue();
-    }
+        database.getReference(user.getUid()).child("service").child(secondkey).removeValue();
 
-    public void delete_clear(String item_key) {
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        database = FirebaseDatabase.getInstance("https://newproject-ab6cb-service.firebaseio.com/");
-        database.getReference(first).child(second).child(third).child(item_key).removeValue();
+        second_database = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
+        second_database.getReference("service").child(first).child(second).child(third).child(itemkey).removeValue();
     }
-    public void update(String item_key) {
+    public void update() {
         user = FirebaseAuth.getInstance().getCurrentUser();
         String localurl = null;
         String imageurl = null;
@@ -188,12 +158,10 @@ public class ServiceItemListDetailActivity extends AppCompatActivity {
         String datelimit = ((EditText) findViewById(R.id.datelimit)).getText().toString();
         String extratext = ((EditText) findViewById(R.id.extratext)).getText().toString();
 
-        ServiceItemInfo serviceItemInfo = new ServiceItemInfo(user.getUid(), localname, address, localurl, textname, service, datelimit, extratext, "open", item_key);
-        database = FirebaseDatabase.getInstance("https://newproject-ab6cb-write.firebaseio.com/");
-        database.getReference(user.getUid()).child("service").child(itemkey).setValue(serviceItemInfo);
+        ServiceItemInfo serviceItemInfo = new ServiceItemInfo(user.getUid(), localname, address, localurl, textname, service, datelimit, extratext, "open", null);
 
-        database = FirebaseDatabase.getInstance("https://newproject-ab6cb-service.firebaseio.com/");
-        database.getReference(first).child(second).child(third).child(item_key).setValue(serviceItemInfo);
+        database = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
+        database.getReference("service").child(first).child(second).child(third).child(itemkey).setValue(serviceItemInfo);
     }
     public void startToast(String msg){
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();

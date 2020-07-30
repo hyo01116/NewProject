@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,7 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MyPageActivity extends Fragment {
     private FirebaseUser user;
-    private String user_name;
+    private String user_name, user_email;
 
     ImageView imageView2;
     TextView name;
@@ -72,13 +73,21 @@ public class MyPageActivity extends Fragment {
                     DocumentSnapshot documentSnapshot = task.getResult();
                     if (documentSnapshot.exists()) {
                         GeneralUserInfo generalUserInfo = documentSnapshot.toObject(GeneralUserInfo.class);
+                        if(generalUserInfo.getImageurl() != null) {
+                            Glide.with(MyPageActivity.this).load(generalUserInfo.getImageurl()).into(imageView2);
+                        }
+                        /*else{
+                            Glide.with(StuffItemDetailActivity.this).load(stuffItemInfo.getLocalurl()).into(imageurl);
+                        }*/
                         user_name = generalUserInfo.getName();
+                        user_email = generalUserInfo.getEmail();
                         name.setText(user_name);
                     }
                 }
             }
         });
     }
+
     public void startActivity(Class c){
         Intent intent = new Intent(getContext(), c);
         startActivity(intent);

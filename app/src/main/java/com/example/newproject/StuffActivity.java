@@ -83,8 +83,8 @@ public class StuffActivity extends Fragment implements StuffItemAdapter.OnItemCl
         });
     }
     public void findstuff(final String first, final String second, final String third){
-        database  = FirebaseDatabase.getInstance("https://newproject-ab6cb-stuff.firebaseio.com/");
-        databaseReference = database.getReference(first).child(second).child(third);
+        database  = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
+        databaseReference = database.getReference("stuff").child(first).child(second).child(third);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

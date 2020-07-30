@@ -49,9 +49,16 @@ public class ServiceItemAdapter extends RecyclerView.Adapter<ServiceItemAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull final ServiceItemAdapter.ServiceItemViewHolder holder, int position) {
-        Glide.with(holder.itemView)
-                .load(arrayList.get(position).getImageurl())
-                .into(holder.et_localurl);
+        if(arrayList.get(position).getImageurl() != null) {
+            Glide.with(holder.itemView)
+                    .load(arrayList.get(position).getImageurl())
+                    .into(holder.et_localurl);
+        }
+        else{
+            Glide.with(holder.itemView)
+                    .load(arrayList.get(position).getLocalurl())
+                    .into(holder.et_localurl);
+        }
         holder.et_localname.setText(arrayList.get(position).getLocalname());
         holder.et_service.setText(arrayList.get(position).getService());
     }

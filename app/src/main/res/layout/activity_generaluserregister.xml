@@ -20,7 +20,7 @@
             android:textColor="@android:color/black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Register"
+            android:text="General Register"
             android:layout_gravity="center"
             android:id="@+id/toolbar_title"
             android:textSize="20sp" />
@@ -35,11 +35,11 @@
 
     <ImageView
         android:background="@android:color/white"
-        android:id="@+id/imageurl"
+        android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_gravity="center"
-        android:src="@drawable/ic_baseline_photo_camera_24" />
+        app:srcCompat="@drawable/ic_baseline_photo_camera_24" />
 
     <EditText
         android:id="@+id/email"

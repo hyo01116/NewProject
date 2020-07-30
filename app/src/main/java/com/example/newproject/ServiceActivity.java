@@ -79,8 +79,8 @@ public class ServiceActivity extends Fragment implements ServiceItemAdapter.OnIt
         });
     }
     public void findservice(){
-        database  = FirebaseDatabase.getInstance("https://newproject-ab6cb-service.firebaseio.com/");
-        databaseReference = database.getReference(first).child(second).child(third);
+        database  = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
+        databaseReference = database.getReference("service").child(first).child(second).child(third);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

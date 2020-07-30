@@ -68,18 +68,18 @@ public class StuffItemDetailActivity extends AppCompatActivity {
         startActivity(intent);
     }
     public void findstuff(){
-        database = FirebaseDatabase.getInstance("https://newproject-ab6cb-stuff.firebaseio.com/");
-        databaseReference= database.getReference(first).child(second).child(third).child(itemkey);
+        database = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
+        databaseReference= database.getReference("stuff").child(first).child(second).child(third).child(itemkey);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 StuffItemInfo stuffItemInfo = snapshot.getValue(StuffItemInfo.class);
-                /*if(stuffItemInfo.getImageurl() != null) {
+                if(stuffItemInfo.getImageurl() != null) {
                     Glide.with(StuffItemDetailActivity.this).load(stuffItemInfo.getImageurl()).into(imageurl);
                 }
                 else{
                     Glide.with(StuffItemDetailActivity.this).load(stuffItemInfo.getLocalurl()).into(imageurl);
-                }*/
+                }
                 textname.setText(stuffItemInfo.getTextname());
                 localname.setText(stuffItemInfo.getLocalname());
                 address.setText(stuffItemInfo.getAddress());

@@ -65,18 +65,18 @@ public class ServiceItemDetailActivity extends AppCompatActivity {
         startActivity(intent);
     }
     public void findservice(){
-        database = FirebaseDatabase.getInstance("https://newproject-ab6cb-service.firebaseio.com/");
-        databaseReference= database.getReference(first).child(second).child(third).child(itemkey);
+        database = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
+        databaseReference= database.getReference("service").child(first).child(second).child(third).child(itemkey);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ServiceItemInfo serviceItemInfo = snapshot.getValue(ServiceItemInfo.class);
-                /*if(serviceItemInfo.getImageurl() != null) {
+                if(serviceItemInfo.getImageurl() != null) {
                     Glide.with(ServiceItemDetailActivity.this).load(serviceItemInfo.getImageurl()).into(imageurl);
                 }
                 else{
                     Glide.with(ServiceItemDetailActivity.this).load(serviceItemInfo.getLocalurl()).into(imageurl);
-                }*/
+                }
                 textname.setText(serviceItemInfo.getTextname());
                 localname.setText(serviceItemInfo.getLocalname());
                 address.setText(serviceItemInfo.getAddress());

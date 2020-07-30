@@ -38,9 +38,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.auth.User;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class LocalUserRegisterActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -49,16 +52,23 @@ public class LocalUserRegisterActivity extends AppCompatActivity {
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
 
+    ImageView imageView;
+    private StorageReference storageRef;
+    private ArrayList<String> pathList = new ArrayList<>();
+
     private Uri filePath;
 
-    ImageView imageurl;
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    StorageReference storageReference = storage.getReference();
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_localuserregister);
 
-        findViewById(R.id.imageurl).setOnClickListener(onClickListener);
+        imageView = (ImageView)findViewById(R.id.imageView);
+
+        findViewById(R.id.imageView).setOnClickListener(onClickListener);
         findViewById(R.id.btn_save_add).setOnClickListener(onClickListener);
         findViewById(R.id.btn_gallery).setOnClickListener(onClickListener);
     }
@@ -66,7 +76,7 @@ public class LocalUserRegisterActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             switch (v.getId()){
-                case R.id.imageurl:
+                case R.id.imageView:
                     CardView cardView = findViewById(R.id.btn_cardview);
                     if(cardView.getVisibility() == View.VISIBLE){
                         cardView.setVisibility(View.GONE);
@@ -97,9 +107,6 @@ public class LocalUserRegisterActivity extends AppCompatActivity {
 
     public void localuserregister() {
         mAuth = FirebaseAuth.getInstance();
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference();
-
         final String email = ((EditText) findViewById(R.id.email)).getText().toString();
         final String password = ((EditText)findViewById(R.id.password)).getText().toString();
         final String name= ((EditText) findViewById(R.id.name)).getText().toString();
@@ -115,10 +122,41 @@ public class LocalUserRegisterActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 user = mAuth.getCurrentUser();
+                                if(filePath == null){        //사진 없으면
+                                    LocalUserInfo localUserInfo = new LocalUserInfo(email, name, phone, first, second, third);
+                                    UserLocationInfo userLocationInfo = new UserLocationInfo(first, second, third);
+                                    userUpload(localUserInfo, userLocationInfo, user.getUid());
+                                    //회원가입이 정상적으로 이뤄졌습니다.
+                                }
+                                else{
+                                    SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMHH_mmss");
+                                    Date now = new Date();
+                                    String filename = formatter.format(now) +".png";
+                                    StorageReference storageRef = storage.getReferenceFromUrl("gs://newproject-ab6cb.appspot.com/").child(user.getUid()).child(String.valueOf(filePath));
+                                    storageRef.putFile(filePath)
+                                            //성공시
+                                            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                @Override
+                                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                    Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
+                                                    LocalUserInfo localUserInfo = new LocalUserInfo(email, name, phone, String.valueOf(filePath), first,second, third);
+                                                    UserLocationInfo userLocationInfo = new UserLocationInfo(first, second, third);
+                                                    userUpload(localUserInfo, userLocationInfo, user.getUid());
+                                                }
+                                            })
+                                            //실패시
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Toast.makeText(getApplicationContext(), "업로드 실패!", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                }
+                                /*user = mAuth.getCurrentUser();
                                 LocalUserInfo localUserInfo = new LocalUserInfo(email, name, phone, first, second, third);
                                 UserLocationInfo userLocationInfo = new UserLocationInfo(first, second, third);
                                 userUpload(localUserInfo, userLocationInfo, user.getUid());
-                                startToast("회원가입이 정상적으로 이뤄졌습니다.");
+                                startToast("회원가입이 정상적으로 이뤄졌습니다.");*/
                             } else {
                                 if (task.getException() != null) {
                                     startToast(task.getException().toString());
@@ -149,18 +187,26 @@ public class LocalUserRegisterActivity extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance("https://newproject-ab6cb.firebaseio.com/").getReference(userid);
         databaseReference.child("level").setValue("2");
     }
-    public void check(){
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)){
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+    public void check() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "이미지를 선택하세요."), 0);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {   //왜 uri가 null인가 -> startActivityForResult를 안해줌
+        super.onActivityResult(requestCode, resultCode, data);
+        //request코드가 0이고 OK를 선택했고 data에 뭔가가 들어 있다면
+        if(requestCode == 0 && resultCode == RESULT_OK){
+            filePath = data.getData();
+            Log.d("TAG", "uri:" + String.valueOf(filePath));
+            try {
+                //Uri 파일을 Bitmap으로 만들어서 ImageView에 집어 넣는다.
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                imageView.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            else{
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-                startToast("권한 거부");
-            }
-        }
-        else{
-            startActivity(GalleryActivity.class);
         }
     }
     public void startActivity(Class c){

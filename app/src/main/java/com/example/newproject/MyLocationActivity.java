@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,6 +31,9 @@ import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapReverseGeoCoder;
 import net.daum.mf.map.api.MapView;
 
+
+import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 
@@ -39,14 +44,17 @@ public class MyLocationActivity extends AppCompatActivity implements MapView.Cur
     String[] REQUIRED_PERMISSIONS  = {Manifest.permission.ACCESS_FINE_LOCATION};
     private MapView mapView;
 
+    private Double lat, lon;
+    private String first, second, third;
+
+    final Geocoder geocoder = new Geocoder(this);
+    List<Address> list = null;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mylocation);
 
         mapView = (MapView)findViewById(R.id.map_view);
-
-        //ViewGroup mapViewContainer = (ViewGroup) findViewById(R.id.map_view);
-        //mapViewContainer.addView(mapView);
 
         findViewById(R.id.btn_save_mylocation).setOnClickListener(onClickListener);
 
@@ -66,7 +74,6 @@ public class MyLocationActivity extends AppCompatActivity implements MapView.Cur
             switch(v.getId()){
                 case R.id.btn_save_mylocation:
                     //save_mylocation();
-                    onBackPressed();
                     break;
             }
         }
@@ -75,13 +82,39 @@ public class MyLocationActivity extends AppCompatActivity implements MapView.Cur
     protected void onDestroy() {
         super.onDestroy();
         mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
-        mapView.setShowCurrentLocationMarker(false);
+        //mapView.setShowCurrentLocationMarker(false);
     }
 
     @Override
     public void onCurrentLocationUpdate(MapView mapView, MapPoint currentLocation, float accuracyInMeters) {
         MapPoint.GeoCoordinate mapPointGeo = currentLocation.getMapPointGeoCoord();
+        lat = mapPointGeo.latitude;
+        lon = mapPointGeo.longitude;
+        MapPOIItem marker = new MapPOIItem();
+        marker.setMapPoint(currentLocation);
+        marker.setMarkerType(MapPOIItem.MarkerType.BluePin); // 기본으로 제공하는 BluePin 마커 모양.
+        marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
+        mapView.addPOIItem(marker);
         Log.i("LOG_TAG", String.format("MapView onCurrentLocationUpdate (%f,%f) accuracy (%f)", mapPointGeo.latitude, mapPointGeo.longitude, accuracyInMeters));
+        try {
+            list = geocoder.getFromLocation(lat, lon, 10);
+            if(list != null) {
+                if (list.size() == 0) {
+                    System.out.println("no list");
+                } else {
+                    first = list.get(0).getAdminArea();
+                    second = list.get(0).getSubLocality();
+                    third = list.get(0).getThoroughfare();
+                    /*System.out.println(list.get(0).toString());
+                    System.out.println(list.get(0).getAdminArea());
+                    System.out.println(list.get(0).getSubLocality());
+                    System.out.println(list.get(0).getThoroughfare());*/
+                }
+            }
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
 

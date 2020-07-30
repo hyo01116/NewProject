@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.annotation.GlideModule;
+import com.bumptech.glide.module.AppGlideModule;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,11 +43,19 @@ public class StuffItemAdapter extends RecyclerView.Adapter<StuffItemAdapter.Stuf
         StuffItemViewHolder holder = new StuffItemViewHolder(view);
         return holder;
     }
+   
     @Override
     public void onBindViewHolder(@NonNull final StuffItemViewHolder holder, int position) {
-        Glide.with(holder.itemView)
-                .load(arrayList.get(position).getImageurl())
-                .into(holder.et_localurl);
+        if(arrayList.get(position).getImageurl() != null) {
+            Glide.with(holder.itemView)
+                    .load(arrayList.get(position).getImageurl())
+                    .into(holder.et_localurl);
+        }
+        else {
+            Glide.with(holder.itemView)
+                    .load(arrayList.get(position).getLocalurl())
+                    .into(holder.et_localurl);
+        }
         holder.et_localname.setText(arrayList.get(position).getLocalname());
         holder.et_stuff.setText(arrayList.get(position).getStuff());
     }

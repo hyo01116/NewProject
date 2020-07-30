@@ -145,7 +145,6 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReference();
-        final StorageReference mounatainImagesRef = storageReference.child("users/"+user.getUid()+"/foodimages.jpg");
 
         if(filePath == null){
             StuffItemInfo stuffItemInfo = new StuffItemInfo(user.getUid(), localname, address, localurl, textname, stuff, datelimit, extratext, "open", null);
@@ -201,8 +200,8 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
     }
     public void uploader(final StuffItemInfo stuffItemInfo, String first, String second, String third){
         user = FirebaseAuth.getInstance().getCurrentUser();
-        database = FirebaseDatabase.getInstance("https://newproject-ab6cb-stuff.firebaseio.com/");
-        databaseReference = database.getReference(first).child(second).child(third);
+        database = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
+        databaseReference = database.getReference("stuff").child(first).child(second).child(third);
 
         final DatabaseReference newdatabaseReference = databaseReference.push();
         newdatabaseReference.setValue(stuffItemInfo)
@@ -211,7 +210,7 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
                     public void onSuccess(Void aVoid) {
                         startToast("등록에 성공하였습니다.");
                         key = newdatabaseReference.getKey();
-                        second_uploader(stuffItemInfo, key);
+                        second_uploader(key);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -221,13 +220,12 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
                     }
                 });
     }
-    public void second_uploader(StuffItemInfo stuffItemInfo, String itemkey){     //유저마다 쓴 글 저장
+    public void second_uploader(String itemkey){     //유저마다 쓴 글 저장
         user = FirebaseAuth.getInstance().getCurrentUser();
         second_database = FirebaseDatabase.getInstance("https://newproject-ab6cb-write.firebaseio.com/");
         second_databaseReference = second_database.getReference(user.getUid()).child("stuff");
         DatabaseReference second_newdatabaseReference = second_databaseReference.push();
-        stuffItemInfo.setKey(itemkey);
-        second_newdatabaseReference.setValue(stuffItemInfo)
+        second_newdatabaseReference.setValue(itemkey)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

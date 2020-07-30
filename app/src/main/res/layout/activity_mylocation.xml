@@ -19,7 +19,7 @@
         android:textSize="20sp" />
     </androidx.appcompat.widget.Toolbar>
 
-    <com.google.android.gms.maps.MapView
+    <net.daum.mf.map.api.MapView
         android:id="@+id/map_view"
         android:layout_width="match_parent"
         android:layout_height="500dp" />
