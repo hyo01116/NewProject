@@ -75,6 +75,8 @@ public class MyLocationActivity extends AppCompatActivity implements MapView.Cur
                 case R.id.btn_save_mylocation:
                     //save_mylocation();
                     break;
+                default:
+                    break;
             }
         }
     };
@@ -92,7 +94,7 @@ public class MyLocationActivity extends AppCompatActivity implements MapView.Cur
         lon = mapPointGeo.longitude;
         MapPOIItem marker = new MapPOIItem();
         marker.setMapPoint(currentLocation);
-        marker.setMarkerType(MapPOIItem.MarkerType.BluePin); // 기본으로 제공하는 BluePin 마커 모양.
+        marker.setMarkerType(MapPOIItem.MarkerType.BluePin);
         marker.setSelectedMarkerType(MapPOIItem.MarkerType.RedPin); // 마커를 클릭했을때, 기본으로 제공하는 RedPin 마커 모양.
         mapView.addPOIItem(marker);
         Log.i("LOG_TAG", String.format("MapView onCurrentLocationUpdate (%f,%f) accuracy (%f)", mapPointGeo.latitude, mapPointGeo.longitude, accuracyInMeters));
