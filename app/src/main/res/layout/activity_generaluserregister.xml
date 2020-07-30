@@ -36,8 +36,8 @@
     <ImageView
         android:background="@android:color/white"
         android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_gravity="center"
         app:srcCompat="@drawable/ic_baseline_photo_camera_24" />
 
@@ -47,6 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:hint="이메일"
+        android:layout_marginTop="20dp"
         android:paddingBottom="8dp"
         app:hintTextAppearance="@style/TextAppearance.Shrine.TextInputLayout.HintText"
         app:hintTextColor="@color/textColorPrimary"
@@ -56,7 +57,7 @@
 
     <EditText
         android:id="@+id/password"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -72,7 +73,7 @@
     <EditText
         android:id="@+id/name"
         android:layout_width="350dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:hint="닉네임"
@@ -87,7 +88,7 @@
     <EditText
         android:id="@+id/phone"
         android:layout_width="350dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:hint="휴대폰번호"
@@ -126,6 +127,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="갤러리" />
+            <Button
+                android:id="@+id/btn_update"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="사진 수정" />
+            <Button
+                android:id="@+id/btn_delete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="사진 삭제" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

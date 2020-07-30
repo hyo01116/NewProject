@@ -78,6 +78,8 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activityë¡œ ë
         findViewById(R.id.imageView).setOnClickListener(onClickListener);
         findViewById(R.id.btn_save_add).setOnClickListener(onClickListener);
         findViewById(R.id.btn_gallery).setOnClickListener(onClickListener);
+        findViewById(R.id.btn_update).setOnClickListener(onClickListener);
+        findViewById(R.id.btn_delete).setOnClickListener(onClickListener);
     }
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -107,6 +109,11 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activityë¡œ ë
                 case R.id.btn_gallery:
                     check();
                     break;
+                case R.id.btn_update:
+                    check();
+                    break;
+                case R.id.btn_delete:
+                    delete();
             }
         }
     };
@@ -273,6 +280,10 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activityë¡œ ë
                 e.printStackTrace();
             }
         }
+    }
+    public void delete(){
+        filePath = null;
+        imageView.setImageResource(R.drawable.ic_baseline_photo_camera_24);
     }
     public void startToast(String msg){
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();

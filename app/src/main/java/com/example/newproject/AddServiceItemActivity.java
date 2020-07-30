@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -65,6 +66,7 @@ public class AddServiceItemActivity extends AppCompatActivity {
     private ArrayList<String> pathList = new ArrayList<>();
 
     private Uri filePath;
+    private BitmapDrawable bitmapDrawable;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -76,6 +78,9 @@ public class AddServiceItemActivity extends AppCompatActivity {
         findViewById(R.id.imageView).setOnClickListener(onClickListener);
         findViewById(R.id.btn_save_add).setOnClickListener(onClickListener);
         findViewById(R.id.btn_gallery).setOnClickListener(onClickListener);
+        findViewById(R.id.btn_update).setOnClickListener(onClickListener);
+        findViewById(R.id.btn_delete).setOnClickListener(onClickListener);
+        //수정, 삭제 버튼 추가
     }
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -104,6 +109,12 @@ public class AddServiceItemActivity extends AppCompatActivity {
                     break;
                 case R.id.btn_gallery:
                     check();
+                    break;
+                case R.id.btn_update:
+                    check();
+                    break;
+                case R.id.btn_delete:
+                    delete_picture();
                     break;
             }
         }
@@ -272,6 +283,10 @@ public class AddServiceItemActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+    public void delete_picture(){
+        filePath = null;
+        imageView.setImageResource(R.drawable.ic_baseline_photo_camera_24);
     }
     public void startToast(String msg){
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();

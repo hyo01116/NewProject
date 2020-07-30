@@ -22,6 +22,15 @@
                 android:orientation="vertical"
                 android:padding="10dp">
 
+
+                <ImageView
+                    android:background="@android:color/white"
+                    android:id="@+id/imageView"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    app:srcCompat="@drawable/ic_baseline_photo_camera_24" />
+
                 <EditText
                     android:id="@+id/textname"
                     android:layout_width="match_parent"
@@ -32,15 +41,6 @@
                     android:inputType="textPersonName"
                     android:textColor="@android:color/black"
                     android:textColorHint="@android:color/darker_gray" />
-
-
-                <ImageView
-                    android:background="@android:color/white"
-                    android:id="@+id/imageView"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:layout_gravity="center"
-                    app:srcCompat="@drawable/ic_baseline_photo_camera_24" />
 
 
                 <EditText
@@ -109,6 +109,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="갤러리" />
+                    <Button
+                        android:id="@+id/btn_update"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="사진 수정 " />
+                    <Button
+                        android:id="@+id/btn_delete"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="사진 삭제" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
         </RelativeLayout>

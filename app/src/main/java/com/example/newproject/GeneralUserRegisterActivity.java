@@ -68,6 +68,8 @@ public class GeneralUserRegisterActivity extends AppCompatActivity {
         findViewById(R.id.imageView).setOnClickListener(onClickListener);
         findViewById(R.id.btn_save_add).setOnClickListener(onClickListener);
         findViewById(R.id.btn_gallery).setOnClickListener(onClickListener);
+        findViewById(R.id.btn_update).setOnClickListener(onClickListener);
+        findViewById(R.id.btn_delete).setOnClickListener(onClickListener);
     }
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -96,6 +98,12 @@ public class GeneralUserRegisterActivity extends AppCompatActivity {
                     break;
                 case R.id.btn_gallery:
                     check();
+                    break;
+                case R.id.btn_update:
+                    check();
+                    return;
+                case R.id.btn_delete:
+                    delete();
                     break;
             }
 
@@ -197,6 +205,10 @@ public class GeneralUserRegisterActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+    public void delete(){
+        filePath = null;
+        imageView.setImageResource(R.drawable.ic_baseline_photo_camera_24);
     }
     public void startActivity(Class c){
         Intent intent = new Intent(this, c);

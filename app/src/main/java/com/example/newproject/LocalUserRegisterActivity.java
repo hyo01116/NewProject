@@ -100,6 +100,12 @@ public class LocalUserRegisterActivity extends AppCompatActivity {
                 case R.id.btn_gallery:
                     check();
                     break;
+                case R.id.btn_update:
+                    check();
+                    break;
+                case R.id.btn_delete:
+                    delete();
+                    break;
             }
 
         }
@@ -192,6 +198,10 @@ public class LocalUserRegisterActivity extends AppCompatActivity {
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "이미지를 선택하세요."), 0);
+    }
+    public void delete(){
+        filePath = null;
+        imageView.setImageResource(R.drawable.ic_baseline_photo_camera_24);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {   //왜 uri가 null인가 -> startActivityForResult를 안해줌
