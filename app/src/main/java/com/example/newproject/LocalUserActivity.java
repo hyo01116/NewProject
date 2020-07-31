@@ -19,17 +19,24 @@ public class LocalUserActivity extends AppCompatActivity{    //작성자 사용�
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_localuser);
 
-        FragmentTransaction hometransaction = getSupportFragmentManager().beginTransaction();
-        HomeActivity homeActivity = new HomeActivity();
-        hometransaction.replace(R.id.frame, homeActivity);
-        hometransaction.addToBackStack(null);
-        hometransaction.commit();
+        FragmentTransaction feedtransaction = getSupportFragmentManager().beginTransaction();
+        FeedActivity feedActivity = new FeedActivity();
+        feedtransaction.replace(R.id.frame, feedActivity);
+        feedtransaction.addToBackStack(null);
+        feedtransaction.commit();
 
         bottomNavigationView = findViewById(R.id.navigation_view);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()){
+                    case R.id.bottom_feed:
+                        FragmentTransaction feedtransaction = getSupportFragmentManager().beginTransaction();
+                        FeedActivity feedActivity = new FeedActivity();
+                        feedtransaction.replace(R.id.frame, feedActivity);
+                        feedtransaction.addToBackStack(null);
+                        feedtransaction.commit();
+                        break;
                     case R.id.bottom_home:
                         FragmentTransaction hometransaction = getSupportFragmentManager().beginTransaction();
                         HomeActivity homeActivity = new HomeActivity();

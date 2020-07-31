@@ -18,7 +18,6 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
     private Context context;
 
     public interface OnListItemSelectedInterface{
-        //한 아이템 클릭시 가게와 메뉴에 대한 상세한 정보를 나타내는 페이지로 이동
         void onItemSelected(View v, int position);
     }
     private MyChatAdapter.OnListItemSelectedInterface mListener;
