@@ -27,7 +27,7 @@
             android:textAllCaps="true"
             android:textColor="#AAF382"
             android:textSize="35sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
     </LinearLayout>
 
 
@@ -37,32 +37,33 @@
         android:orientation="vertical">
         <EditText
                 android:id="@+id/et_email"
-                android:hint="이메일"
-                android:layout_width="350dp"
+                android:layout_width="330dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:inputType="text"
                 android:maxLines="1"
+                android:background="@drawable/ema"
                 android:textColor="@android:color/black"/>
 
             <EditText
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="30dp"
                 android:id="@+id/et_password"
-                android:layout_width="350dp"
+                android:layout_width="330dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:hint="비밀번호"
                 android:inputType="textPassword"
+                android:background="@drawable/pass"
                 android:textColor="@android:color/black"/>
 
-            <Button
-                android:textColor="@android:color/background_dark"
-                android:layout_margin="20dp"
-                android:id="@+id/btn_login"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Login"
-                android:textSize="13sp" />
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="330dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_gravity="center"
+            android:text="Login"
+            android:textColor="@android:color/background_dark"
+            android:textSize="13sp" />
 
 
     </LinearLayout>

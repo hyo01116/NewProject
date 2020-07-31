@@ -1,13 +1,16 @@
 package com.example.newproject;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
@@ -24,9 +27,11 @@ public class ServiceItemDetailActivity extends AppCompatActivity {
     public DatabaseReference databaseReference;
     public String first, second, third, userid, itemkey;
 
-    ImageView imageurl;
-    TextView textname, localname, address, service, datelimit, extratext;
+    ImageView imageurl, localurl;
+    TextView textname, localname, extratext, toolbar_title;
+    Toolbar toolbar;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -38,12 +43,10 @@ public class ServiceItemDetailActivity extends AppCompatActivity {
         second = getIntent().getStringExtra("second");
         third = getIntent().getStringExtra("third");
 
+        toolbar = (Toolbar)findViewById(R.id.top_toolbar);
         imageurl = (ImageView)findViewById(R.id.imageurl);
-        textname = (TextView)findViewById(R.id.textname);
+        localurl = (ImageView)findViewById(R.id.localurl);
         localname = (TextView)findViewById(R.id.localname);
-        address = (TextView)findViewById(R.id.address);
-        service = (TextView)findViewById(R.id.service);
-        datelimit = (TextView)findViewById(R.id.datelimit);
         extratext = (TextView)findViewById(R.id.extratext);
         findViewById(R.id.btn_chat).setOnClickListener(onClickListener);
         findservice();
@@ -68,6 +71,7 @@ public class ServiceItemDetailActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
         databaseReference= database.getReference("service").child(first).child(second).child(third).child(itemkey);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ServiceItemInfo serviceItemInfo = snapshot.getValue(ServiceItemInfo.class);
@@ -77,11 +81,12 @@ public class ServiceItemDetailActivity extends AppCompatActivity {
                 else{
                     Glide.with(ServiceItemDetailActivity.this).load(serviceItemInfo.getLocalurl()).into(imageurl);
                 }
-                textname.setText(serviceItemInfo.getTextname());
+                if(serviceItemInfo.getLocalurl() != null) {
+                    Glide.with(ServiceItemDetailActivity.this).load(serviceItemInfo.getLocalurl()).into(localurl);
+                }
+                toolbar.setTitle(serviceItemInfo.getTextname());
+                //textname.setText(serviceItemInfo.getTextname());
                 localname.setText(serviceItemInfo.getLocalname());
-                address.setText(serviceItemInfo.getAddress());
-                datelimit.setText(serviceItemInfo.getDatelimit());
-                service.setText(serviceItemInfo.getService());
                 extratext.setText(serviceItemInfo.getExtratext());
             }
 

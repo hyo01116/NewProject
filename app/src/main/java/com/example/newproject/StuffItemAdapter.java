@@ -57,7 +57,7 @@ public class StuffItemAdapter extends RecyclerView.Adapter<StuffItemAdapter.Stuf
                     .into(holder.et_localurl);
         }
         holder.et_localname.setText(arrayList.get(position).getLocalname());
-        holder.et_stuff.setText(arrayList.get(position).getStuff());
+        holder.et_textname.setText(arrayList.get(position).getTextname());
     }
 
     public int getItemCount() {
@@ -67,13 +67,13 @@ public class StuffItemAdapter extends RecyclerView.Adapter<StuffItemAdapter.Stuf
     public class StuffItemViewHolder extends RecyclerView.ViewHolder {    //cloud firestore
         ImageView et_localurl;
         TextView et_localname;
-        TextView et_stuff;
+        TextView et_textname;
 
         public StuffItemViewHolder(@NonNull View itemView) {
             super(itemView);
             this.et_localurl = itemView.findViewById(R.id.et_localurl);
             this.et_localname = itemView.findViewById(R.id.et_localname);
-            this.et_stuff = itemView.findViewById(R.id.et_stuff);
+            this.et_textname = itemView.findViewById(R.id.et_textname);
 
             itemView.setOnClickListener(new View.OnClickListener(){
                 @Override

@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,7 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class ServiceItemListDetailActivity extends AppCompatActivity {
 
     private String itemkey, secondkey;
-    private ImageView imageurl;
+    private ImageView imageurl, localurl;
     private TextView textname, localname, address, service, datelimit, extratext;
 
     private String first, second, third;
@@ -56,9 +57,7 @@ public class ServiceItemListDetailActivity extends AppCompatActivity {
         imageurl = (ImageView) findViewById(R.id.imageurl);
         textname = (TextView) findViewById(R.id.textname);
         localname = (TextView) findViewById(R.id.localname);
-        address = (TextView) findViewById(R.id.address);
-        service = (TextView) findViewById(R.id.service);
-        datelimit = (TextView) findViewById(R.id.datelimit);
+        localurl = (ImageView)findViewById(R.id.localurl);
         extratext = (TextView) findViewById(R.id.extratext);
         finduserinfo();
     }
@@ -92,17 +91,17 @@ public class ServiceItemListDetailActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ServiceItemInfo serviceItemInfo = snapshot.getValue(ServiceItemInfo.class);
-                /*if(stuffItemInfo.getImageurl() != null) {
-                    Glide.with(StuffItemDetailActivity.this).load(stuffItemInfo.getImageurl()).into(imageurl);
+                if(serviceItemInfo.getImageurl() != null) {
+                    Glide.with(ServiceItemListDetailActivity.this).load(serviceItemInfo.getImageurl()).into(imageurl);
                 }
                 else{
-                    Glide.with(StuffItemDetailActivity.this).load(stuffItemInfo.getLocalurl()).into(imageurl);
-                }*/
+                    Glide.with(ServiceItemListDetailActivity.this).load(serviceItemInfo.getLocalurl()).into(imageurl);
+                }
+                if(serviceItemInfo.getLocalurl() != null){
+                    Glide.with(ServiceItemListDetailActivity.this).load(serviceItemInfo.getLocalurl()).into(localurl);
+                }
                 textname.setText(serviceItemInfo.getTextname());
                 localname.setText(serviceItemInfo.getLocalname());
-                address.setText(serviceItemInfo.getAddress());
-                service.setText(serviceItemInfo.getService());
-                datelimit.setText(serviceItemInfo.getDatelimit());
                 extratext.setText(serviceItemInfo.getExtratext());
             }
 
@@ -153,12 +152,9 @@ public class ServiceItemListDetailActivity extends AppCompatActivity {
         String imageurl = null;
         String textname = ((EditText) findViewById(R.id.textname)).getText().toString();
         String localname = ((EditText) findViewById(R.id.localname)).getText().toString();
-        String address = ((EditText) findViewById(R.id.address)).getText().toString();
-        String service = ((EditText) findViewById(R.id.service)).getText().toString();
-        String datelimit = ((EditText) findViewById(R.id.datelimit)).getText().toString();
         String extratext = ((EditText) findViewById(R.id.extratext)).getText().toString();
 
-        ServiceItemInfo serviceItemInfo = new ServiceItemInfo(user.getUid(), localname, address, localurl, textname, service, datelimit, extratext, "open", null);
+        ServiceItemInfo serviceItemInfo = new ServiceItemInfo(user.getUid(), localname, localurl, textname, extratext, "open", null);
 
         database = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
         database.getReference("service").child(first).child(second).child(third).child(itemkey).setValue(serviceItemInfo);

@@ -60,7 +60,7 @@ public class ServiceItemAdapter extends RecyclerView.Adapter<ServiceItemAdapter.
                     .into(holder.et_localurl);
         }
         holder.et_localname.setText(arrayList.get(position).getLocalname());
-        holder.et_service.setText(arrayList.get(position).getService());
+        holder.et_textname.setText(arrayList.get(position).getTextname());
     }
 
     public int getItemCount() {
@@ -70,13 +70,13 @@ public class ServiceItemAdapter extends RecyclerView.Adapter<ServiceItemAdapter.
     public class ServiceItemViewHolder extends RecyclerView.ViewHolder {    //cloud firestore
         ImageView et_localurl;
         TextView et_localname;
-        TextView et_service;
+        TextView et_textname;
 
         public ServiceItemViewHolder(@NonNull View itemView) {
             super(itemView);
             this.et_localurl = itemView.findViewById(R.id.et_localurl);
             this.et_localname = itemView.findViewById(R.id.et_localname);
-            this.et_service = itemView.findViewById(R.id.et_service);
+            this.et_textname = itemView.findViewById(R.id.et_textname);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

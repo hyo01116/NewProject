@@ -1,6 +1,7 @@
 package com.example.newproject;
 
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,8 +28,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class StuffItemListDetailActivity extends AppCompatActivity {
 
     private String itemkey, secondkey;
-    private ImageView imageurl;
-    private TextView textname, localname, address, stuff, datelimit, extratext;
+    private ImageView imageurl, localurl;
+    private TextView textname, localname,  extratext;
 
     private String first, second, third;
 
@@ -55,9 +57,7 @@ public class StuffItemListDetailActivity extends AppCompatActivity {
         imageurl = (ImageView) findViewById(R.id.imageurl);
         textname = (TextView) findViewById(R.id.textname);
         localname = (TextView) findViewById(R.id.localname);
-        address = (TextView) findViewById(R.id.address);
-        stuff = (TextView) findViewById(R.id.stuff);
-        datelimit = (TextView) findViewById(R.id.datelimit);
+        localurl = (ImageView)findViewById(R.id.localurl);
         extratext = (TextView) findViewById(R.id.extratext);
         findstuff();
     }
@@ -91,17 +91,17 @@ public class StuffItemListDetailActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 StuffItemInfo stuffItemInfo = snapshot.getValue(StuffItemInfo.class);
-                /*if(stuffItemInfo.getImageurl() != null) {
-                    Glide.with(StuffItemDetailActivity.this).load(stuffItemInfo.getImageurl()).into(imageurl);
+                if(stuffItemInfo.getImageurl() != null) {
+                    Glide.with(StuffItemListDetailActivity.this).load(stuffItemInfo.getImageurl()).into(imageurl);
                 }
                 else{
-                    Glide.with(StuffItemDetailActivity.this).load(stuffItemInfo.getLocalurl()).into(imageurl);
-                }*/
+                    Glide.with(StuffItemListDetailActivity.this).load(stuffItemInfo.getLocalurl()).into(imageurl);
+                }
+                if(stuffItemInfo.getLocalurl() != null) {
+                    Glide.with(StuffItemListDetailActivity.this).load(stuffItemInfo.getLocalurl()).into(localurl);
+                }
                 textname.setText(stuffItemInfo.getTextname());
                 localname.setText(stuffItemInfo.getLocalname());
-                address.setText(stuffItemInfo.getAddress());
-                datelimit.setText(stuffItemInfo.getDatelimit());
-                stuff.setText(stuffItemInfo.getStuff());
                 extratext.setText(stuffItemInfo.getExtratext());
             }
 
@@ -130,12 +130,9 @@ public class StuffItemListDetailActivity extends AppCompatActivity {
         String imageurl = null;     //사진 수정버튼 만들기
         String textname = ((EditText) findViewById(R.id.textname)).getText().toString();
         String localname = ((EditText) findViewById(R.id.localname)).getText().toString();
-        String address = ((EditText) findViewById(R.id.address)).getText().toString();
-        String stuff = ((EditText) findViewById(R.id.stuff)).getText().toString();
-        String datelimit = ((EditText) findViewById(R.id.datelimit)).getText().toString();
         String extratext = ((EditText) findViewById(R.id.extratext)).getText().toString();
 
-        StuffItemInfo stuffItemInfo = new StuffItemInfo(user.getUid(), localname, address, localurl, imageurl, textname, stuff, datelimit, extratext, "open", null);
+        StuffItemInfo stuffItemInfo = new StuffItemInfo(user.getUid(), localname, localurl, imageurl, textname, extratext, "open", null);
         database = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
         database.getReference("stuff").child(first).child(second).child(third).child(itemkey).setValue(stuffItemInfo);
     }

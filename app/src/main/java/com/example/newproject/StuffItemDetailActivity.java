@@ -1,13 +1,16 @@
 package com.example.newproject;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,7 +29,9 @@ public class StuffItemDetailActivity extends AppCompatActivity {
     public DatabaseReference databaseReference;
     public String first, second, third, userid, itemkey;
 
-    ImageView imageurl;
+    ImageView imageurl, localurl;
+    Toolbar toolbar;
+
     TextView textname, localname, address, stuff, datelimit, extratext;
 
     @Override
@@ -40,12 +45,11 @@ public class StuffItemDetailActivity extends AppCompatActivity {
         second = getIntent().getStringExtra("second");
         third = getIntent().getStringExtra("third");
 
+        toolbar = (Toolbar)findViewById(R.id.top_toolbar);
+
         imageurl = (ImageView)findViewById(R.id.imageurl);
-        textname = (TextView)findViewById(R.id.textname);
         localname = (TextView)findViewById(R.id.localname);
-        address = (TextView)findViewById(R.id.address);
-        stuff = (TextView)findViewById(R.id.stuff);
-        datelimit = (TextView)findViewById(R.id.datelimit);
+        localurl = (ImageView)findViewById(R.id.localurl);
         extratext = (TextView)findViewById(R.id.extratext);
         findViewById(R.id.btn_chat).setOnClickListener(onClickListener);
         findstuff();
@@ -80,11 +84,11 @@ public class StuffItemDetailActivity extends AppCompatActivity {
                 else{
                     Glide.with(StuffItemDetailActivity.this).load(stuffItemInfo.getLocalurl()).into(imageurl);
                 }
-                textname.setText(stuffItemInfo.getTextname());
+                if(stuffItemInfo.getLocalurl() != null) {
+                    Glide.with(StuffItemDetailActivity.this).load(stuffItemInfo.getLocalurl()).into(localurl);
+                }
+                toolbar.setTitle(stuffItemInfo.getTextname());
                 localname.setText(stuffItemInfo.getLocalname());
-                address.setText(stuffItemInfo.getAddress());
-                stuff.setText(stuffItemInfo.getStuff());
-                datelimit.setText(stuffItemInfo.getDatelimit());
                 extratext.setText(stuffItemInfo.getExtratext());
             }
 

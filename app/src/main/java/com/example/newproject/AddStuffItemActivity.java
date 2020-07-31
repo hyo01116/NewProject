@@ -144,9 +144,6 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
     }
     public void addstuffinfo(final String first, final String second, final String third, final String localname, final String localurl){
         final String textname = ((EditText)findViewById(R.id.textname)).getText().toString();
-        final String stuff = ((EditText)findViewById(R.id.stuff)).getText().toString();
-        final String address = ((EditText)findViewById(R.id.address)).getText().toString();
-        final String datelimit = ((EditText)findViewById(R.id.datelimit)).getText().toString();
         final String extratext =((EditText)findViewById(R.id.extratext)).getText().toString();
         user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -154,7 +151,7 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
         StorageReference storageReference = storage.getReference();
 
         if(filePath == null){
-            StuffItemInfo stuffItemInfo = new StuffItemInfo(user.getUid(), localname, address, localurl, textname, stuff, datelimit, extratext, "open", null);
+            StuffItemInfo stuffItemInfo = new StuffItemInfo(user.getUid(), localname, localurl, textname, extratext, "open", null);
             uploader(stuffItemInfo, first, second, third);
         }
         else {
@@ -168,7 +165,7 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
-                            StuffItemInfo stuffItemInfo = new StuffItemInfo(user.getUid(), localname, address, localurl, String.valueOf(filePath), textname, stuff, datelimit, extratext, "open", null);
+                            StuffItemInfo stuffItemInfo = new StuffItemInfo(user.getUid(), localname, localurl, String.valueOf(filePath), textname, extratext, "open", null);
                             uploader(stuffItemInfo, first, second, third);
                         }
                     })

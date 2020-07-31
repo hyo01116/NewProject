@@ -146,9 +146,6 @@ public class AddServiceItemActivity extends AppCompatActivity {
     }
     public void addserviceinfo(final String first, final String second, final String third, final String localname, final String localurl){
         final String textname = ((EditText)findViewById(R.id.textname)).getText().toString();
-        final String service = ((EditText)findViewById(R.id.service)).getText().toString();
-        final String address = ((EditText)findViewById(R.id.address)).getText().toString();
-        final String datelimit = ((EditText)findViewById(R.id.datelimit)).getText().toString();
         final String extratext =((EditText)findViewById(R.id.extratext)).getText().toString();
         user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -156,7 +153,7 @@ public class AddServiceItemActivity extends AppCompatActivity {
         StorageReference storageReference = storage.getReference();
 
         if(filePath == null){
-            ServiceItemInfo serviceItemInfo = new ServiceItemInfo(user.getUid(), localname, address, localurl, textname, service, datelimit, extratext, "open", null);
+            ServiceItemInfo serviceItemInfo = new ServiceItemInfo(user.getUid(), localname, address, localurl, textname, extratext, "open", null);
             uploader(serviceItemInfo, first, second, third);
         }
         else {
@@ -170,7 +167,7 @@ public class AddServiceItemActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
-                            ServiceItemInfo serviceItemInfo = new ServiceItemInfo(user.getUid(), localname, address, localurl, String.valueOf(filePath), textname, service, datelimit, extratext, "open", null);
+                            ServiceItemInfo serviceItemInfo = new ServiceItemInfo(user.getUid(), localname, localurl, String.valueOf(filePath), textname, extratext, "open", null);
                             uploader(serviceItemInfo, first, second, third);
                         }
                     })
