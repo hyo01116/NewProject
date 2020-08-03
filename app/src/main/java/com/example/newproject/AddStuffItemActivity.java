@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -63,6 +64,7 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
     private String localname, address, localurl, key;
 
     ImageView imageView;
+    Button btn_photo;
     private StorageReference storageRef;
     private ArrayList<String> pathList = new ArrayList<>();
 
@@ -76,6 +78,7 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
         imageView = (ImageView)findViewById(R.id.imageView);
 
         findViewById(R.id.imageView).setOnClickListener(onClickListener);
+        findViewById(R.id.btn_photo).setOnClickListener(onClickListener);
         findViewById(R.id.btn_save_add).setOnClickListener(onClickListener);
         findViewById(R.id.btn_gallery).setOnClickListener(onClickListener);
         findViewById(R.id.btn_update).setOnClickListener(onClickListener);
@@ -85,13 +88,22 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
         @Override
         public void onClick(View v) {
             switch (v.getId()){
-                case R.id.imageView:
+                case R.id.btn_photo:
                     CardView cardView = findViewById(R.id.btn_cardview);
                     if(cardView.getVisibility() == View.VISIBLE){
                         cardView.setVisibility(View.GONE);
                     }
                     else{
                         cardView.setVisibility(View.VISIBLE);
+                    }
+                    break;
+                case R.id.imageView:
+                    CardView cardView2 = findViewById(R.id.btn_cardview);
+                    if(cardView2.getVisibility() == View.VISIBLE){
+                        cardView2.setVisibility(View.GONE);
+                    }
+                    else{
+                        cardView2.setVisibility(View.VISIBLE);
                     }
                     break;
                 case R.id.btn_save_add:
@@ -273,6 +285,8 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
                 //Uri 파일을 Bitmap으로 만들어서 ImageView에 집어 넣는다.
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 imageView.setImageBitmap(bitmap);
+                imageView.setVisibility(View.VISIBLE);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -280,7 +294,7 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
     }
     public void delete(){
         filePath = null;
-        imageView.setImageResource(R.drawable.ic_baseline_photo_camera_24);
+        imageView.setVisibility(View.INVISIBLE);
     }
     public void startToast(String msg){
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();

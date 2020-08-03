@@ -7,17 +7,18 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/top_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white">
+        android:layout_height="50dp"
+        android:background="@drawable/toolbar">
+
         <TextView
-            android:textStyle="bold"
-            android:textColor="@android:color/black"
+            android:id="@+id/toolbar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Feed"
+            android:gravity="center"
             android:layout_gravity="center"
-            android:id="@+id/toolbar_title"
-            android:textSize="20sp" />
+            android:textColor="@android:color/black"
+            android:textSize="15sp"
+            android:textStyle="bold" />
     </androidx.appcompat.widget.Toolbar>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"

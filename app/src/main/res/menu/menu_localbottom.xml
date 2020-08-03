@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:title="feed"
-        android:id="@+id/bottom_feed"
-        android:icon="@drawable/ic_baseline_favorite_24"
-        app:showAsAction="always"/>
     <item android:title="Home"
-        android:id="@+id/bottom_home"
+        android:id="@+id/bottom_feed"
         android:icon="@drawable/ic_baseline_home_24"
+        app:showAsAction="always"/>
+    <item android:title="Find"
+        android:id="@+id/bottom_home"
+        android:icon="@drawable/ic_baseline_search_24"
         app:showAsAction="always"/>
 
     <item android:title="Add"

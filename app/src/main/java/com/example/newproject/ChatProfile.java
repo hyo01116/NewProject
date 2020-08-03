@@ -8,7 +8,9 @@ public class ChatProfile {
         this.name =name;
         this.profile = profile;
     }
+    public ChatProfile(String name){
 
+    }
     public ChatProfile() {
 
     }

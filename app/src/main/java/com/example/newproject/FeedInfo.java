@@ -1,12 +1,14 @@
 package com.example.newproject;
 
 public class FeedInfo {
+    String userid;
     String localurl;
     String localname;
     String picture;
     String extratext;
 
-    public FeedInfo(String localurl, String localname, String picture, String extratext) {
+    public FeedInfo(String userid, String localurl, String localname, String picture, String extratext) {
+        this.userid = userid;
         this.localurl = localurl;
         this.localname = localname;
         this.picture = picture;
@@ -16,6 +18,10 @@ public class FeedInfo {
     public FeedInfo() {
 
     }
+
+    public String getUserid(){ return userid; }
+    public void setUserid(String userid){ this.userid = userid; }
+
     public String getLocalurl(){ return localurl; }
     public void setLocalurl(String localurl){ this.localurl = localurl; }
 

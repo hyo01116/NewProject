@@ -2,30 +2,34 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fillViewport="true"
     xmlns:tools="http://schemas.android.com/tools">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="600dp"
             android:orientation="vertical">
+
             <EditText
                 android:id="@+id/textname"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_gravity="center"
-                android:layout_margin="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:gravity="center"
                 android:textColor="@android:color/black"
-                android:textSize="35sp" />
+                android:textSize="20sp" />
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="10dp">
+                android:layout_height="600dp"
+                android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/imageurl"
@@ -33,25 +37,30 @@
                     android:layout_height="300dp"
                     android:layout_gravity="center"
                     android:background="@android:color/white"
+                    android:scaleType="fitXY"
                     tools:srcCompat="@tools:sample/avatars" />
+
                 <LinearLayout
-                    android:layout_marginTop="25dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginRight="10dp"
                     android:orientation="horizontal">
-                    <ImageView
-                        android:background="@drawable/avatar"
+
+                    <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/localurl"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_gravity="center"
+                        android:background="@drawable/avatar"
                         android:scaleType="centerCrop" />
-                    <EditText
+
+                    <TextView
                         android:id="@+id/localname"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
                         android:padding="10dp"
                         android:textColor="@android:color/black"
                         android:textSize="20dp" />
@@ -59,15 +68,14 @@
 
                 <EditText
                     android:id="@+id/extratext"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="20dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="10dp"
                     android:inputType="textMultiLine"
                     android:nestedScrollingEnabled="false"
                     android:overScrollMode="ifContentScrolls"
-                    android:padding="20dp"
                     android:textColor="@android:color/black"
                     android:textSize="18sp" />
             </LinearLayout>
@@ -77,6 +85,38 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="10dp">
+            <androidx.cardview.widget.CardView
+                android:id="@+id/btn_cardview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:elevation="10dp"
+                android:visibility="gone"
+                app:cardCornerRadius="15dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="5dp">
+
+                    <Button
+                        android:id="@+id/btn_gallery"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="갤러리" />
+                    <Button
+                        android:id="@+id/btn_updatepicture"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="사진 수정 " />
+                    <Button
+                        android:id="@+id/btn_deletepicture"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="사진 삭제" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
             <Button
                 android:id="@+id/btn_clear"

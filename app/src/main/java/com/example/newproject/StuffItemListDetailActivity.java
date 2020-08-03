@@ -1,7 +1,12 @@
 package com.example.newproject;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -25,6 +30,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.IOException;
+
 public class StuffItemListDetailActivity extends AppCompatActivity {
 
     private String itemkey, secondkey;
@@ -38,6 +45,8 @@ public class StuffItemListDetailActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private FirebaseDatabase second_database;
     private DatabaseReference second_databaseReference;
+
+    private Uri filePath;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,6 +88,15 @@ public class StuffItemListDetailActivity extends AppCompatActivity {
                     itemclear_basicdb();
                     startToast("게시물이 거래완료 되었습니다.");
                     //startfunction();
+                    break;
+                case R.id.btn_gallery:
+                    check();
+                    break;
+                case R.id.btn_updatepicture:
+                    check();
+                    break;
+                case R.id.btn_deletepicture:
+                    delete_picture();
                     break;
             }
         }
@@ -128,13 +146,51 @@ public class StuffItemListDetailActivity extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         String localurl = null;
         String imageurl = null;     //사진 수정버튼 만들기
+        String localname = ((TextView)findViewById(R.id.localname)).getText().toString();
         String textname = ((EditText) findViewById(R.id.textname)).getText().toString();
-        String localname = ((EditText) findViewById(R.id.localname)).getText().toString();
         String extratext = ((EditText) findViewById(R.id.extratext)).getText().toString();
 
         StuffItemInfo stuffItemInfo = new StuffItemInfo(user.getUid(), localname, localurl, imageurl, textname, extratext, "open", null);
         database = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
         database.getReference("stuff").child(first).child(second).child(third).child(itemkey).setValue(stuffItemInfo);
+    }
+    public void check(){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "이미지를 선택하세요."), 0);
+        /*if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)){
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+            }
+            else{
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                startToast("권한 거부");
+            }
+        }
+        else{
+            startActivity(GalleryActivity.class);
+        }*/
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {   //왜 uri가 null인가 -> startActivityForResult를 안해줌
+        super.onActivityResult(requestCode, resultCode, data);
+        //request코드가 0이고 OK를 선택했고 data에 뭔가가 들어 있다면
+        if(requestCode == 0 && resultCode == RESULT_OK){
+            filePath = data.getData();
+            Log.d("TAG", "uri:" + String.valueOf(filePath));
+            try {
+                //Uri 파일을 Bitmap으로 만들어서 ImageView에 집어 넣는다.
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                imageurl.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    public void delete_picture(){
+        filePath = null;
+        localurl.setImageResource(R.drawable.ic_baseline_photo_camera_24);
     }
     public void startToast(String msg){
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();

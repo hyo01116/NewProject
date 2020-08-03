@@ -26,12 +26,13 @@
                 android:textSize="20sp" />
         </androidx.appcompat.widget.Toolbar>
         <LinearLayout
+            android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="600dp"
-            android:orientation="vertical"
-            android:padding="10dp">
+            android:orientation="vertical">
 
             <ImageView
+                android:scaleType="fitXY"
                 android:id="@+id/imageurl"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
@@ -45,7 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:background="@drawable/avatar"
                     android:id="@+id/localurl"
                     android:layout_width="50dp"
@@ -75,21 +76,15 @@
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
         </LinearLayout>
-        <androidx.cardview.widget.CardView
-            android:layout_marginRight="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_width="match_parent"
+        <Button
+            android:layout_marginBottom="20dp"
+            android:layout_gravity="center"
+            android:background="@drawable/rounded_rectangular_button"
+            android:id="@+id/btn_chat"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@android:color/darker_gray"
-            app:cardCornerRadius="30dp">
-            <Button
-                android:id="@+id/btn_chat"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_weight="1"
-                android:foregroundGravity="bottom"
-                android:text="채팅하기"
-                android:textColor="@android:color/black" />
-        </androidx.cardview.widget.CardView>
+            android:foregroundGravity="bottom"
+            android:text="채팅하기"
+            android:textColor="@android:color/black" />
     </LinearLayout>
 </ScrollView>

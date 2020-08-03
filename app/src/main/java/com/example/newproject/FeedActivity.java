@@ -7,7 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,16 +36,25 @@ public class FeedActivity extends Fragment implements FeedAdapter.OnListItemSele
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
 
+    Toolbar toolbar;
+
     private String first, second, third;
     private ArrayList<FeedInfo> arrayList = new ArrayList<FeedInfo>();
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container, @NonNull Bundle savedInstanceState){
         ViewGroup view = (ViewGroup)inflater.inflate(R.layout.activity_feed, container, false);
 
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
+        dividerItemDecoration.setDrawable(getContext().getResources().getDrawable(R.drawable.recyclerview_line));
+
+        toolbar = (Toolbar)view.findViewById(R.id.top_toolbar);
+
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
+        //recyclerView.addItemDecoration(dividerItemDecoration);
+
 
         finduserinfo();
         return view;
@@ -62,6 +73,7 @@ public class FeedActivity extends Fragment implements FeedAdapter.OnListItemSele
                         first = localUserInfo.getFirst();
                         second = localUserInfo.getSecond();
                         third = localUserInfo.getThird();
+                        toolbar.setTitle(third);       //중간정렬 안됨
                         findfeed(first, second, third);
                     }
                 }

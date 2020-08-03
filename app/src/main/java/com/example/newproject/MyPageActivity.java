@@ -26,15 +26,16 @@ public class MyPageActivity extends Fragment {
     private String user_name, user_email;
 
     ImageView imageView2;
-    TextView name;
+    TextView name, email;
 
-    Button btn_myaccount, btn_myitemlist, btn_mylocation;
+    Button btn_myaccount, btn_myitemlist, btn_mylocation, btn_myfeed;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container, @NonNull Bundle savedInstanceState){
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.activity_mypage, container, false);
 
         name = view.findViewById(R.id.user_name);
+        email = view.findViewById(R.id.user_email);
         imageView2 = view.findViewById(R.id.imageView2);
 
         mydata();        //user email 보여줌
@@ -42,6 +43,7 @@ public class MyPageActivity extends Fragment {
         btn_myaccount = (Button)view.findViewById(R.id.btn_myaccount);
         btn_myitemlist = (Button)view.findViewById(R.id.btn_myitemlist);
         btn_mylocation = (Button)view.findViewById(R.id.btn_mylocation);
+        btn_myfeed = (Button)view.findViewById(R.id.btn_myfeed);
 
         btn_myaccount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,6 +62,12 @@ public class MyPageActivity extends Fragment {
                 startActivity(MyLocationActivity.class);
             }
         });
+        btn_myfeed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(MyFeedActivity.class);
+            }
+        });
         return view;
     }
     public void mydata(){     //이메일 나타내기
@@ -74,14 +82,12 @@ public class MyPageActivity extends Fragment {
                     if (documentSnapshot.exists()) {
                         GeneralUserInfo generalUserInfo = documentSnapshot.toObject(GeneralUserInfo.class);
                         if(generalUserInfo.getImageurl() != null) {
-                            Glide.with(MyPageActivity.this).load(generalUserInfo.getImageurl()).into(imageView2);
+                            Glide.with(getActivity()).load(generalUserInfo.getImageurl()).into(imageView2);
                         }
-                        /*else{
-                            Glide.with(StuffItemDetailActivity.this).load(stuffItemInfo.getLocalurl()).into(imageurl);
-                        }*/
                         user_name = generalUserInfo.getName();
                         user_email = generalUserInfo.getEmail();
                         name.setText(user_name);
+                        email.setText(user_email);
                     }
                 }
             }

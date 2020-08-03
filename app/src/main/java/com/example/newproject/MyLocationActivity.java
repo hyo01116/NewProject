@@ -23,7 +23,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import net.daum.mf.map.api.CalloutBalloonAdapter;
 import net.daum.mf.map.api.MapPOIItem;
@@ -50,6 +58,10 @@ public class MyLocationActivity extends AppCompatActivity implements MapView.Cur
     final Geocoder geocoder = new Geocoder(this);
     List<Address> list = null;
 
+    private FirebaseUser user;
+    private FirebaseDatabase database;
+    private DatabaseReference databaseReference;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mylocation);
@@ -73,7 +85,6 @@ public class MyLocationActivity extends AppCompatActivity implements MapView.Cur
         public void onClick(View v) {
             switch(v.getId()){
                 case R.id.btn_save_mylocation:
-                    //save_mylocation();
                     break;
                 default:
                     break;
@@ -84,9 +95,18 @@ public class MyLocationActivity extends AppCompatActivity implements MapView.Cur
     protected void onDestroy() {
         super.onDestroy();
         mapView.setCurrentLocationTrackingMode(MapView.CurrentLocationTrackingMode.TrackingModeOff);
-        //mapView.setShowCurrentLocationMarker(false);
+        mapView.setShowCurrentLocationMarker(false);
     }
 
+    public void save_mylocation() {
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        database = FirebaseDatabase.getInstance();
+        System.out.println("first: "+first+" second: "+second+" third: "+third);
+        FirebaseFirestore.getInstance().collection("Users").document(user.getUid()).update("first", first);
+        FirebaseFirestore.getInstance().collection("Users").document(user.getUid()).update("second", second);
+        FirebaseFirestore.getInstance().collection("Users").document(user.getUid()).update("third", third);
+    }
     @Override
     public void onCurrentLocationUpdate(MapView mapView, MapPoint currentLocation, float accuracyInMeters) {
         MapPoint.GeoCoordinate mapPointGeo = currentLocation.getMapPointGeoCoord();
@@ -106,11 +126,11 @@ public class MyLocationActivity extends AppCompatActivity implements MapView.Cur
                 } else {
                     first = list.get(0).getAdminArea();
                     second = list.get(0).getSubLocality();
-                    third = list.get(0).getThoroughfare();
-                    /*System.out.println(list.get(0).toString());
+                    third = list.get(0).getSubThoroughfare();
+                    System.out.println("first: "+first+" second: "+second+" third: "+third);
+                    System.out.println(list.get(0).toString());
                     System.out.println(list.get(0).getAdminArea());
                     System.out.println(list.get(0).getSubLocality());
-                    System.out.println(list.get(0).getThoroughfare());*/
                 }
             }
         }

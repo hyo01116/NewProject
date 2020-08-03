@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 
 public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatViewHolder> {
@@ -24,7 +26,7 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
     @NonNull
     @Override
     public MyChatAdapter.MyChatViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LinearLayout v = (LinearLayout) LayoutInflater.from(parent.getContext()).inflate(R.layout.item_mychat, parent, false);
+        View v =  LayoutInflater.from(parent.getContext()).inflate(R.layout.item_mychat, parent, false);
         MyChatAdapter.MyChatViewHolder holder = new MyChatAdapter.MyChatViewHolder(v);
         return holder;
     }
@@ -38,9 +40,12 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
     @Override
     public void onBindViewHolder(@NonNull MyChatAdapter.MyChatViewHolder holder, int position) {
         ChatProfile mychat = mDataset.get(position);
-        //chat profile 세팅
+        if(mDataset.get(position).getProfile() != null){
+            Glide.with(holder.itemView)
+                    .load(mDataset.get(position).getProfile())
+                    .into(holder.et_chatprofile);
+        }
         holder.et_chatid.setText(mychat.getName());
-        //holder.et_textname.setText(mychat);
     }
 
     @Override
@@ -56,8 +61,8 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
         public MyChatViewHolder(@NonNull View itemView) {
             super(itemView);
             //채팅자의 프로필 사진
+            this.et_chatprofile = itemView.findViewById(R.id.et_chatprofile);
             this.et_chatid = itemView.findViewById(R.id.et_chatid);
-            //this.et_textname = itemView.findViewById(R.id.et_textname);
             itemView.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v){
