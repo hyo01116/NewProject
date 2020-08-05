@@ -54,7 +54,7 @@ public class FeedActivity extends Fragment implements FeedAdapter.OnListItemSele
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         //recyclerView.addItemDecoration(dividerItemDecoration);
-
+        //버튼클릭시 이동
 
         finduserinfo();
         return view;

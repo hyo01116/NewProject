@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -38,6 +39,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     @Override
     public void onBindViewHolder(@NonNull ChatViewHolder holder, int position) {
         ChatInfo chat = mDataset.get(position);
+        /*Glide.with(holder.itemView)
+                .load(mDataset.get(position).getProfile())
+                .into(holder.et_profile);*/
+        holder.et_time.setText(chat.getTime());
         holder.et_data.setText(chat.getData());
         user = FirebaseAuth.getInstance().getCurrentUser();
         nickname = user.getUid();
@@ -55,9 +60,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
 
     public class ChatViewHolder extends RecyclerView.ViewHolder {
         TextView et_data;
-
+        TextView et_time;
+        ImageView et_profile;
         public ChatViewHolder(@NonNull View itemView) {
             super(itemView);
+            this.et_time= itemView.findViewById(R.id.et_time);
             this.et_data= itemView.findViewById(R.id.et_data);
         }
     }
