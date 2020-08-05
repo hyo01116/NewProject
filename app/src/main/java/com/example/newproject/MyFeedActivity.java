@@ -3,12 +3,15 @@ package com.example.newproject;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -36,17 +39,36 @@ public class MyFeedActivity extends AppCompatActivity implements FeedAdapter.OnL
     private FirebaseDatabase database, second_database;
     private DatabaseReference databaseReference, second_databaseReference;
 
-    private ArrayList<String> arrayList_key;
-    private ArrayList<String> arrayList_secondkey;
-    private ArrayList<FeedInfo> arrayList;
+    private ArrayList<String> arrayList_key = new ArrayList<String>();     //new arraylist 안해주면 nullexception 생김
+    private ArrayList<String> arrayList_secondkey = new ArrayList<String>();
+    private ArrayList<FeedInfo> arrayList = new ArrayList<FeedInfo>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_myfeed);
 
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(MyFeedActivity.this);
+        recyclerView.setLayoutManager(layoutManager);
+        //recyclerView.addItemDecoration(dividerItemDecoration);
+        //버튼클릭시 이동
+        findViewById(R.id.btn_add).setOnClickListener(onClickListener);
 
+        finduserinfo();
     }
+    View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.btn_add:
+                    startActivity(AddFeedActivity.class);
+                    break;
+            }
+        }
+    };
+
     public void finduserinfo() {
         final String[] first = new String[1];
         final String[] second = new String[1];
@@ -70,7 +92,8 @@ public class MyFeedActivity extends AppCompatActivity implements FeedAdapter.OnL
             }
         });
     }
-    public void findMyFeed(final String first, final String second, final String third){
+    public void findMyFeed(final String first, final String second, final String third){    //클릭시 상세페이지로 이동하여 수정하기
+        //현재는 내가 작성한 피드를 보여줌
         final String[] title_key = new String[1];
         final String[] key = {null};
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -82,17 +105,19 @@ public class MyFeedActivity extends AppCompatActivity implements FeedAdapter.OnL
             public void onDataChange(@NonNull DataSnapshot snapshot) {     //write에서 피드 키 찾음
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     key[0] = String.valueOf(dataSnapshot.getValue());
+                    System.out.println("key: "+key[0]);
                     /*arrayList_key.add(key[0]);    //base에서의 key
                     arrayList_secondkey.add(dataSnapshot.getKey());   //write에서의 key*/
-                    second_databaseReference = second_database.getReference().child(first).child(second).child(third).child(key[0]);
+                    second_databaseReference = second_database.getReference(first).child(second).child(third).child(key[0]);
                     second_databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             FeedInfo feedInfo = snapshot.getValue(FeedInfo.class);
+                            System.out.println("info: "+feedInfo.getExtratext());
                             arrayList.add(feedInfo);
                             adapter = new FeedAdapter(arrayList, getApplicationContext(), MyFeedActivity.this);
                             recyclerView.setAdapter(adapter);
-                        }
+                        }    //클릭시 상세 페이지 이동 후 수정, 삭제 가능하게 함
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
 
@@ -111,5 +136,9 @@ public class MyFeedActivity extends AppCompatActivity implements FeedAdapter.OnL
     @Override
     public void onItemSelected(View v, int position) {
 
+    }
+    public void startActivity(Class c){
+        Intent intent = new Intent(this, c);
+        startActivity(intent);
     }
 }

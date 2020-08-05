@@ -14,6 +14,9 @@ public class FeedInfo {
         this.picture = picture;
         this.extratext = extratext;
     }
+    public FeedInfo(String userid, String localurl, String localname, String extratext){
+
+    }
 
     public FeedInfo() {
 

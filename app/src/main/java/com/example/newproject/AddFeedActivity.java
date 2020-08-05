@@ -1,32 +1,23 @@
 package com.example.newproject;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.android.gms.tasks.Continuation;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -42,48 +33,43 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
-public class AddServiceItemActivity extends AppCompatActivity {
+public class AddFeedActivity extends AppCompatActivity {     //피드 작성
+
     private FirebaseUser user;
-    private FirebaseDatabase database;
-    private DatabaseReference databaseReference;
+    private FirebaseDatabase database, second_database;
+    private DatabaseReference databaseReference, second_databaseReference;
 
-    private FirebaseDatabase second_database;
-    private DatabaseReference second_databaseReference;
-
-    private String localname, localurl, key;
-
-    ImageView imageView;
     private Uri filePath;
 
+    ImageView imageView, localurl;
+    TextView localname;
+
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_addserviceitem);
+        setContentView(R.layout.activity_addfeed);
 
-        imageView = (ImageView)findViewById(R.id.imageView);
-
-        findViewById(R.id.btn_photo).setOnClickListener(onClickListener);
         findViewById(R.id.imageView).setOnClickListener(onClickListener);
-        findViewById(R.id.btn_save_add).setOnClickListener(onClickListener);
+        findViewById(R.id.btn_add).setOnClickListener(onClickListener);
         findViewById(R.id.btn_gallery).setOnClickListener(onClickListener);
         findViewById(R.id.btn_update).setOnClickListener(onClickListener);
         findViewById(R.id.btn_delete).setOnClickListener(onClickListener);
-        //수정, 삭제 버튼 추가
+        imageView = (ImageView)findViewById(R.id.imageView);
+        localurl = (ImageView)findViewById(R.id.localurl);
+        localname = (TextView)findViewById(R.id.localname);
+
+        setuserinfo();
     }
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             switch (v.getId()){
-                case R.id.btn_photo:
+                case R.id.imageView:
+                    System.out.println("here");
                     CardView cardView = findViewById(R.id.btn_cardview);
                     if(cardView.getVisibility() == View.VISIBLE){
                         cardView.setVisibility(View.GONE);
@@ -92,26 +78,8 @@ public class AddServiceItemActivity extends AppCompatActivity {
                         cardView.setVisibility(View.VISIBLE);
                     }
                     break;
-                case R.id.imageView:
-                    CardView cardView2 = findViewById(R.id.btn_cardview);
-                    if(cardView2.getVisibility() == View.VISIBLE){
-                        cardView2.setVisibility(View.GONE);
-                    }
-                    else{
-                        cardView2.setVisibility(View.VISIBLE);
-                    }
-                    break;
-                case R.id.btn_save_add:
-                    addservice();
-                    Handler timer = new Handler();
-                    /*timer.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Intent intent = new Intent(getContext(), LocalUserActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                        }
-                    }, 2000);*/
+                case R.id.btn_add:
+                    finduserinfo();
                     break;
                 case R.id.btn_gallery:
                     check();
@@ -125,10 +93,13 @@ public class AddServiceItemActivity extends AppCompatActivity {
             }
         }
     };
-    public void addservice(){
+    public void finduserinfo(){     //feed db에 저장 후 key를 받아서 write db에 저장
         final String[] first = new String[1];
         final String[] second = new String[1];
         final String[] third = new String[1];
+        final String[] localurl = new String[1];
+        final String[] localname = new String[1];
+        //feed db에 저장하기 위해서 first, second, third가 필요
         user = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final DocumentReference documentReference = db.collection("Users").document(user.getUid());    //현재 로그인한 사람의 주소
@@ -139,33 +110,80 @@ public class AddServiceItemActivity extends AppCompatActivity {
                     DocumentSnapshot documentSnapshot = task.getResult();
                     if (documentSnapshot.exists()) {
                         LocalUserInfo localUserInfo = documentSnapshot.toObject(LocalUserInfo.class);
+                        localurl[0] = localUserInfo.getImageurl();
+                        localname[0] = localUserInfo.getName();
                         first[0] = localUserInfo.getFirst();
                         second[0] = localUserInfo.getSecond();
                         third[0] = localUserInfo.getThird();
-                        localname = localUserInfo.getName();
-                        localurl = localUserInfo.getImageurl();
-                        addserviceinfo(first[0], second[0], third[0], localname, localurl);
+                        save_feed(first[0], second[0], third[0], localurl[0], localname[0]);   //imageurl, name, first, second, third를 받아오기
                     }
                 }
             }
         });
     }
-    public void addserviceinfo(final String first, final String second, final String third, final String localname, final String localurl){
-        final String textname = ((EditText)findViewById(R.id.textname)).getText().toString();
-        final String extratext =((EditText)findViewById(R.id.extratext)).getText().toString();
+    public void setuserinfo(){
+        final String[] picture = new String[1];
+        final String[] name = new String[1];
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final DocumentReference documentReference = db.collection("Users").document(user.getUid());    //현재 로그인한 사람의 주소
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot documentSnapshot = task.getResult();
+                    if (documentSnapshot.exists()) {
+                        LocalUserInfo localUserInfo = documentSnapshot.toObject(LocalUserInfo.class);
+                        picture[0] = localUserInfo.getImageurl();
+                        name[0] = localUserInfo.getName();
+                        localname.setText(name[0]);
+                        Glide.with(AddFeedActivity.this).load(picture[0]).into(localurl);
+                    }
+                }
+            }
+        });
+    }
+    public void save_feed(final String first, final String second, final String third, final String localurl, final String localname){    //feed db에 저장
+        //userid, localurl, localname, picture, extratext
+        final String extratext = ((EditText)findViewById(R.id.extratext)).getText().toString();
         user = FirebaseAuth.getInstance().getCurrentUser();
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReference();
 
         if(filePath == null){
-            ServiceItemInfo serviceItemInfo = new ServiceItemInfo(user.getUid(), localname, localurl, textname, extratext, "open", null);
-            uploader(serviceItemInfo, first, second, third);
+            /*
+            <LinearLayout
+
+            android:layout_marginRight="15dp"
+            android:layout_gravity="right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+                <Button
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/ic_baseline_phone_24"/>
+                <Button
+            android:layout_marginLeft="15dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/ic_baseline_chat_24"/>
+
+                <Button
+            android:layout_marginLeft="15dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/ic_baseline_favorite_24"
+            android:gravity="right" />
+            </LinearLayout>*/
+            FeedInfo feedInfo = new FeedInfo(user.getUid(),localurl, localname, extratext);
+            uploader(feedInfo, first, second, third);
         }
         else {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMHH_mmss");
+            /*SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMHH_mmss");
             Date now = new Date();
-            String filename = formatter.format(now) +".png";
+            String filename = formatter.format(now) + ".png";*/
             StorageReference storageRef = storage.getReferenceFromUrl("gs://newproject-ab6cb.appspot.com/").child(user.getUid()).child(String.valueOf(filePath));
             storageRef.putFile(filePath)
                     //성공시
@@ -173,8 +191,8 @@ public class AddServiceItemActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
-                            ServiceItemInfo serviceItemInfo = new ServiceItemInfo(user.getUid(), localname, localurl, String.valueOf(filePath), textname, extratext, "open", null);
-                            uploader(serviceItemInfo, first, second, third);
+                            FeedInfo feedInfo = new FeedInfo(user.getUid(), localurl, localname, String.valueOf(filePath), extratext);
+                            uploader(feedInfo, first, second, third);
                         }
                     })
                     //실패시
@@ -184,51 +202,26 @@ public class AddServiceItemActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "업로드 실패!", Toast.LENGTH_SHORT).show();
                         }
                     });
-            /*try{
-                InputStream stream = new FileInputStream(new File(imageurl));
-                final UploadTask uploadTask = mounatainImagesRef.putStream(stream);
-                uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                    @Override
-                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                        if(!task.isSuccessful()){
-                            throw task.getException();
-                        }
-                        return mounatainImagesRef.getDownloadUrl();
-                    }
-                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Uri> task) {
-                        if(task.isSuccessful()){
-                            Uri downloadUri = task.getResult();
-                            ServiceItemInfo serviceItemInfo = new ServiceItemInfo(user.getUid(), localname, address, localurl, imageurl, textname, service, datelimit, extratext, "open", null);
-                            uploader(serviceItemInfo, first, second, third);
-                        }
-                    }
-                });
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }*/
         }
     }
-    public void uploader(final ServiceItemInfo serviceItemInfo, String first, String second, String third){
+    public void uploader(final FeedInfo feedInfo, String first, String second, String third){
+        final String[] key = new String[1];
         user = FirebaseAuth.getInstance().getCurrentUser();
-        database = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
-        databaseReference = database.getReference("service").child(first).child(second).child(third);
+        database = FirebaseDatabase.getInstance("https://newproject-ab6cb-feed.firebaseio.com/");
+        databaseReference = database.getReference().child(first).child(second).child(third);
 
         final DatabaseReference newdatabaseReference = databaseReference.push();
-        newdatabaseReference.setValue(serviceItemInfo)
+        newdatabaseReference.setValue(feedInfo)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        startToast("등록에 성공하였습니다.");
-                        key = newdatabaseReference.getKey();
-                        second_uploader(key);
+                        key[0] = newdatabaseReference.getKey();      //해당 피드의 키
+                        second_uploader(key[0]);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        startToast("등록에 실패했습니다.");
                     }
                 });
     }
@@ -236,7 +229,7 @@ public class AddServiceItemActivity extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         second_database = FirebaseDatabase.getInstance("https://newproject-ab6cb-write.firebaseio.com/");
 
-        second_databaseReference = second_database.getReference(user.getUid()).child("service");
+        second_databaseReference = second_database.getReference(user.getUid()).child("feed");
         DatabaseReference second_newdatabaseReference = second_databaseReference.push();
         second_newdatabaseReference.setValue(itemkey)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -292,12 +285,5 @@ public class AddServiceItemActivity extends AppCompatActivity {
         filePath = null;
         //이미지 삭제시 사라지게 하는법
         imageView.setVisibility(View.INVISIBLE);
-    }
-    public void startToast(String msg){
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-    }
-    public void startActivity(Class c){
-        Intent intent = new Intent(this, c);
-        startActivityForResult(intent, 0);
     }
 }
