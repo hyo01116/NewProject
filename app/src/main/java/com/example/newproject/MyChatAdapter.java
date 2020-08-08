@@ -40,11 +40,9 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
     @Override
     public void onBindViewHolder(@NonNull MyChatAdapter.MyChatViewHolder holder, int position) {
         ChatProfile mychat = mDataset.get(position);
-        if(mDataset.get(position).getProfile() != null){
-            Glide.with(holder.itemView)
-                    .load(mDataset.get(position).getProfile())
-                    .into(holder.et_chatprofile);
-        }
+        Glide.with(holder.itemView)
+                .load(mDataset.get(position).getProfile())
+                .into(holder.et_chatprofile);
         holder.et_chatid.setText(mychat.getName());
     }
 

@@ -68,7 +68,7 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activityë¡œ ë
     private StorageReference storageRef;
     private ArrayList<String> pathList = new ArrayList<>();
 
-    private Uri filePath;
+    private Uri filePath, basicPath;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -163,8 +163,19 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activityë¡œ ë
         StorageReference storageReference = storage.getReference();
 
         if(filePath == null){
-            StuffItemInfo stuffItemInfo = new StuffItemInfo(user.getUid(), localname, localurl, textname, extratext, "open", null);
-            uploader(stuffItemInfo, first, second, third);
+            StorageReference pathReference = storageReference.child("images/p8.jpg");
+            pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    basicPath = uri;
+                    StuffItemInfo stuffItemInfo = new StuffItemInfo(user.getUid(), localname, localurl, String.valueOf(basicPath), textname, extratext, "open", null);
+                    uploader(stuffItemInfo, first, second, third);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                }
+            });
         }
         else {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMHH_mmss");

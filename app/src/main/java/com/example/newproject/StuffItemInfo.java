@@ -10,23 +10,13 @@ public class StuffItemInfo {
     private String state;         //open, close
     private String key;           //키 -> 사용자별 작성글에서 key저장
 
-    public StuffItemInfo(String userid, String localname, String localurl, String imageurl, String textname, String extratext, String state, String key){
+    public StuffItemInfo(String userid, String localname, String localurl, String imageurl, String textname, String extratext, String state, String key) {
         this.userid = userid;
         this.localname = localname;
         this.localurl = localurl;
         this.imageurl = imageurl;
         this.textname = textname;
-        this.extratext= extratext;
-        this.state = state;
-        this.key = key;
-    }
-
-    public StuffItemInfo(String userid, String localname, String localurl, String textname, String extratext, String state, String key){
-        this.userid = userid;
-        this.localname = localname;
-        this.localurl = localurl;
-        this.textname = textname;
-        this.extratext= extratext;
+        this.extratext = extratext;
         this.state = state;
         this.key = key;
     }

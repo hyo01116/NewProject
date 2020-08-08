@@ -32,46 +32,40 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.IOException;
 
-public class ServiceItemListDetailActivity extends AppCompatActivity {
-
-    private String itemkey, secondkey;
-    private ImageView imageurl, localurl;
-    private TextView textname, localname, extratext;
-
-    private String first, second, third, local_url, local_name, extra_text, text_name;
-
+public class MyFeedDetailActivity extends AppCompatActivity {
     private FirebaseUser user;
-    private FirebaseDatabase database;
-    private DatabaseReference databaseReference;
-
-    private FirebaseDatabase second_database;
-    private DatabaseReference second_databaseReference;
+    private FirebaseDatabase database, second_database;
+    private DatabaseReference databaseReference, second_databaseReference;
 
     private Uri filePath;
+
+    ImageView localurl, imageView;
+    TextView localname, extratext;
+
+    private String first, second, third, key, secondkey;
+    private String local_url, local_name, picture, text;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_serviceitemdetail);
+        setContentView(R.layout.activity_feeddetail);
 
-        findViewById(R.id.imageurl).setOnClickListener(onClickListener);
         findViewById(R.id.btn_gallery).setOnClickListener(onClickListener);
         findViewById(R.id.btn_updatepicture).setOnClickListener(onClickListener);
         findViewById(R.id.btn_deletepicture).setOnClickListener(onClickListener);
         findViewById(R.id.btn_update).setOnClickListener(onClickListener);
         findViewById(R.id.btn_delete).setOnClickListener(onClickListener);
-        findViewById(R.id.btn_clear).setOnClickListener(onClickListener);
+        findViewById(R.id.imageView).setOnClickListener(onClickListener);
 
-        itemkey = getIntent().getStringExtra("itemkey");
-        secondkey = getIntent().getStringExtra("secondkey");
         first = getIntent().getStringExtra("first");
         second = getIntent().getStringExtra("second");
         third = getIntent().getStringExtra("third");
-        //userid = getIntent().getStringExtra("userid");   //글 올린사람의 id
-        imageurl = (ImageView) findViewById(R.id.imageurl);
-        textname = (TextView) findViewById(R.id.textname);
+        key = getIntent().getStringExtra("key");
+        secondkey = getIntent().getStringExtra("secondkey");
+
+        localurl = (ImageView) findViewById(R.id.localurl);
         localname = (TextView) findViewById(R.id.localname);
-        localurl = (ImageView)findViewById(R.id.localurl);
+        imageView = (ImageView)findViewById(R.id.imageView);
         extratext = (TextView) findViewById(R.id.extratext);
         finduserinfo();
     }
@@ -89,12 +83,7 @@ public class ServiceItemListDetailActivity extends AppCompatActivity {
                     startToast("게시물이 삭제되었습니다.");
                     //startfunction();
                     break;
-                case R.id.btn_clear:     //state를 close로 변화 + 리스트에 나타낼때 state가 close인 경우 회색으로 표시
-                    itemclear_basicdb();
-                    startToast("게시물이 거래완료 되었습니다.");
-                    //startfunction();
-                    break;
-                case R.id.imageurl:
+                case R.id.imageView:
                     CardView cardView = findViewById(R.id.btn_cardview);
                     if(cardView.getVisibility() == View.VISIBLE){
                         cardView.setVisibility(View.GONE);
@@ -116,32 +105,6 @@ public class ServiceItemListDetailActivity extends AppCompatActivity {
             }
         }
     };
-
-    public void findservice(String first, String second, String third) {
-        database = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
-        databaseReference = database.getReference("service").child(first).child(second).child(third).child(itemkey);
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ServiceItemInfo serviceItemInfo = snapshot.getValue(ServiceItemInfo.class);
-                local_url = serviceItemInfo.getLocalurl();
-                local_name = serviceItemInfo.getLocalname();
-                filePath = Uri.parse(serviceItemInfo.getImageurl());
-                extra_text = serviceItemInfo.getExtratext();
-                text_name = serviceItemInfo.getTextname();
-                Glide.with(ServiceItemListDetailActivity.this).load(serviceItemInfo.getImageurl()).into(imageurl);
-                Glide.with(ServiceItemListDetailActivity.this).load(serviceItemInfo.getLocalurl()).into(localurl);
-                textname.setText(serviceItemInfo.getTextname());
-                localname.setText(serviceItemInfo.getLocalname());
-                extratext.setText(serviceItemInfo.getExtratext());
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
     public void finduserinfo() {
         user = FirebaseAuth.getInstance().getCurrentUser();
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -157,35 +120,52 @@ public class ServiceItemListDetailActivity extends AppCompatActivity {
                         first = localUserInfo.getFirst();
                         second = localUserInfo.getSecond();
                         third = localUserInfo.getThird();
-                        findservice(first, second, third);
+                        local_url = localUserInfo.getImageurl();
+                        local_name = localUserInfo.getName();
+                        findfeed(first, second, third);
                     }
                 }
             }
         });
     }
-    public void itemclear_basicdb() {
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        database = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
-        database.getReference("service").child(first).child(second).child(third).child(itemkey).child("state").setValue("close");
-    }
+    public void findfeed(String first, String second, String third) {
+        database = FirebaseDatabase.getInstance("https://newproject-ab6cb-feed.firebaseio.com/");
+        databaseReference = database.getReference().child(first).child(second).child(third).child(key);
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                FeedInfo feedInfo = snapshot.getValue(FeedInfo.class);
+                Glide.with(MyFeedDetailActivity.this).load(feedInfo.getLocalurl()).into(localurl);
+                Glide.with(MyFeedDetailActivity.this).load(feedInfo.getPicture()).into(imageView);
+                local_url = feedInfo.getLocalurl();
+                local_name = feedInfo.getLocalname();
+                filePath = Uri.parse(feedInfo.getPicture());
+                text = feedInfo.getExtratext();
+                localname.setText(feedInfo.getLocalname());
+                extratext.setText(feedInfo.getExtratext());
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
     public void delete() {
         user = FirebaseAuth.getInstance().getCurrentUser();
         database = FirebaseDatabase.getInstance("https://newproject-ab6cb-write.firebaseio.com/");
         database.getReference(user.getUid()).child("service").child(secondkey).removeValue();
 
-        second_database = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
-        second_database.getReference("service").child(first).child(second).child(third).child(itemkey).removeValue();
+        second_database = FirebaseDatabase.getInstance("https://newproject-ab6cb-feed.firebaseio.com/");
+        second_database.getReference().child(first).child(second).child(third).child(key).removeValue();
     }
     public void update() {
         user = FirebaseAuth.getInstance().getCurrentUser();
-        text_name = ((EditText) findViewById(R.id.textname)).getText().toString();
-        extra_text = ((EditText) findViewById(R.id.extratext)).getText().toString();
+        text = ((EditText) findViewById(R.id.extratext)).getText().toString();
+        FeedInfo feedInfo = new FeedInfo(user.getUid(), local_url, local_name, String.valueOf(filePath), text);
 
-        ServiceItemInfo serviceItemInfo = new ServiceItemInfo(user.getUid(), local_name, local_url, String.valueOf(filePath), text_name, extra_text, "open", null);
-
-        database = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
-        database.getReference("service").child(first).child(second).child(third).child(itemkey).setValue(serviceItemInfo);
+        database = FirebaseDatabase.getInstance("https://newproject-ab6cb-feed.firebaseio.com/");
+        database.getReference().child(first).child(second).child(third).child(key).setValue(feedInfo);
     }
     public void check(){
         Intent intent = new Intent();
@@ -203,9 +183,8 @@ public class ServiceItemListDetailActivity extends AppCompatActivity {
             try {
                 //Uri 파일을 Bitmap으로 만들어서 ImageView에 집어 넣는다.
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                imageurl.setImageBitmap(bitmap);
-                imageurl.setVisibility(View.VISIBLE);
-
+                imageView.setImageBitmap(bitmap);
+                imageView.setVisibility(View.VISIBLE);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -213,7 +192,7 @@ public class ServiceItemListDetailActivity extends AppCompatActivity {
     }
     public void delete_picture(){
         filePath = null;
-        imageurl.setVisibility(View.INVISIBLE);
+        imageView.setVisibility(View.INVISIBLE);
     }
     public void startToast(String msg){
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();

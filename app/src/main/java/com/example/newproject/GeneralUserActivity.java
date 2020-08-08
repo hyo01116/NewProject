@@ -51,11 +51,11 @@ public class GeneralUserActivity extends AppCompatActivity {    //일반사용�
                         chattransaction.commit();
                         break;
                     case R.id.btn_mypage:
-                        FragmentTransaction mypagetransaction = getSupportFragmentManager().beginTransaction();
-                        MyPageActivity myPageActivity = new MyPageActivity();
-                        mypagetransaction.replace(R.id.frame, myPageActivity);
-                        mypagetransaction.addToBackStack(null);
-                        mypagetransaction.commit();
+                        FragmentTransaction generalpagetransaction = getSupportFragmentManager().beginTransaction();
+                        GeneralPageActivity generalPageActivity = new GeneralPageActivity();
+                        generalpagetransaction.replace(R.id.frame, generalPageActivity);
+                        generalpagetransaction.addToBackStack(null);
+                        generalpagetransaction.commit();
                         break;
                 }
                 return true;

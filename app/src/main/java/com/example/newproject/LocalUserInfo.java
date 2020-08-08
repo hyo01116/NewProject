@@ -21,14 +21,6 @@ public class LocalUserInfo {
         this.second = second;
         this.third = third;
     }
-    public LocalUserInfo(String email, String name, String phone, String first, String second, String third){
-        this.email = email;
-        this.name = name;
-        this.phone = phone;
-        this.first = first;
-        this.second = second;
-        this.third = third;
-    }
 
     public String getEmail() { return email; }
     public void setEmail(String email){ this.email = email;}

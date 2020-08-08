@@ -29,11 +29,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
-public class MyFeedActivity extends AppCompatActivity implements FeedAdapter.OnListItemSelectedInterface{    //마이페이지에서 피드관리 + 피드 작성
+public class MyFeedActivity extends AppCompatActivity implements MyFeedAdapter.OnItemClickListener{    //마이페이지에서 피드관리 + 피드 작성
     //피드 작성시 write -> userid -> feed에 작성한 피드 저장
     //write에서 글의 key 받아서 feeddb에서 first,second, third로 들어가서 내용 찾기 (수정으로 바꾸기) + 글 쓰는 버튼 추가
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
+    private MyFeedAdapter adapter;       //recyclerview.adapter(x) -> myfeedadapter (setonitemclicklistener 가능)
     private RecyclerView.LayoutManager layoutManager;
     private FirebaseUser user;
     private FirebaseDatabase database, second_database;
@@ -94,8 +94,8 @@ public class MyFeedActivity extends AppCompatActivity implements FeedAdapter.OnL
     }
     public void findMyFeed(final String first, final String second, final String third){    //클릭시 상세페이지로 이동하여 수정하기
         //현재는 내가 작성한 피드를 보여줌
-        final String[] title_key = new String[1];
         final String[] key = {null};
+        final String[] secondkey = {null};
         user = FirebaseAuth.getInstance().getCurrentUser();
         database  = FirebaseDatabase.getInstance("https://newproject-ab6cb-write.firebaseio.com/");
         second_database = FirebaseDatabase.getInstance("https://newproject-ab6cb-feed.firebaseio.com/");
@@ -105,6 +105,7 @@ public class MyFeedActivity extends AppCompatActivity implements FeedAdapter.OnL
             public void onDataChange(@NonNull DataSnapshot snapshot) {     //write에서 피드 키 찾음
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     key[0] = String.valueOf(dataSnapshot.getValue());
+                    secondkey[0] = String.valueOf(dataSnapshot.getKey());
                     System.out.println("key: "+key[0]);
                     /*arrayList_key.add(key[0]);    //base에서의 key
                     arrayList_secondkey.add(dataSnapshot.getKey());   //write에서의 key*/
@@ -113,10 +114,23 @@ public class MyFeedActivity extends AppCompatActivity implements FeedAdapter.OnL
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             FeedInfo feedInfo = snapshot.getValue(FeedInfo.class);
-                            System.out.println("info: "+feedInfo.getExtratext());
                             arrayList.add(feedInfo);
-                            adapter = new FeedAdapter(arrayList, getApplicationContext(), MyFeedActivity.this);
+                            adapter = new MyFeedAdapter(arrayList, MyFeedActivity.this);
                             recyclerView.setAdapter(adapter);
+                            adapter.setOnItemClickListener(new OnMyFeedItemListClickListener() {
+                                @Override
+                                public void onItemClick(MyFeedAdapter.MyFeedViewHolder holder, View view, int position) {
+                                    MyFeedAdapter.MyFeedViewHolder viewHolder = (MyFeedAdapter.MyFeedViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
+                                    //first, second, third, key[0]을 넘김 (수정, 삭제 페이지로 이동)
+                                    Intent intent = new Intent(getApplicationContext(), MyFeedDetailActivity.class);
+                                    intent.putExtra("first", first);
+                                    intent.putExtra("second", second);
+                                    intent.putExtra("third",third);
+                                    intent.putExtra("key", key[0]);
+                                    intent.putExtra("secondkey", secondkey[0]);
+                                    startActivity(intent);
+                                }
+                            });
                         }    //클릭시 상세 페이지 이동 후 수정, 삭제 가능하게 함
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
@@ -132,9 +146,8 @@ public class MyFeedActivity extends AppCompatActivity implements FeedAdapter.OnL
             }
         });
     }
-
     @Override
-    public void onItemSelected(View v, int position) {
+    public void onItemClick(MyFeedAdapter.MyFeedViewHolder myFeedViewHolder, View v, int position) {
 
     }
     public void startActivity(Class c){

@@ -40,16 +40,13 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
     @Override
     public void onBindViewHolder(@NonNull FeedAdapter.FeedViewHolder holder, int position) {
         FeedInfo feedInfo = mDataset.get(position);
-        if(mDataset.get(position).getLocalurl() != null) {
-            Glide.with(holder.itemView)
-                    .load(mDataset.get(position).getLocalurl())
-                    .into(holder.localurl);
-        }
-        if(mDataset.get(position).getPicture() != null) {
-            Glide.with(holder.itemView)
-                    .load(mDataset.get(position).getPicture())
-                    .into(holder.picture);
-        }
+        Glide.with(holder.itemView)
+                .load(mDataset.get(position).getLocalurl())
+                .into(holder.localurl);
+        Glide.with(holder.itemView)
+                .load(mDataset.get(position).getPicture())
+                .into(holder.picture);
+
         holder.localname.setText(feedInfo.getLocalname());
         holder.extratext.setText(feedInfo.getExtratext());
     }

@@ -122,21 +122,6 @@ public class StuffItemListActivity extends Fragment implements StuffItemListAdap
                         }
                     });
                 }
-                /*adapter = new StuffItemListAdapter(arrayList, getContext());
-                recyclerView.setAdapter(adapter);
-                adapter.setOnItemClickListener(new OnStuffItemListClickListener() {
-                    @Override
-                    public void onItemClick(StuffItemListAdapter.StuffItemListViewHolder holder, View view, int position) {
-                        StuffItemListAdapter.StuffItemListViewHolder viewHolder = (StuffItemListAdapter.StuffItemListViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
-                        Intent intent = new Intent(getContext(), StuffItemListDetailActivity.class);
-                        intent.putExtra("itemkey", arrayList_key.get(position));
-                        intent.putExtra("secondkey", arrayList_secondkey.get(position));
-                        intent.putExtra("first", first);
-                        intent.putExtra("second", second);
-                        intent.putExtra("third", third);
-                        startActivity(intent);
-                    }
-                });*/
             }
 
             @Override

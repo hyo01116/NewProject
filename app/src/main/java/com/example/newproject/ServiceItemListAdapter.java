@@ -46,7 +46,7 @@ public class ServiceItemListAdapter extends RecyclerView.Adapter<ServiceItemList
     @Override
     public void onBindViewHolder(@NonNull final ServiceItemListAdapter.ServiceItemListViewHolder holder, int position) {
         Glide.with(holder.itemView)
-                .load(arrayList.get(position).getImageurl())
+                .load(arrayList.get(position).getLocalurl())
                 .into(holder.et_localurl);
         holder.et_localname.setText(arrayList.get(position).getLocalname());
         holder.et_textname.setText(arrayList.get(position).getTextname());

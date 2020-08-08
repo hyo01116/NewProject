@@ -56,7 +56,7 @@ public class LocalUserRegisterActivity extends AppCompatActivity {
     private StorageReference storageRef;
     private ArrayList<String> pathList = new ArrayList<>();
 
-    private Uri filePath;
+    private Uri filePath, basicPath;
 
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageReference = storage.getReference();
@@ -129,9 +129,20 @@ public class LocalUserRegisterActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 user = mAuth.getCurrentUser();
                                 if(filePath == null){        //사진 없으면
-                                    LocalUserInfo localUserInfo = new LocalUserInfo(email, name, phone, first, second, third);
-                                    UserLocationInfo userLocationInfo = new UserLocationInfo(first, second, third);
-                                    userUpload(localUserInfo, userLocationInfo, user.getUid());
+                                    StorageReference pathReference = storageReference.child("images/p8.jpg");
+                                    pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                        @Override
+                                        public void onSuccess(Uri uri) {
+                                            basicPath = uri;
+                                            LocalUserInfo localUserInfo = new LocalUserInfo(email, name, phone, String.valueOf(basicPath), first, second, third);
+                                            UserLocationInfo userLocationInfo = new UserLocationInfo(first, second, third);
+                                            userUpload(localUserInfo, userLocationInfo, user.getUid());
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                        }
+                                    });
                                     //회원가입이 정상적으로 이뤄졌습니다.
                                 }
                                 else{

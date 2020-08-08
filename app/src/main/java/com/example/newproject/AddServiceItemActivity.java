@@ -62,7 +62,7 @@ public class AddServiceItemActivity extends AppCompatActivity {
     private String localname, localurl, key;
 
     ImageView imageView;
-    private Uri filePath;
+    private Uri filePath, basicPath;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -159,8 +159,20 @@ public class AddServiceItemActivity extends AppCompatActivity {
         StorageReference storageReference = storage.getReference();
 
         if(filePath == null){
-            ServiceItemInfo serviceItemInfo = new ServiceItemInfo(user.getUid(), localname, localurl, textname, extratext, "open", null);
-            uploader(serviceItemInfo, first, second, third);
+            StorageReference pathReference = storageReference.child("images/p8.jpg");
+            pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    basicPath = uri;
+                    ServiceItemInfo serviceItemInfo = new ServiceItemInfo(user.getUid(), localname, localurl, String.valueOf(basicPath), textname, extratext, "open", null);
+                    uploader(serviceItemInfo, first, second, third);
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                }
+            });
         }
         else {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMHH_mmss");

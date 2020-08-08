@@ -21,16 +21,6 @@ public class ServiceItemInfo {
         this.key = key;
     }
 
-    public ServiceItemInfo(String userid, String localname, String localurl, String textname, String extratext, String state, String key) {
-        this.userid = userid;
-        this.localname = localname;
-        this.localurl = localurl;
-        this.textname = textname;
-        this.extratext = extratext;
-        this.state = state;
-        this.key = key;
-    }
-
     public ServiceItemInfo() {
 
     }

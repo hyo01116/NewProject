@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -21,7 +22,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class MyPageActivity extends Fragment {
+public class GeneralPageActivity extends Fragment {
     private FirebaseUser user;
     private String user_name, user_email;
 
@@ -32,7 +33,7 @@ public class MyPageActivity extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container, @NonNull Bundle savedInstanceState) {
-        ViewGroup view = (ViewGroup) inflater.inflate(R.layout.activity_mypage, container, false);
+        ViewGroup view = (ViewGroup) inflater.inflate(R.layout.activity_mygeneralpage, container, false);
 
         name = view.findViewById(R.id.user_name);
         email = view.findViewById(R.id.user_email);
@@ -41,31 +42,17 @@ public class MyPageActivity extends Fragment {
         mydata();        //user email 보여줌
 
         btn_myaccount = (Button) view.findViewById(R.id.btn_myaccount);
-        btn_myitemlist = (Button) view.findViewById(R.id.btn_myitemlist);
         btn_mylocation = (Button) view.findViewById(R.id.btn_mylocation);
-        btn_myfeed = (Button) view.findViewById(R.id.btn_myfeed);
 
         btn_myaccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
             }
         });
-        btn_myitemlist.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(MyItemListActivity.class);
-            }
-        });
         btn_mylocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(MyLocationActivity.class);
-            }
-        });
-        btn_myfeed.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(MyFeedActivity.class);
             }
         });
         return view;

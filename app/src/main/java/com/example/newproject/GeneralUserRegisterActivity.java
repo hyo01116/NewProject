@@ -42,6 +42,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import io.grpc.Context;
+
 public class GeneralUserRegisterActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser user;
@@ -53,7 +55,7 @@ public class GeneralUserRegisterActivity extends AppCompatActivity {
     private StorageReference storageRef;
     private ArrayList<String> pathList = new ArrayList<>();
 
-    private Uri filePath;
+    private Uri filePath, basicPath;
 
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageReference = storage.getReference();
@@ -109,6 +111,7 @@ public class GeneralUserRegisterActivity extends AppCompatActivity {
 
         }
     };
+
     public void generaluserregister() {
         mAuth = FirebaseAuth.getInstance();
         final String email = ((EditText) findViewById(R.id.email)).getText().toString();
@@ -126,16 +129,24 @@ public class GeneralUserRegisterActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 user = mAuth.getCurrentUser();
-                                if(filePath == null){        //사진 없으면
-                                    GeneralUserInfo generalUserInfo = new GeneralUserInfo(email, name, phone, first, second, third);
-                                    UserLocationInfo userLocationInfo = new UserLocationInfo(first, second, third);
-                                    userUpload(generalUserInfo, userLocationInfo, user.getUid());
-                                    //회원가입이 정상적으로 이뤄졌습니다.
+                                if(filePath == null){        //사진 없으면 basic이미지로 대체
+                                    StorageReference pathReference = storageReference.child("images/p8.jpg");
+                                    pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                        @Override
+                                        public void onSuccess(Uri uri) {
+                                            basicPath = uri;
+                                            GeneralUserInfo generalUserInfo = new GeneralUserInfo(email, name, phone, String.valueOf(basicPath), first, second, third);
+                                            UserLocationInfo userLocationInfo = new UserLocationInfo(first, second, third);
+                                            userUpload(generalUserInfo, userLocationInfo, user.getUid());
+
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                        }
+                                    });
                                 }
                                 else{
-                                    SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMHH_mmss");
-                                    Date now = new Date();
-                                    String filename = formatter.format(now) +".png";
                                     StorageReference storageRef = storage.getReferenceFromUrl("gs://newproject-ab6cb.appspot.com/").child(user.getUid()).child(String.valueOf(filePath));
                                     storageRef.putFile(filePath)
                                             //성공시

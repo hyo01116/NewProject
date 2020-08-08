@@ -109,20 +109,12 @@ public class StuffItemListDetailActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 StuffItemInfo stuffItemInfo = snapshot.getValue(StuffItemInfo.class);
-                if(stuffItemInfo.getImageurl() != null) {
-                    Glide.with(StuffItemListDetailActivity.this).load(stuffItemInfo.getImageurl()).into(imageurl);
-                }
-                else{
-                    Glide.with(StuffItemListDetailActivity.this).load(stuffItemInfo.getLocalurl()).into(imageurl);
-                }
-                if(stuffItemInfo.getLocalurl() != null) {
-                    Glide.with(StuffItemListDetailActivity.this).load(stuffItemInfo.getLocalurl()).into(localurl);
-                }
+                Glide.with(StuffItemListDetailActivity.this).load(stuffItemInfo.getImageurl()).into(imageurl);
+                Glide.with(StuffItemListDetailActivity.this).load(stuffItemInfo.getLocalurl()).into(localurl);
                 textname.setText(stuffItemInfo.getTextname());
                 localname.setText(stuffItemInfo.getLocalname());
                 extratext.setText(stuffItemInfo.getExtratext());
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 

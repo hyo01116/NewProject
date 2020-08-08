@@ -43,7 +43,7 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
     private FirebaseDatabase database, second_database;
     private DatabaseReference databaseReference, second_databaseReference;
 
-    private Uri filePath;
+    private Uri filePath, basicPath;
 
     ImageView imageView, localurl;
     TextView localname;
@@ -69,7 +69,6 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.imageView:
-                    System.out.println("here");
                     CardView cardView = findViewById(R.id.btn_cardview);
                     if(cardView.getVisibility() == View.VISIBLE){
                         cardView.setVisibility(View.GONE);
@@ -152,33 +151,20 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
         StorageReference storageReference = storage.getReference();
 
         if(filePath == null){
-            /*
-            <LinearLayout
+            StorageReference pathReference = storageReference.child("images/p8.jpg");
+            pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    basicPath = uri;
+                    FeedInfo feedInfo = new FeedInfo(user.getUid(),localurl, localname, String.valueOf(basicPath),extratext);
+                    uploader(feedInfo, first, second, third);
 
-            android:layout_marginRight="15dp"
-            android:layout_gravity="right"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-                <Button
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@drawable/ic_baseline_phone_24"/>
-                <Button
-            android:layout_marginLeft="15dp"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@drawable/ic_baseline_chat_24"/>
-
-                <Button
-            android:layout_marginLeft="15dp"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@drawable/ic_baseline_favorite_24"
-            android:gravity="right" />
-            </LinearLayout>*/
-            FeedInfo feedInfo = new FeedInfo(user.getUid(),localurl, localname, extratext);
-            uploader(feedInfo, first, second, third);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                }
+            });
         }
         else {
             /*SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMHH_mmss");

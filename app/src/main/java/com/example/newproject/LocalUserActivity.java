@@ -53,12 +53,6 @@ public class LocalUserActivity extends AppCompatActivity{    //작성자 사용�
                             cardView.setVisibility(View.VISIBLE);
                         }
                         break;
-                        /*FragmentTransaction addtransaction = getSupportFragmentManager().beginTransaction();
-                        WritePostActivity writePostActivity = new WritePostActivity();
-                        addtransaction.replace(R.id.frame, writePostActivity);
-                        addtransaction.addToBackStack(null);
-                        addtransaction.commit();
-                        break;*/
                     case R.id.bottom_mychat:
                         FragmentTransaction chattransaction = getSupportFragmentManager().beginTransaction();
                         MyChatListActivity myChatListActivity = new MyChatListActivity();
