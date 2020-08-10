@@ -5,19 +5,23 @@
     android:orientation="vertical"
     android:background="@android:color/white"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <LinearLayout
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/top_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <ImageView
+        android:layout_height="50dp"
+        app:menu="@menu/menu_stuffservice"
+        android:background="@drawable/toolbar">
+
+        <TextView
+            android:id="@+id/toolbar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/p4"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:layout_gravity="center">
-        </ImageView>
-    </LinearLayout>
+            android:layout_gravity="center"
+            android:text="리스트"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </androidx.appcompat.widget.Toolbar>
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs"
         app:tabTextColor="@android:color/black"

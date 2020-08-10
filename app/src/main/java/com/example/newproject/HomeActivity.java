@@ -3,11 +3,14 @@ package com.example.newproject;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -15,6 +18,8 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 
 public class HomeActivity extends Fragment {
+
+    Toolbar toolbar;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container, @NonNull Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.activity_home, container, false);
@@ -28,6 +33,20 @@ public class HomeActivity extends Fragment {
         final ViewPager viewPager = (ViewPager) view.findViewById(R.id.view_pager);
         final MyPagerAdapter myPagerAdapter = new MyPagerAdapter(getChildFragmentManager(), tabs.getTabCount());
         viewPager.setAdapter(myPagerAdapter);
+
+        toolbar = (Toolbar)view.findViewById(R.id.top_toolbar);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch(item.getItemId()){
+                    case R.id.findmap:
+
+                        startActivity(FindMapActivity.class);
+                        break;
+                }
+                return false;
+            }
+        });
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -48,6 +67,7 @@ public class HomeActivity extends Fragment {
         });
         return view;
     }
+
     public void startActivity(Class c){
         Intent intent = new Intent(getContext(), c);
         startActivity(intent);

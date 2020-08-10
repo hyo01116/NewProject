@@ -1,5 +1,7 @@
 package com.example.newproject;
 
+import com.google.firebase.firestore.GeoPoint;
+
 public class LocalUserInfo {
     private String email;
     private String name;
@@ -8,11 +10,12 @@ public class LocalUserInfo {
     private String first;
     private String second;
     private String third;
+    private GeoPoint geoPoint;
 
     public LocalUserInfo(){
 
     }
-    public LocalUserInfo(String email, String name, String phone, String imageurl, String first, String second, String third){
+    public LocalUserInfo(String email, String name, String phone, String imageurl, GeoPoint geoPoint, String first, String second, String third){
         this.email =email;
         this.name = name;
         this.phone = phone;
@@ -33,6 +36,9 @@ public class LocalUserInfo {
 
     public String getImageurl(){ return imageurl;}
     public void setImageurl(String imageurl){ this.imageurl = imageurl;}
+
+    public GeoPoint getGeoPoint(){ return geoPoint; }
+    public void setGeoPoint(GeoPoint geoPoint){ this.geoPoint = geoPoint; }
 
     public String getFirst() { return first; }
     public void setFirst(String first){ this.first = first;}
