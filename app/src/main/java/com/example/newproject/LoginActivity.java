@@ -45,14 +45,18 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         findViewById(R.id.btn_login).setOnClickListener(onClickListener);
+        findViewById(R.id.btn_register).setOnClickListener(onClickListener);
         getHashKey();
     }
     View.OnClickListener onClickListener = new View.OnClickListener(){
         @Override
         public void onClick(View v){
-            switch (v.getId()){
+            switch (v.getId()) {
                 case R.id.btn_login:
                     login();
+                    break;
+                case R.id.btn_register:
+                    startActivity(UserRegisterActivity.class);
                     break;
             }
         }

@@ -51,13 +51,13 @@ public class StuffActivity extends Fragment implements StuffItemAdapter.OnItemCl
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.activity_stuff, container, false);
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
-        dividerItemDecoration.setDrawable(getContext().getResources().getDrawable(R.drawable.recyclerview_line));
+        dividerItemDecoration.setDrawable(getContext().getResources().getDrawable(R.drawable.rec_lin));
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        //recyclerView.addItemDecoration(dividerItemDecoration);
+        recyclerView.addItemDecoration(dividerItemDecoration);
 
         findLocationinfo();
 
