@@ -27,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.btn_register:
                     startActivity(UserRegisterActivity.class);
                     break;
+                default:
+                    break;
             }
         }
     };
