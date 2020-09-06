@@ -1,4 +1,4 @@
-package com.example.newproject;
+package com.example.newproject.Class;
 
 public class GeneralUserInfo {
     private String email;

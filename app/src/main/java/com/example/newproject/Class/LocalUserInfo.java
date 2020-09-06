@@ -1,4 +1,4 @@
-package com.example.newproject;
+package com.example.newproject.Class;
 
 import com.google.firebase.firestore.GeoPoint;
 

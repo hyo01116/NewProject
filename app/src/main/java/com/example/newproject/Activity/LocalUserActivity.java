@@ -1,4 +1,4 @@
-package com.example.newproject;
+package com.example.newproject.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,8 +9,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 
+import com.example.newproject.AddServiceItemActivity;
+import com.example.newproject.AddStuffItemActivity;
+import com.example.newproject.HomeActivity;
+import com.example.newproject.MyChatListActivity;
+import com.example.newproject.MyPageActivity;
+import com.example.newproject.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class LocalUserActivity extends AppCompatActivity{    //작성자 사용화면
     private BottomNavigationView bottomNavigationView;

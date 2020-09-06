@@ -1,6 +1,5 @@
-package com.example.newproject;
+package com.example.newproject.Activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +12,10 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.newproject.Adapter.FeedAdapter;
+import com.example.newproject.Class.FeedInfo;
+import com.example.newproject.Class.LocalUserInfo;
+import com.example.newproject.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,7 +31,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
-public class FeedActivity extends Fragment implements FeedAdapter.OnListItemSelectedInterface{
+public class FeedActivity extends Fragment implements FeedAdapter.OnListItemSelectedInterface {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -42,6 +45,7 @@ public class FeedActivity extends Fragment implements FeedAdapter.OnListItemSele
     private ArrayList<FeedInfo> arrayList = new ArrayList<FeedInfo>();
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container, @NonNull Bundle savedInstanceState){
+        //미리 정의해둔 xml을 view로 변환하는 것
         ViewGroup view = (ViewGroup)inflater.inflate(R.layout.activity_feed, container, false);
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);

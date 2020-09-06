@@ -1,9 +1,12 @@
-package com.example.newproject;
+package com.example.newproject.Adapter;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+
+import com.example.newproject.ServiceActivity;
+import com.example.newproject.StuffActivity;
 
 public class MyPagerAdapter extends FragmentPagerAdapter {
     int mNumOfTabs;

@@ -1,10 +1,13 @@
-package com.example.newproject;
+package com.example.newproject.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
+import com.example.newproject.R;
+import com.example.newproject.UserRegisterActivity;
 
 public class MainActivity extends AppCompatActivity {
 

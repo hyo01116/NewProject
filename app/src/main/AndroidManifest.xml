@@ -20,7 +20,7 @@
         <activity android:name=".MyFeedActivity"/>
         <activity android:name=".LocalUserRegisterActivity"/>
         <activity android:name=".GeneralUserRegisterActivity"/>
-        <activity android:name=".LoginActivity">
+        <activity android:name=".Activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,8 +30,8 @@
         <activity android:name=".MyLocationActivity"/>
         <activity android:name=".ChatActivity"/>
         <activity android:name=".GalleryActivity"/>
-        <activity android:name=".GeneralUserActivity"/>
-        <activity android:name=".LocalUserActivity"/>
+        <activity android:name=".Activity.GeneralUserActivity"/>
+        <activity android:name=".Activity.LocalUserActivity"/>
         <activity android:name=".MyItemListActivity"/>
         <activity android:name=".ServiceItemDetailActivity"/>
         <activity android:name=".AddStuffItemActivity"/>
@@ -40,7 +40,7 @@
         <activity android:name=".StuffItemListDetailActivity"/>
         <activity android:name=".StuffItemDetailActivity"/>
         <activity android:name=".ServiceItemListDetailActivity"/>
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".Activity.MainActivity"/>
         <meta-data android:name="com.kakao.sdk.AppKey" android:value="94f6e20cdcbf24eacb09c76fb2fe43e1"/>
 
     </application>

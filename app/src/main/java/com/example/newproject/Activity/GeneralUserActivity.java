@@ -1,4 +1,4 @@
-package com.example.newproject;
+package com.example.newproject.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.newproject.GeneralPageActivity;
+import com.example.newproject.HomeActivity;
+import com.example.newproject.MyChatListActivity;
+import com.example.newproject.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class GeneralUserActivity extends AppCompatActivity {    //일반사용자 사용화면
@@ -63,6 +67,7 @@ public class GeneralUserActivity extends AppCompatActivity {    //일반사용�
         });
     }
 
+    @Override
     public void onBackPressed(){
         super.onBackPressed();
         finish();
