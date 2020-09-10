@@ -16,8 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.example.newproject.R;
-import com.example.newproject.UserLevelInfo;
-import com.example.newproject.UserRegisterActivity;
+import com.example.newproject.Class.UserLevelInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;

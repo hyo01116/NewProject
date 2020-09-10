@@ -5,6 +5,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.example.newproject.Activity.ServiceItemListActivity;
+import com.example.newproject.Activity.StuffItemListActivity;
+
 public class MyItemListAdapter extends FragmentPagerAdapter {
     int mNumOfTabs;
 

@@ -18,6 +18,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.newproject.Class.LocalUserInfo;
+import com.example.newproject.Class.ServiceItemInfo;
+import com.example.newproject.Class.StuffItemInfo;
+import com.example.newproject.Class.UserLocationInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;

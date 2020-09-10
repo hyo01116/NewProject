@@ -121,6 +121,8 @@ public class MyLocationActivity extends AppCompatActivity implements MapView.Cur
                     System.out.println(list.get(0).toString());
                     System.out.println(list.get(0).getAdminArea());
                     System.out.println(list.get(0).getSubLocality());
+                    //사용자가 지도에서 원하는 위치를 클릭하면 해당 위치의 위도 경도를 불러오고 위도경도를 주소로 변환함
+                    //주소에서 시, 구, 동을 가져와서 회원정보에 저장
                 }
             }
         }

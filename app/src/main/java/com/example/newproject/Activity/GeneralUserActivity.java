@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.newproject.GeneralPageActivity;
-import com.example.newproject.HomeActivity;
 import com.example.newproject.MyChatListActivity;
 import com.example.newproject.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;

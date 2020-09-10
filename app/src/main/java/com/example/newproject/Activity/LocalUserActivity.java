@@ -10,9 +10,6 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.example.newproject.AddServiceItemActivity;
-import com.example.newproject.AddStuffItemActivity;
-import com.example.newproject.HomeActivity;
 import com.example.newproject.MyChatListActivity;
 import com.example.newproject.MyPageActivity;
 import com.example.newproject.R;
