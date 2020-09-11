@@ -97,6 +97,8 @@ public class ServiceActivity extends Fragment implements ServiceItemAdapter.OnIt
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //특정 시점에 동작하게 하는 함수
+                //비동기 해결하기 위해 구현하는데 그 이유는 다른 일 하다가 데이터가 준비되면 콜백함수내의 작업들을 실행하라고
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
                     ServiceItemInfo serviceItemInfo = dataSnapshot.getValue(ServiceItemInfo.class);
                     if(serviceItemInfo.getState().equals("open")){

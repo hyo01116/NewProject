@@ -49,7 +49,7 @@ public class StuffItemAdapter extends RecyclerView.Adapter<StuffItemAdapter.Stuf
    
     @Override
     public void onBindViewHolder(@NonNull final StuffItemViewHolder holder, int position) {
-        Picasso.with(holder.itemView)
+        Glide.with(holder.itemView)
                 .load(arrayList.get(position).getLocalurl())
                 .into(holder.et_localurl);
         holder.et_localname.setText(arrayList.get(position).getLocalname());
