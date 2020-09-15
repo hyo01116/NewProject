@@ -44,6 +44,7 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
                 .load(mDataset.get(position).getProfile())
                 .into(holder.et_chatprofile);
         holder.et_chatid.setText(mychat.getName());
+        //holder.et_textname.setText(mychat.getLasttext());
     }
 
     @Override
@@ -61,6 +62,7 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
             //채팅자의 프로필 사진
             this.et_chatprofile = itemView.findViewById(R.id.et_chatprofile);
             this.et_chatid = itemView.findViewById(R.id.et_chatid);
+            //this.et_textname = itemView.findViewById(R.id.et_textname);
             itemView.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v){

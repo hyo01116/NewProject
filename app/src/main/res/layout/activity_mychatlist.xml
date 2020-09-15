@@ -15,7 +15,7 @@
             android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Chat List"
+            android:text="진행중인 채팅"
             android:layout_gravity="center"
             android:textColor="@android:color/black"
             android:textSize="20dp">

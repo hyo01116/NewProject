@@ -9,10 +9,12 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.newproject.Class.ChatProfile;
+import com.example.newproject.Class.LocalUserInfo;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -43,10 +45,15 @@ public class MyChatListActivity extends Fragment implements MyChatAdapter.OnList
     public View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container, @NonNull Bundle savedInstanceState){
         ViewGroup view = (ViewGroup)inflater.inflate(R.layout.activity_mychatlist, container, false);
 
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
+        dividerItemDecoration.setDrawable(this.getResources().getDrawable(R.drawable.recycler_line));
+
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(dividerItemDecoration);
 
         findmychat();
         return view;
@@ -54,8 +61,6 @@ public class MyChatListActivity extends Fragment implements MyChatAdapter.OnList
 
     public void findmychat() {
         final String[] key = new String[1];
-        String email;
-        String profile;
         final DocumentReference[] documentReference = new DocumentReference[1];
         final FirebaseFirestore[] db = {FirebaseFirestore.getInstance()};
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -74,6 +79,8 @@ public class MyChatListActivity extends Fragment implements MyChatAdapter.OnList
                         @Override
                         public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                             ChatProfile chatProfile = documentSnapshot.toObject(ChatProfile.class);
+                            LocalUserInfo localUserInfo = documentSnapshot.toObject(LocalUserInfo.class);
+                            chatProfile.setProfile(localUserInfo.getImageurl());
                             arrayList.add(chatProfile);
                             adapter = new MyChatAdapter(arrayList, getContext(), MyChatListActivity.this);
                             recyclerView.setAdapter(adapter);

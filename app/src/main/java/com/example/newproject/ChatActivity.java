@@ -4,10 +4,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,9 +38,9 @@ public class ChatActivity extends AppCompatActivity {
     private ArrayList<ChatInfo> chatInfoArrayList;
 
     private EditText et_textsend;
-    private Button btn_send;
+    private ImageView btn_send;
 
-    private String chat_userid, my_userid;
+    private String chat_userid, my_userid, nickname;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,9 +55,9 @@ public class ChatActivity extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         chat_userid = getIntent().getStringExtra("chat_userid");    //상대방 id
         my_userid = user.getUid();
+        nickname = getIntent().getStringExtra("nickname");
 
-        System.out.println("user: "+chat_userid);
-        System.out.println("my: "+my_userid);
+
         chat_databaseReference = FirebaseDatabase.getInstance("https://newproject-ab6cb-chat.firebaseio.com/").getReference(my_userid).child(chat_userid);
         chat_secondary_databseReference = FirebaseDatabase.getInstance("https://newproject-ab6cb-chat.firebaseio.com/").getReference(chat_userid).child(my_userid);
 
@@ -63,7 +65,7 @@ public class ChatActivity extends AppCompatActivity {
         et_textsend = findViewById(R.id.et_textsend);
 
         chatInfoArrayList= new ArrayList<>();
-        adapter = new ChatAdapter(chatInfoArrayList, ChatActivity.this);
+        adapter = new ChatAdapter(chatInfoArrayList, ChatActivity.this, my_userid);
         recyclerView.setAdapter(adapter);
 
         btn_send.setOnClickListener(new View.OnClickListener() {
@@ -72,14 +74,10 @@ public class ChatActivity extends AppCompatActivity {
                 String msg = et_textsend.getText().toString();
                 if (msg != null) {
                     ChatInfo chat = new ChatInfo();
-                    long now = System.currentTimeMillis();
-                    Date date = new Date(now);
-                    SimpleDateFormat sdfNow = new SimpleDateFormat("HH:mm");
-                    String formatDate = sdfNow.format(date);
-                    chat.setTime(formatDate);
-                    //chat.setProfile();
                     chat.setData(msg);
-                    chat.setUid(user.getUid());
+                    chat.setUid(my_userid);
+                    chat.setNickname(nickname);
+                    et_textsend.setText(" ");
                     chat_databaseReference.push().setValue(chat);
                     chat_secondary_databseReference.push().setValue(chat);
                 }

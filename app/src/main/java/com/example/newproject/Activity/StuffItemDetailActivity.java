@@ -33,7 +33,7 @@ public class StuffItemDetailActivity extends AppCompatActivity {
     public FirebaseUser user;
     public FirebaseDatabase database;
     public DatabaseReference databaseReference;
-    public String first, second, third, userid;
+    public String first, second, third, userid, name;
 
     private BottomNavigationView generalbottom;
 
@@ -47,6 +47,7 @@ public class StuffItemDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stuffdetail);
         stuffItemInfo = (StuffItemInfo)getIntent().getSerializableExtra("Serialize");
+        name = getIntent().getStringExtra("name");
 
         imageurl = (ImageView)findViewById(R.id.imageurl);
         localname = (TextView)findViewById(R.id.localname);
@@ -90,6 +91,7 @@ public class StuffItemDetailActivity extends AppCompatActivity {
         userid = stuffItemInfo.getUserid();
         Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtra("chat_userid", userid);
+        intent.putExtra("nickname", name);
         startActivity(intent);
     }
     public void findstuff(){

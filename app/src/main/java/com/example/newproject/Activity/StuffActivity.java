@@ -49,7 +49,7 @@ public class StuffActivity extends Fragment implements StuffItemAdapter.OnItemCl
     private FirebaseUser user;
     private FirebaseFirestore db;
 
-    private String first, second, third, phone, address;
+    private String first, second, third, name;
 
     TextView et_phone;
 
@@ -93,13 +93,14 @@ public class StuffActivity extends Fragment implements StuffItemAdapter.OnItemCl
                         first = generalUserInfo.getFirst();
                         second = generalUserInfo.getSecond();
                         third = generalUserInfo.getThird();
-                        findstuff(first, second, third);
+                        name = generalUserInfo.getName();
+                        findstuff(first, second, third, name);
                     }
                 }
             }
         });
     }
-    public void findstuff(final String first, final String second, final String third){
+    public void findstuff(final String first, final String second, final String third, final String name){
         database  = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
         databaseReference = database.getReference("stuff").child(first).child(second).child(third);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -127,6 +128,7 @@ public class StuffActivity extends Fragment implements StuffItemAdapter.OnItemCl
                         StuffItemAdapter.StuffItemViewHolder viewHolder = (StuffItemAdapter.StuffItemViewHolder)recyclerView_noti.findViewHolderForAdapterPosition(position);
                         Intent intent = new Intent(getContext(), StuffItemDetailActivity.class);
                         intent.putExtra("Serialize", arrayList_noti.get(position));
+                        intent.putExtra("name", name);
                         startActivity(intent);
                     }
                 });
@@ -141,6 +143,7 @@ public class StuffActivity extends Fragment implements StuffItemAdapter.OnItemCl
                         //(class에 serializable을 상속시켜놓음, stuffiteminfo를 직렬화하여 intent로 다음 액티비티에 넘김)
                         //원래는 intent로 넘겼지만, 객체 통째로 넘김
                         intent.putExtra("Serialize", arrayList.get(position));
+                        intent.putExtra("name", name);
                         startActivity(intent);
                     }
                 });

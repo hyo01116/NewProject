@@ -1,27 +1,25 @@
 package com.example.newproject.Class;
 
-public class ChatInfo {
-    //채팅시에는 유저 아이디, 정보, 시간, 사진 불러옴
-    private String uid;
-    private String data;
-    private String time;
-    private String profile;
+import java.io.Serializable;
 
-    public ChatInfo(String uid, String time, String profile, String data){
-        this.uid = uid;
+public class ChatInfo implements Serializable {
+    //채팅시에는 유저 아이디, 정보, 시간, 사진 불러옴
+    private String data;
+    private String nickname;
+    private String uid;
+
+    public ChatInfo(String uid, String nickname, String data){
         this.data = data;
-        this.profile = profile;
-        this.time = time;
+        this.uid = uid;
+        this.nickname = nickname;
     }
     public ChatInfo(){
 
     }
-    public String getUid(){ return this.uid; }
-    public void setUid(String uid){ this.uid = uid; }
+    public String getUid() {return this.uid; }
+    public void setUid(String uid){ this.uid = uid;}
     public String getData(){ return this.data; }
     public void setData(String data){ this.data = data;}
-    public String getTime(){ return this.time;}
-    public void setTime(String time){ this.time = time;}
-    public String getProfile(){ return this.profile;}
-    public void setProfile(String profile){ this.profile = profile;}
+    public String getNickname(){ return this.nickname; }
+    public void setNickname(String nickname){ this.nickname = nickname; }
 }
