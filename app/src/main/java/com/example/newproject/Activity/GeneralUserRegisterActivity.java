@@ -126,7 +126,7 @@ public class GeneralUserRegisterActivity extends AppCompatActivity {
                                         @Override
                                         public void onSuccess(Uri uri) {
                                             basicPath = uri;
-                                            GeneralUserInfo generalUserInfo = new GeneralUserInfo(email, name, phone, String.valueOf(basicPath), first, second, third);
+                                            GeneralUserInfo generalUserInfo = new GeneralUserInfo(email, name,String.valueOf(basicPath), first, second, third);
                                             UserLocationInfo userLocationInfo = new UserLocationInfo(first, second, third);
                                             userUpload(generalUserInfo, userLocationInfo, user.getUid());
 
@@ -145,7 +145,7 @@ public class GeneralUserRegisterActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                                     Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
-                                                    GeneralUserInfo generalUserInfo = new GeneralUserInfo(email, name, phone, String.valueOf(filePath), first,second, third);
+                                                    GeneralUserInfo generalUserInfo = new GeneralUserInfo(email, name,  String.valueOf(filePath), first,second, third);
                                                     UserLocationInfo userLocationInfo = new UserLocationInfo(first, second, third);
                                                     userUpload(generalUserInfo, userLocationInfo, user.getUid());
                                                 }

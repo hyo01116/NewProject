@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:title="북마크"
+        android:icon="@drawable/ic_baseline_star_border_24"
+        android:id="@+id/btn_like"/>
+    <item
+        android:title="전화"
+        android:icon="@drawable/ic_baseline_phone_24"
+        android:id="@+id/btn_phone"/>
+    <item
+        android:title="채팅하기"
+        android:icon="@drawable/ic_baseline_chat_24"
+        android:id="@+id/btn_chat"/>
+</menu>

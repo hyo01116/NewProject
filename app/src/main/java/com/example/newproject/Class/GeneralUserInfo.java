@@ -3,7 +3,6 @@ package com.example.newproject.Class;
 public class GeneralUserInfo {
     private String email;
     private String name;
-    private String phone;
     private String imageurl;
     private String first;
     private String second;
@@ -12,10 +11,9 @@ public class GeneralUserInfo {
     public GeneralUserInfo(){
 
     }
-    public GeneralUserInfo(String email, String name, String phone, String imageurl, String first, String second, String third){
+    public GeneralUserInfo(String email, String name, String imageurl, String first, String second, String third){
         this.email =email;
         this.name = name;
-        this.phone = phone;
         this.imageurl = imageurl;
         this.first = first;
         this.second = second;
@@ -27,9 +25,6 @@ public class GeneralUserInfo {
 
     public String getName(){ return name;}
     public void setName(String name){this.name = name;}
-
-    public String getPhone(){ return phone;}
-    public void setPhone(String phone){ this.phone = phone;}
 
     public String getImageurl(){ return imageurl;}
     public void setImageurl(String imageurl){ this.imageurl = imageurl;}

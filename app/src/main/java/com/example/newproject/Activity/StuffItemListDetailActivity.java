@@ -27,6 +27,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class StuffItemListDetailActivity extends AppCompatActivity {
 
@@ -134,11 +138,22 @@ public class StuffItemListDetailActivity extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         String localurl = null;
         String imageurl = null;     //사진 수정버튼 만들기
+        String noti = "0";
+        String datelimit="0";
+        String day;
+        String phone = "0109999999";
+        String address = "주소";
         String localname = ((TextView)findViewById(R.id.localname)).getText().toString();
         String textname = ((EditText) findViewById(R.id.textname)).getText().toString();
         String extratext = ((EditText) findViewById(R.id.extratext)).getText().toString();
+        Date currentTime = Calendar.getInstance().getTime();
+        SimpleDateFormat year = new SimpleDateFormat("yyyy", Locale.getDefault());
+        SimpleDateFormat month = new SimpleDateFormat("mm", Locale.getDefault());
+        SimpleDateFormat date = new SimpleDateFormat("dd", Locale.getDefault());
 
-        StuffItemInfo stuffItemInfo = new StuffItemInfo(user.getUid(), localname, localurl, imageurl, textname, extratext, "open", null);
+        day = year.format(currentTime) + "/"+ month.format(currentTime) +"/"+date.format(currentTime);
+
+        StuffItemInfo stuffItemInfo = new StuffItemInfo(user.getUid(), day, noti, datelimit, phone, address, localname, localurl, imageurl, textname, extratext, "open", null);
         database = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
         database.getReference("stuff").child(first).child(second).child(third).child(itemkey).setValue(stuffItemInfo);
     }

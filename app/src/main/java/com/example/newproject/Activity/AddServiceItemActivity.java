@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -23,6 +24,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -36,7 +38,9 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class AddServiceItemActivity extends AppCompatActivity {
     private FirebaseUser user;
@@ -46,7 +50,8 @@ public class AddServiceItemActivity extends AppCompatActivity {
     private FirebaseDatabase second_database;
     private DatabaseReference second_databaseReference;
 
-    private String localname, localurl, key;
+    private String localname, localurl, key, noti;
+    private BottomNavigationView generalbottom;
 
     ImageView imageView;
     private Uri filePath, basicPath;
@@ -57,14 +62,37 @@ public class AddServiceItemActivity extends AppCompatActivity {
         setContentView(R.layout.activity_addserviceitem);
 
         imageView = (ImageView)findViewById(R.id.imageView);
+        noti = "0";
 
         findViewById(R.id.btn_photo).setOnClickListener(onClickListener);
         findViewById(R.id.imageView).setOnClickListener(onClickListener);
-        findViewById(R.id.btn_save_add).setOnClickListener(onClickListener);
         findViewById(R.id.btn_gallery).setOnClickListener(onClickListener);
         findViewById(R.id.btn_update).setOnClickListener(onClickListener);
         findViewById(R.id.btn_delete).setOnClickListener(onClickListener);
         //수정, 삭제 버튼 추가
+
+        generalbottom = findViewById(R.id.navigation_view);
+        generalbottom.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()){
+                    case R.id.btn_noti:    //긴급
+                        if(noti.equals("0")){
+                            noti = "1";
+                            startToast("긴급 등록");
+                        }
+                        else{
+                            noti = "0";
+                            startToast("긴급 해제");
+                        }
+                        break;
+                    case R.id.btn_add:  //저장
+                        addservice();
+                        break;
+                }
+                return true;
+            }
+        });
     }
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -89,18 +117,6 @@ public class AddServiceItemActivity extends AppCompatActivity {
                     else{
                         cardView2.setVisibility(View.VISIBLE);
                     }
-                    break;
-                case R.id.btn_save_add:
-                    addservice();
-                    Handler timer = new Handler();
-                    /*timer.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Intent intent = new Intent(getContext(), LocalUserActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                        }
-                    }, 2000);*/
                     break;
                 case R.id.btn_gallery:
                     check();
@@ -142,10 +158,18 @@ public class AddServiceItemActivity extends AppCompatActivity {
     public void addserviceinfo(final String first, final String second, final String third, final String localname, final String localurl){
         final String textname = ((EditText)findViewById(R.id.textname)).getText().toString();
         final String extratext =((EditText)findViewById(R.id.extratext)).getText().toString();
+        final String datelimit= ((EditText)findViewById(R.id.date)).getText().toString();
+        final String day;
         user = FirebaseAuth.getInstance().getCurrentUser();
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReference();
+
+        Date currentTime = Calendar.getInstance().getTime();
+        SimpleDateFormat year = new SimpleDateFormat("yyyy", Locale.getDefault());
+        SimpleDateFormat month = new SimpleDateFormat("mm", Locale.getDefault());
+        SimpleDateFormat date = new SimpleDateFormat("dd", Locale.getDefault());
+        day = year.format(currentTime) + "/"+ month.format(currentTime) +"/"+date.format(currentTime);
 
         if(filePath == null){
             StorageReference pathReference = storageReference.child("images/p8.jpg");
@@ -153,7 +177,7 @@ public class AddServiceItemActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(Uri uri) {
                     basicPath = uri;
-                    ServiceItemInfo serviceItemInfo = new ServiceItemInfo(user.getUid(), localname, localurl, String.valueOf(basicPath), textname, extratext, "open", null);
+                    ServiceItemInfo serviceItemInfo = new ServiceItemInfo(user.getUid(), day, noti, datelimit, localname, localurl, String.valueOf(basicPath), textname, extratext, "open", null);
                     uploader(serviceItemInfo, first, second, third);
 
                 }
@@ -174,7 +198,7 @@ public class AddServiceItemActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
-                            ServiceItemInfo serviceItemInfo = new ServiceItemInfo(user.getUid(), localname, localurl, String.valueOf(filePath), textname, extratext, "open", null);
+                            ServiceItemInfo serviceItemInfo = new ServiceItemInfo(user.getUid(), day, noti, datelimit, localname, localurl, String.valueOf(filePath), textname, extratext, "open", null);
                             uploader(serviceItemInfo, first, second, third);
                         }
                     })

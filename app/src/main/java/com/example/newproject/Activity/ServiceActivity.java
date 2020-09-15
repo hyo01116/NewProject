@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +14,9 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.newproject.Adapter.StuffItemAdapter;
+import com.example.newproject.Class.GeneralUserInfo;
+import com.example.newproject.Class.StuffItemInfo;
 import com.example.newproject.Interface.OnServiceItemClickListener;
 import com.example.newproject.R;
 import com.example.newproject.Adapter.ServiceItemAdapter;
@@ -39,29 +43,40 @@ public class ServiceActivity extends Fragment implements ServiceItemAdapter.OnIt
     //그래서 다중상속을 사용할 수 없어서 intent로 아이템 키 값을 넘기고 다시 데이터베이스에 접근해서 아이템을 찾아오는 방식으로 세부사항 구현
     private RecyclerView recyclerView;
     private ServiceItemAdapter adapter;
+    private RecyclerView recyclerView_noti;
+    private ServiceItemAdapter adapter_noti;
     private RecyclerView.LayoutManager layoutManager;
 
     ArrayList<ServiceItemInfo> arrayList = new ArrayList<ServiceItemInfo>();
-    ArrayList<String> arrayList_key = new ArrayList<String>();
+    ArrayList<ServiceItemInfo> arrayList_noti = new ArrayList<ServiceItemInfo>();
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
     private FirebaseUser user;
     private FirebaseFirestore db;
 
-    private String first, second, third, userlevel;
+    private String first, second, third, phone;
+
+    TextView et_phone;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container, @NonNull Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.activity_service, container, false);
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
-        dividerItemDecoration.setDrawable(getContext().getResources().getDrawable(R.drawable.recyclerview_line));
+        dividerItemDecoration.setDrawable(getContext().getResources().getDrawable(R.drawable.recycler_line));
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        //recyclerView.addItemDecoration(dividerItemDecoration);
+        recyclerView.addItemDecoration(dividerItemDecoration);
+
+        recyclerView_noti = (RecyclerView) view.findViewById(R.id.recyclerView_noti);
+        recyclerView_noti.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(getContext());
+        recyclerView_noti.setLayoutManager(layoutManager);
+        recyclerView_noti.addItemDecoration(dividerItemDecoration);
 
         findLocationinfo();
 
@@ -81,17 +96,17 @@ public class ServiceActivity extends Fragment implements ServiceItemAdapter.OnIt
                     if (documentSnapshot.exists()) {
                         //userlocationinfo 객체를 생성해서 받아온 documentsnapshot에서 객체의 형태로 저장
                         //그다음 get메소드로 사용자의 위치 정보 받아옴
-                        UserLocationInfo userLocationInfo = documentSnapshot.toObject(UserLocationInfo.class);
-                        first = userLocationInfo.getFirst();
-                        second = userLocationInfo.getSecond();
-                        third = userLocationInfo.getThird();
-                        findservice();
+                        GeneralUserInfo generalUserInfo = documentSnapshot.toObject(GeneralUserInfo.class);
+                        first = generalUserInfo.getFirst();
+                        second = generalUserInfo.getSecond();
+                        third = generalUserInfo.getThird();
+                        findservice(first, second, third);
                     }
                 }
             }
         });
     }
-    public void findservice(){
+    public void findservice(String first, String second, String third){
         database  = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
         databaseReference = database.getReference("service").child(first).child(second).child(third);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -102,9 +117,28 @@ public class ServiceActivity extends Fragment implements ServiceItemAdapter.OnIt
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
                     ServiceItemInfo serviceItemInfo = dataSnapshot.getValue(ServiceItemInfo.class);
                     if(serviceItemInfo.getState().equals("open")){
-                        arrayList.add(serviceItemInfo);
+                        if(serviceItemInfo.getNoti().equals("1")){
+                            arrayList_noti.add(serviceItemInfo);
+                        }
+                        else {
+                            arrayList.add(serviceItemInfo);
+                        }
                     }
                 }
+                adapter_noti = new ServiceItemAdapter(arrayList_noti, getContext());
+                recyclerView_noti.setAdapter(adapter_noti);
+                adapter_noti.setOnItemClickListener(new OnServiceItemClickListener() {
+                    //인터페이스 사용 -> onitemclick을 무조건 재정의, 여기서는 클릭시 화면 이동 + 인텐트로 현재 정보를 넘기는것
+                    //인텐트는 화면간 정보전달
+                    @Override
+                    public void onItemClick(ServiceItemAdapter.ServiceItemViewHolder holder, View view, int position) {
+                        ServiceItemAdapter.ServiceItemViewHolder viewHolder = (ServiceItemAdapter.ServiceItemViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
+                        Intent intent = new Intent(getContext(), ServiceItemDetailActivity.class);
+                        intent.putExtra("parcel", arrayList.get(position));
+                        startActivity(intent);
+                    }
+                });
+
                 adapter = new ServiceItemAdapter(arrayList, getContext());
                 recyclerView.setAdapter(adapter);
                 adapter.setOnItemClickListener(new OnServiceItemClickListener() {
@@ -116,11 +150,6 @@ public class ServiceActivity extends Fragment implements ServiceItemAdapter.OnIt
                         Intent intent = new Intent(getContext(), ServiceItemDetailActivity.class);
                         intent.putExtra("parcel", arrayList.get(position));
                         startActivity(intent);
-                        /*intent.putExtra("itemkey", arrayList_key.get(position));
-                        intent.putExtra("userid", arrayList.get(position).getUserid());
-                        intent.putExtra("first", first);
-                        intent.putExtra("second",second);
-                        intent.putExtra("third", third);*/
                     }
                 });
             }

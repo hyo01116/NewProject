@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.newproject">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
@@ -14,6 +15,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name="com.google.firebase.auth.internal.FederatedSignInActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleInstance"
+            android:permission="com.google.firebase.auth.api.gms.permission.LAUNCH_FEDERATED_SIGN_IN"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            tools:replace="android:launchMode" />
         <activity android:name=".FindMapActivity"/>
         <activity android:name=".MyFeedDetailActivity"/>
         <activity android:name=".AddFeedActivity"/>
@@ -42,7 +51,16 @@
         <activity android:name=".Activity.ServiceItemListDetailActivity"/>
         <activity android:name=".Activity.MainActivity"/>
         <meta-data android:name="com.kakao.sdk.AppKey" android:value="94f6e20cdcbf24eacb09c76fb2fe43e1"/>
-
+        <service android:name="com.google.firebase.components.ComponentDiscoveryService" />
+        <meta-data
+            android:name="com.google.firebase.components:com.google.firebase.auth.FirebaseAuthRegistrar"
+            android:value="com.google.firebase.components.ComponentRegistrar" />
+        <meta-data
+            android:name="com.google.firebase.components:com.google.firebase.analytics.connector.internal.AnalyticsConnectorRegistrar"
+            android:value="com.google.firebase.components.ComponentRegistrar" />
+        <meta-data
+            android:name="com.google.firebase.components:com.google.firebase.iid.Registrar"
+            android:value="com.google.firebase.components.ComponentRegistrar" />
     </application>
 
 </manifest>

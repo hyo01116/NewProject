@@ -34,6 +34,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class ServiceItemListDetailActivity extends AppCompatActivity {
 
@@ -188,8 +192,19 @@ public class ServiceItemListDetailActivity extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         text_name = ((EditText) findViewById(R.id.textname)).getText().toString();
         extra_text = ((EditText) findViewById(R.id.extratext)).getText().toString();
+        String noti = "0";
+        String datelimit="0";
+        String day;
 
-        ServiceItemInfo serviceItemInfo = new ServiceItemInfo(user.getUid(), local_name, local_url, String.valueOf(filePath), text_name, extra_text, "open", null);
+        Date currentTime = Calendar.getInstance().getTime();
+        SimpleDateFormat year = new SimpleDateFormat("yyyy", Locale.getDefault());
+        SimpleDateFormat month = new SimpleDateFormat("mm", Locale.getDefault());
+        SimpleDateFormat date = new SimpleDateFormat("dd", Locale.getDefault());
+
+        day = year.format(currentTime) + "/"+ month.format(currentTime) +"/"+date.format(currentTime);
+
+
+        ServiceItemInfo serviceItemInfo = new ServiceItemInfo(user.getUid(), day, noti, datelimit, local_name, local_url, String.valueOf(filePath), text_name, extra_text, "open", null);
 
         database = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
         database.getReference("service").child(first).child(second).child(third).child(itemkey).setValue(serviceItemInfo);

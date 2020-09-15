@@ -28,6 +28,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -46,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         findViewById(R.id.btn_login).setOnClickListener(onClickListener);
-        findViewById(R.id.btn_register).setOnClickListener(onClickListener);
+        //findViewById(R.id.btn_register).setOnClickListener(onClickListener);
         getHashKey();
     }
     View.OnClickListener onClickListener = new View.OnClickListener(){
@@ -56,9 +57,9 @@ public class LoginActivity extends AppCompatActivity {
                 case R.id.btn_login:
                     login();
                     break;
-                case R.id.btn_register:
+                /*case R.id.btn_register:
                     startActivity(UserRegisterActivity.class);
-                    break;
+                    break;*/
             }
         }
     };
@@ -87,22 +88,19 @@ public class LoginActivity extends AppCompatActivity {
         String email = ((EditText) findViewById(R.id.et_email)).getText().toString();
         String password = ((EditText)findViewById(R.id.et_password)).getText().toString();
         mAuth = FirebaseAuth.getInstance();
-        if(email.length() > 0 && password.length() > 0){
+        if (email.length() > 0 && password.length() > 0) {
             mAuth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isSuccessful()){
+                            if (task.isSuccessful()) {
                                 findlogin();
-                                FirebaseUser user = mAuth.getCurrentUser();
-                            }
-                            else{
+                            } else {
                                 startToast("이메일 또는 비밀번호가 맞지않습니다.");
                             }
                         }
                     });
-        }
-        else {
+        } else {
             startToast("이메일 또는 비밀번호를 입력해주세요.");
         }
     }

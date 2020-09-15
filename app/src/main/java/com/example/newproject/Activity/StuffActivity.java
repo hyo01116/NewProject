@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.newproject.Class.GeneralUserInfo;
 import com.example.newproject.Class.StuffItemInfo;     //stuffiteminfo 클래스를 import 해와서 사용
 import com.example.newproject.Interface.OnStuffItemClickListener;
 import com.example.newproject.R;
@@ -35,16 +37,21 @@ import java.util.ArrayList;
 
 public class StuffActivity extends Fragment implements StuffItemAdapter.OnItemClickListener {
     private RecyclerView recyclerView;
+    private RecyclerView recyclerView_noti;
+    private StuffItemAdapter adapter_noti;
     private StuffItemAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
     ArrayList<StuffItemInfo> arrayList = new ArrayList<StuffItemInfo>();
+    ArrayList<StuffItemInfo> arrayList_noti = new ArrayList<StuffItemInfo>();
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
     private FirebaseUser user;
     private FirebaseFirestore db;
 
-    private String first, second, third, userlevel;
+    private String first, second, third, phone, address;
+
+    TextView et_phone;
 
     @Nullable
     @Override
@@ -52,13 +59,19 @@ public class StuffActivity extends Fragment implements StuffItemAdapter.OnItemCl
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.activity_stuff, container, false);
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
-        dividerItemDecoration.setDrawable(getContext().getResources().getDrawable(R.drawable.rec_lin));
+        dividerItemDecoration.setDrawable(getContext().getResources().getDrawable(R.drawable.recycler_line));
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(dividerItemDecoration);
+
+        recyclerView_noti = (RecyclerView) view.findViewById(R.id.recyclerView_noti);
+        recyclerView_noti.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(getContext());
+        recyclerView_noti.setLayoutManager(layoutManager);
+        recyclerView_noti.addItemDecoration(dividerItemDecoration);
 
         findLocationinfo();
 
@@ -76,10 +89,10 @@ public class StuffActivity extends Fragment implements StuffItemAdapter.OnItemCl
                 if (task.isSuccessful()) {
                     DocumentSnapshot documentSnapshot = task.getResult();
                     if (documentSnapshot.exists()) {
-                        UserLocationInfo userLocationInfo = documentSnapshot.toObject(UserLocationInfo.class);
-                        first = userLocationInfo.getFirst();
-                        second = userLocationInfo.getSecond();
-                        third = userLocationInfo.getThird();
+                        GeneralUserInfo generalUserInfo = documentSnapshot.toObject(GeneralUserInfo.class);
+                        first = generalUserInfo.getFirst();
+                        second = generalUserInfo.getSecond();
+                        third = generalUserInfo.getThird();
                         findstuff(first, second, third);
                     }
                 }
@@ -98,9 +111,26 @@ public class StuffActivity extends Fragment implements StuffItemAdapter.OnItemCl
                     StuffItemInfo stuffItemInfo = dataSnapshot.getValue(StuffItemInfo.class);
                     //getvalue를 통해 객체에 받아온 정보를 넣고 open 이라면 arraylist에 대입
                     if(stuffItemInfo.getState().equals("open")){
-                        arrayList.add(stuffItemInfo);
+                        if(stuffItemInfo.getNoti().equals("1")){
+                            arrayList_noti.add(stuffItemInfo);
+                        }
+                        else{
+                            arrayList.add(stuffItemInfo);
+                        }
                     }
                 }
+                adapter_noti = new StuffItemAdapter(arrayList_noti, getContext());
+                recyclerView_noti.setAdapter(adapter_noti);
+                adapter_noti.setOnItemClickListener(new OnStuffItemClickListener() {
+                    @Override
+                    public void onItemClick(StuffItemAdapter.StuffItemViewHolder holder, View view, int position) {
+                        StuffItemAdapter.StuffItemViewHolder viewHolder = (StuffItemAdapter.StuffItemViewHolder)recyclerView_noti.findViewHolderForAdapterPosition(position);
+                        Intent intent = new Intent(getContext(), StuffItemDetailActivity.class);
+                        intent.putExtra("Serialize", arrayList_noti.get(position));
+                        startActivity(intent);
+                    }
+                });
+
                 adapter = new StuffItemAdapter(arrayList, getContext());
                 recyclerView.setAdapter(adapter);
                 adapter.setOnItemClickListener(new OnStuffItemClickListener() {
@@ -115,7 +145,6 @@ public class StuffActivity extends Fragment implements StuffItemAdapter.OnItemCl
                     }
                 });
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 //사용자가 데이터를 읽을 권한이 없는 경우

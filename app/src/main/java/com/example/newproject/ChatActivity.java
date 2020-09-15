@@ -54,6 +54,8 @@ public class ChatActivity extends AppCompatActivity {
         chat_userid = getIntent().getStringExtra("chat_userid");    //상대방 id
         my_userid = user.getUid();
 
+        System.out.println("user: "+chat_userid);
+        System.out.println("my: "+my_userid);
         chat_databaseReference = FirebaseDatabase.getInstance("https://newproject-ab6cb-chat.firebaseio.com/").getReference(my_userid).child(chat_userid);
         chat_secondary_databseReference = FirebaseDatabase.getInstance("https://newproject-ab6cb-chat.firebaseio.com/").getReference(chat_userid).child(my_userid);
 

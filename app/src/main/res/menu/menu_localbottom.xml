@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:title="Home"
+    <item android:title="홈"
         android:id="@+id/bottom_feed"
         android:icon="@drawable/ic_baseline_home_24"
         app:showAsAction="always"/>
-    <item android:title="Find"
+    <item android:title="조회"
         android:id="@+id/bottom_home"
         android:icon="@drawable/ic_baseline_search_24"
         app:showAsAction="always"/>
 
-    <item android:title="Add"
+    <item android:title="글 작성"
         android:id="@+id/bottom_add"
         android:icon="@drawable/ic_baseline_add_24"
         app:showAsAction="always"/>
     
-    <item android:title="Mychat"
+    <item android:title="채팅"
         android:id="@+id/bottom_mychat"
         android:icon="@drawable/ic_baseline_chat_24"
         app:showAsAction="always"/>
     <item
         android:id="@+id/btn_mypage"
         android:icon="@drawable/ic_baseline_menu_24"
-        android:title="mypage"
+        android:title="마이페이지"
         app:showAsAction="always" />
 </menu>

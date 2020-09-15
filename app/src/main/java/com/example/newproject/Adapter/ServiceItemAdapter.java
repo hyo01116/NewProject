@@ -69,6 +69,8 @@ public class ServiceItemAdapter extends RecyclerView.Adapter<ServiceItemAdapter.
                 .into(holder.et_localurl);
         holder.et_localname.setText(arrayList.get(position).getLocalname());
         holder.et_textname.setText(arrayList.get(position).getTextname());
+        holder.et_datelimit.setText(arrayList.get(position).getDatelimit());
+        holder.et_day.setText(arrayList.get(position).getDay());
     }
 
     public int getItemCount() {
@@ -79,12 +81,16 @@ public class ServiceItemAdapter extends RecyclerView.Adapter<ServiceItemAdapter.
         ImageView et_localurl;
         TextView et_localname;
         TextView et_textname;
+        TextView et_datelimit;
+        TextView et_day;
 
         public ServiceItemViewHolder(@NonNull View itemView) {
             super(itemView);
             this.et_localurl = itemView.findViewById(R.id.et_localurl);
             this.et_localname = itemView.findViewById(R.id.et_localname);
             this.et_textname = itemView.findViewById(R.id.et_textname);
+            this.et_datelimit = itemView.findViewById(R.id.et_datelimit);
+            this.et_day = itemView.findViewById(R.id.et_day);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,6 +24,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -37,7 +39,9 @@ import com.google.firebase.storage.UploadTask;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class AddStuffItemActivity extends AppCompatActivity {    //activity로 바꾸기
     private FirebaseUser user;
@@ -48,13 +52,10 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
     private FirebaseDatabase second_database;
     private DatabaseReference second_databaseReference;
 
-    private String localname, address, localurl, key;
+    private String localname, localurl, key, noti, address, phone;
+    private BottomNavigationView generalbottom;
 
-    ImageView imageView;
-    Button btn_photo;
-    private StorageReference storageRef;
-    private ArrayList<String> pathList = new ArrayList<>();
-
+    ImageView btn_photo, imageView;
     private Uri filePath, basicPath;
 
     @Override
@@ -64,12 +65,36 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
 
         imageView = (ImageView)findViewById(R.id.imageView);
 
-        findViewById(R.id.imageView).setOnClickListener(onClickListener);
+        findViewById(R.id.imageView).setOnClickListener(onClickListener);   //아직 사진 안넣음
         findViewById(R.id.btn_photo).setOnClickListener(onClickListener);
-        findViewById(R.id.btn_save_add).setOnClickListener(onClickListener);
         findViewById(R.id.btn_gallery).setOnClickListener(onClickListener);
         findViewById(R.id.btn_update).setOnClickListener(onClickListener);
         findViewById(R.id.btn_delete).setOnClickListener(onClickListener);
+
+        noti = "0";
+
+        generalbottom = findViewById(R.id.navigation_view);
+        generalbottom.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()){
+                    case R.id.btn_noti:    //긴급
+                        if(noti.equals("0")){
+                            noti = "1";
+                            startToast("긴급 등록");
+                        }
+                        else{
+                            noti = "0";
+                            startToast("긴급 해제");
+                        }
+                        break;
+                    case R.id.btn_add:  //저장
+                        addstuff();
+                        break;
+                }
+                return true;
+            }
+        });
     }
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -92,18 +117,6 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
                     else{
                         cardView2.setVisibility(View.VISIBLE);
                     }
-                    break;
-                case R.id.btn_save_add:
-                    addstuff();
-                    /*Handler timer = new Handler();
-                    timer.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Intent intent = new Intent(this, LocalUserActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                        }
-                    }, 2000);*/
                     break;
                 case R.id.btn_gallery:
                     check();
@@ -135,19 +148,29 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
                         third[0] = localUserInfo.getThird();
                         localname = localUserInfo.getName();
                         localurl = localUserInfo.getImageurl();
-                        addstuffinfo(first[0], second[0], third[0], localname, localurl);
+                        address = localUserInfo.getAddress();
+                        phone = localUserInfo.getPhone();
+                        addstuffinfo(first[0], second[0], third[0], phone, address, localname, localurl);
                     }
                 }
             }
         });
     }
-    public void addstuffinfo(final String first, final String second, final String third, final String localname, final String localurl){
+    public void addstuffinfo(final String first, final String second, final String third, final String phone, final String address, final String localname, final String localurl){
         final String textname = ((EditText)findViewById(R.id.textname)).getText().toString();
+        final String datelimit= ((EditText)findViewById(R.id.date)).getText().toString();
         final String extratext =((EditText)findViewById(R.id.extratext)).getText().toString();
+        final String day;
         user = FirebaseAuth.getInstance().getCurrentUser();
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReference();
+
+        Date currentTime = Calendar.getInstance().getTime();
+        SimpleDateFormat year = new SimpleDateFormat("yyyy", Locale.getDefault());
+        SimpleDateFormat month = new SimpleDateFormat("mm", Locale.getDefault());
+        SimpleDateFormat date = new SimpleDateFormat("dd", Locale.getDefault());
+        day = year.format(currentTime) + "/"+ month.format(currentTime) +"/"+date.format(currentTime);
 
         if(filePath == null){
             StorageReference pathReference = storageReference.child("images/p8.jpg");
@@ -155,7 +178,7 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
                 @Override
                 public void onSuccess(Uri uri) {
                     basicPath = uri;
-                    StuffItemInfo stuffItemInfo = new StuffItemInfo(user.getUid(), localname, localurl, String.valueOf(basicPath), textname, extratext, "open", null);
+                    StuffItemInfo stuffItemInfo = new StuffItemInfo(user.getUid(), day, noti, datelimit, phone, address, localname, localurl, String.valueOf(basicPath), textname, extratext, "open", null);
                     uploader(stuffItemInfo, first, second, third);
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -175,7 +198,7 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
-                            StuffItemInfo stuffItemInfo = new StuffItemInfo(user.getUid(), localname, localurl, String.valueOf(filePath), textname, extratext, "open", null);
+                            StuffItemInfo stuffItemInfo = new StuffItemInfo(user.getUid(), day, noti, datelimit, phone, address, localname, localurl, String.valueOf(filePath), textname, extratext, "open", null);
                             uploader(stuffItemInfo, first, second, third);
                         }
                     })

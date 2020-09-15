@@ -112,6 +112,7 @@ public class LocalUserRegisterActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         final String email = ((EditText) findViewById(R.id.email)).getText().toString();
         final String password = ((EditText)findViewById(R.id.password)).getText().toString();
+        final String address = "주소";
         final String name= ((EditText) findViewById(R.id.name)).getText().toString();    //name에서 좌표로 변환시키기
         final String phone = ((EditText)findViewById(R.id.phone)).getText().toString();
         final String first = "서울특별시";
@@ -131,7 +132,7 @@ public class LocalUserRegisterActivity extends AppCompatActivity {
                                         @Override
                                         public void onSuccess(Uri uri) {
                                             basicPath = uri;
-                                            LocalUserInfo localUserInfo = new LocalUserInfo(email, name, phone, String.valueOf(basicPath), null, first, second, third);
+                                            LocalUserInfo localUserInfo = new LocalUserInfo(email, name, phone, address, String.valueOf(basicPath), null, first, second, third);
                                             UserLocationInfo userLocationInfo = new UserLocationInfo(first, second, third);
                                             userUpload(localUserInfo, userLocationInfo, user.getUid(), name);
                                         }
@@ -152,7 +153,7 @@ public class LocalUserRegisterActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                                     //Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
-                                                    LocalUserInfo localUserInfo = new LocalUserInfo(email, name, phone, String.valueOf(filePath), null, first, second, third);
+                                                    LocalUserInfo localUserInfo = new LocalUserInfo(email, name, phone, address, String.valueOf(filePath), null, first, second, third);
                                                     UserLocationInfo userLocationInfo = new UserLocationInfo(first, second, third);
                                                     userUpload(localUserInfo, userLocationInfo, user.getUid(), name);
                                                 }

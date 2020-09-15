@@ -1,68 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardCornerRadius="5dp"
-    android:layout_marginLeft="10dp"
     android:layout_marginTop="10dp"
-    android:layout_marginRight="10dp"
-    android:layout_marginBottom="10dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
     android:orientation="vertical">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
         <LinearLayout
-            android:layout_margin="10dp"
+            android:padding="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:background="@drawable/avatar"
-            android:id="@+id/localurl"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:scaleType="centerCrop"/>
-        <TextView
-            android:textStyle="bold"
-            android:id="@+id/localname"
-            android:layout_gravity="center"
-            android:layout_marginLeft="20dp"
-            android:textSize="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="localname"
-            android:textColor="@android:color/black"/>
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/localurl"
+                app:srcCompat="@drawable/ic_baseline_person_24"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="5dp" />
+            <TextView
+                android:textStyle="bold"
+                android:id="@+id/localname"
+                android:layout_gravity="center_vertical"
+                android:textSize="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="localname"
+                android:textColor="#000000"/>
         </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
         <ImageView
             android:scaleType="fitXY"
             android:id="@+id/picture"
             android:layout_width="match_parent"
-            android:layout_height="250dp"/>
-    </LinearLayout>
-        <LinearLayout
+            android:layout_height="300dp">
+        </ImageView>
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-        </LinearLayout>
-        <LinearLayout
-            android:layout_margin="10dp"
-            android:layout_width="match_parent"
+            android:padding="5dp">
+            <ImageView
+                android:id="@+id/like"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                app:srcCompat="@drawable/ic_baseline_turned_in_not_24"/>
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:id="@+id/comment"
+                app:srcCompat="@drawable/ic_baseline_email_24"
+                android:layout_marginStart="10dp"
+                android:layout_toRightOf="@+id/like"
+                android:layout_marginLeft="10dp" />
+            <ImageView
+                android:layout_marginRight="5dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:id="@+id/save"
+                app:srcCompat="@drawable/ic_baseline_phone_24"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true" />
+        </RelativeLayout>
+    <RelativeLayout
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="7dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:textSize="20dp"
-                android:textColor="@android:color/black"
-                android:id="@+id/extratext"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"/>
-        </LinearLayout>
-    </LinearLayout>
-
-</androidx.cardview.widget.CardView>
+            android:textStyle="bold"
+            android:id="@+id/address"
+            android:text="address"
+            android:textColor="#000000"/>
+        <TextView
+            android:layout_marginRight="5dp"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="italic"
+            android:id="@+id/day"
+            android:text="2020/02/01"
+            android:textColor="#000000"/>
+    </RelativeLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/phone"
+            android:text="phone-number"
+            android:textColor="#000000"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="5dp"
+            android:id="@+id/extratext"
+            android:text="description"
+            android:textColor="#000000"/>
+</LinearLayout>

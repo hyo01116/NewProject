@@ -6,6 +6,8 @@ public class FeedInfo {
     String localname;
     String picture;
     String extratext;
+    String address;
+    String phone;
 
     public FeedInfo(String userid, String localurl, String localname, String picture, String extratext) {
         this.userid = userid;
@@ -13,6 +15,7 @@ public class FeedInfo {
         this.localname = localname;
         this.picture = picture;
         this.extratext = extratext;
+
     }
     public FeedInfo(String userid, String localurl, String localname, String extratext){
 
@@ -36,4 +39,5 @@ public class FeedInfo {
 
     public String getExtratext(){ return extratext;}
     public void setExtratext(String extratext ){ this.extratext = extratext; }
+
 }

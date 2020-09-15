@@ -14,6 +14,8 @@ import com.example.newproject.R;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 public class StuffItemAdapter extends RecyclerView.Adapter<StuffItemAdapter.StuffItemViewHolder> implements OnStuffItemClickListener {
@@ -54,6 +56,8 @@ public class StuffItemAdapter extends RecyclerView.Adapter<StuffItemAdapter.Stuf
                 .into(holder.et_localurl);
         holder.et_localname.setText(arrayList.get(position).getLocalname());
         holder.et_textname.setText(arrayList.get(position).getTextname());
+        holder.et_datelimit.setText(arrayList.get(position).getDatelimit());
+        holder.et_day.setText(arrayList.get(position).getDay());
     }
 
     public int getItemCount() {
@@ -64,12 +68,16 @@ public class StuffItemAdapter extends RecyclerView.Adapter<StuffItemAdapter.Stuf
         ImageView et_localurl;
         TextView et_localname;
         TextView et_textname;
+        TextView et_datelimit;
+        TextView et_day;
 
         public StuffItemViewHolder(@NonNull View itemView) {
             super(itemView);
             this.et_localurl = itemView.findViewById(R.id.et_localurl);
             this.et_localname = itemView.findViewById(R.id.et_localname);
             this.et_textname = itemView.findViewById(R.id.et_textname);
+            this.et_datelimit = itemView.findViewById(R.id.et_datelimit);
+            this.et_day = itemView.findViewById(R.id.et_day);
 
             itemView.setOnClickListener(new View.OnClickListener(){
                 @Override

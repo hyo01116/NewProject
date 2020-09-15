@@ -90,9 +90,9 @@ public class ServiceItemDetailActivity extends AppCompatActivity {
         if(serviceItemInfo.getLocalurl() != null) {
             Glide.with(ServiceItemDetailActivity.this).load(serviceItemInfo.getLocalurl()).into(localurl);
         }
-        toolbar.setTitle(serviceItemInfo.getTextname());
+        toolbar.setTitle(serviceItemInfo.getLocalname());
         //textname.setText(serviceItemInfo.getTextname());
-        localname.setText(serviceItemInfo.getLocalname());
+        localname.setText(serviceItemInfo.getTextname());
         extratext.setText(serviceItemInfo.getExtratext());
     }
 

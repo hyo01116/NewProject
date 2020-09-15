@@ -6,6 +6,7 @@ public class LocalUserInfo {
     private String email;
     private String name;
     private String phone;
+    private String address;
     private String imageurl;
     private String first;
     private String second;
@@ -15,10 +16,11 @@ public class LocalUserInfo {
     public LocalUserInfo(){
 
     }
-    public LocalUserInfo(String email, String name, String phone, String imageurl, GeoPoint geoPoint, String first, String second, String third){
+    public LocalUserInfo(String email, String name, String phone, String address, String imageurl, GeoPoint geoPoint, String first, String second, String third){
         this.email =email;
         this.name = name;
         this.phone = phone;
+        this.address  = address;
         this.imageurl = imageurl;
         this.first = first;
         this.second = second;
@@ -33,6 +35,10 @@ public class LocalUserInfo {
 
     public String getPhone(){ return phone;}
     public void setPhone(String phone){ this.phone = phone;}
+
+    public String getAddress(){ return address; }
+    public void setAddress(String address){ this.address = address;}
+
 
     public String getImageurl(){ return imageurl;}
     public void setImageurl(String imageurl){ this.imageurl = imageurl;}

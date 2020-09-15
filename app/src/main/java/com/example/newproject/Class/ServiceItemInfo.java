@@ -16,11 +16,16 @@ public class ServiceItemInfo implements Parcelable {
     private String extratext;     //상세설명
     private String state;         //open, close
     private String key;           //키 -> 사용자별 작성글에서 key저장
-    //클래스의 필드의 값은 대부분 private로 지정
+    private String noti;
+    private String datelimit;
+    private String day;
 
-    public ServiceItemInfo(String userid, String localname, String localurl, String imageurl, String textname, String extratext, String state, String key) {
+    public ServiceItemInfo(String userid,String day, String noti, String datelimit, String localname, String localurl, String imageurl, String textname, String extratext, String state, String key) {
         this.userid = userid;
         this.localname = localname;
+        this.day = day;
+        this.noti = noti;
+        this.datelimit = datelimit;
         this.localurl = localurl;
         this.imageurl = imageurl;
         this.textname = textname;
@@ -37,15 +42,23 @@ public class ServiceItemInfo implements Parcelable {
     public String getUserid() {
         return userid;
     }
-
     public void setUserid(String userid) {
         this.userid = userid;
     }
 
+    public String getDay(){ return day;}
+    public void setDay(String day){ this.day = day; }
+
+    public String getNoti(){ return noti; }
+    public void setNoti(String noti){ this.noti = noti; }
+
+    public String getDatelimit(){ return datelimit; }
+    public void setDatelimit(String datelimit){ this.datelimit = datelimit; }
+
+
     public String getLocalname() {
         return localname;
     }
-
     public void setLocalname(String localname) {
         this.localname = localname;
     }
@@ -54,7 +67,6 @@ public class ServiceItemInfo implements Parcelable {
     public String getLocalurl() {
         return localurl;
     }
-
     public void setLocalurl(String localurl) {
         this.localurl = localurl;
     }
@@ -62,7 +74,6 @@ public class ServiceItemInfo implements Parcelable {
     public String getTextname() {
         return textname;
     }
-
     public void setTextname(String textname) {
         this.textname = textname;
     }
@@ -71,7 +82,6 @@ public class ServiceItemInfo implements Parcelable {
     public String getExtratext() {
         return extratext;
     }
-
     public void setExtratext(String extratext) {
         this.extratext = extratext;
     }
@@ -79,7 +89,6 @@ public class ServiceItemInfo implements Parcelable {
     public String getImageurl() {
         return imageurl;
     }
-
     public void setImageurl(String imageurl) {
         this.imageurl = imageurl;
     }
@@ -87,7 +96,6 @@ public class ServiceItemInfo implements Parcelable {
     public String getKey() {
         return key;
     }
-
     public void setKey(String key) {
         this.key = key;
     }
@@ -95,7 +103,6 @@ public class ServiceItemInfo implements Parcelable {
     public String getState() {
         return state;
     }
-
     public void setState(String state) {
         this.state = state;
     }
