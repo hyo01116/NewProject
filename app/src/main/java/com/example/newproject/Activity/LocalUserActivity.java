@@ -46,7 +46,7 @@ public class LocalUserActivity extends AppCompatActivity{    //작성자 사용�
                         hometransaction.addToBackStack(null);
                         hometransaction.commit();
                         break;
-                    case R.id.bottom_add:     //카드뷰로 stuff인지 service인지
+                    case R.id.bottom_add:
                         CardView cardView = findViewById(R.id.btn_cardview);
                         if(cardView.getVisibility() == View.VISIBLE){
                             cardView.setVisibility(View.GONE);
