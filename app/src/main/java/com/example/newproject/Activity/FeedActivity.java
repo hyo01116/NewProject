@@ -1,13 +1,18 @@
 package com.example.newproject.Activity;
 
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.loader.content.CursorLoader;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,9 +34,12 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class FeedActivity extends Fragment implements FeedAdapter.OnListItemSelectedInterface {
+
+    //개인별 봉사 추천기능 (분류해서 저장한 뒤 추천)
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -40,6 +48,7 @@ public class FeedActivity extends Fragment implements FeedAdapter.OnListItemSele
     private DatabaseReference databaseReference;
 
     Toolbar toolbar;
+    TextView toolbar_title;
 
     private String first, second, third;
     private ArrayList<FeedInfo> arrayList = new ArrayList<FeedInfo>();
@@ -53,6 +62,7 @@ public class FeedActivity extends Fragment implements FeedAdapter.OnListItemSele
 
         toolbar = (Toolbar)view.findViewById(R.id.top_toolbar);
 
+        toolbar_title = (TextView)view.findViewById(R.id.toolbar_title);
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext());
@@ -77,7 +87,7 @@ public class FeedActivity extends Fragment implements FeedAdapter.OnListItemSele
                         first = localUserInfo.getFirst();
                         second = localUserInfo.getSecond();
                         third = localUserInfo.getThird();
-                        toolbar.setTitle(third);       //중간정렬 안됨
+                        toolbar_title.setText(third);
                         findfeed(first, second, third);
                     }
                 }
@@ -86,6 +96,7 @@ public class FeedActivity extends Fragment implements FeedAdapter.OnListItemSele
     }
     public void findfeed(String first, String second, String third){
         final String[] key = {null};
+        final String[] path = new String[1];
         user = FirebaseAuth.getInstance().getCurrentUser();
         database = FirebaseDatabase.getInstance("https://newproject-ab6cb-feed.firebaseio.com/");
         databaseReference = database.getReference(first).child(second).child(third);

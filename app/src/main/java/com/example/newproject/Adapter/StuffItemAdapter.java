@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 public class StuffItemAdapter extends RecyclerView.Adapter<StuffItemAdapter.StuffItemViewHolder> implements OnStuffItemClickListener {
     //어댑터는 뷰와 데이터를 연결해주는 역할
-    private ArrayList<StuffItemInfo> arrayList;
+    private ArrayList<StuffItemInfo> mDataset;
     private Context context;
     private OnStuffItemClickListener listener;
 
@@ -36,9 +36,9 @@ public class StuffItemAdapter extends RecyclerView.Adapter<StuffItemAdapter.Stuf
             listener.onItemClick(holder, view, position);
         }
     }
-    public StuffItemAdapter(ArrayList<StuffItemInfo> arrayList, Context context){
+    public StuffItemAdapter(ArrayList<StuffItemInfo> mDataset, Context context){
         //context : 어플리케이션이나 객체의 현재 상태를 나타내는 것 (activity는 context를 상속받음)
-        this.arrayList = arrayList;
+        this.mDataset = mDataset;
         this.context = context;
     }
     @NonNull
@@ -51,17 +51,19 @@ public class StuffItemAdapter extends RecyclerView.Adapter<StuffItemAdapter.Stuf
    
     @Override
     public void onBindViewHolder(@NonNull final StuffItemViewHolder holder, int position) {
+        StuffItemInfo stuffItemInfo =  mDataset.get(position);
         Glide.with(holder.itemView)
-                .load(arrayList.get(position).getLocalurl())
+                .load(mDataset.get(position).getLocalurl())
+                .error(R.drawable.picture19)
                 .into(holder.et_localurl);
-        holder.et_localname.setText(arrayList.get(position).getLocalname());
-        holder.et_textname.setText(arrayList.get(position).getTextname());
-        holder.et_datelimit.setText(arrayList.get(position).getDatelimit());
-        holder.et_day.setText(arrayList.get(position).getDay());
+        holder.et_localname.setText(stuffItemInfo.getLocalname());
+        holder.et_textname.setText(stuffItemInfo.getTextname());
+        holder.et_datelimit.setText(stuffItemInfo.getDatelimit());
+        holder.et_day.setText(stuffItemInfo.getDay());
     }
 
     public int getItemCount() {
-        return arrayList.size();
+        return mDataset.size();
     }
 
     public class StuffItemViewHolder extends RecyclerView.ViewHolder {    //cloud firestore

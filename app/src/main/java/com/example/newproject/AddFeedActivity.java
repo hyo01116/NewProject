@@ -1,8 +1,11 @@
 package com.example.newproject;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -13,8 +16,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.newproject.Class.FeedInfo;
@@ -23,6 +29,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -34,6 +41,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.io.IOException;
 
 public class AddFeedActivity extends AppCompatActivity {     //피드 작성
@@ -97,6 +105,8 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
         final String[] third = new String[1];
         final String[] localurl = new String[1];
         final String[] localname = new String[1];
+        final String[] address = new String[1];
+        final String[] phone = new String[1];
         //feed db에 저장하기 위해서 first, second, third가 필요
         user = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -113,7 +123,9 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
                         first[0] = localUserInfo.getFirst();
                         second[0] = localUserInfo.getSecond();
                         third[0] = localUserInfo.getThird();
-                        save_feed(first[0], second[0], third[0], localurl[0], localname[0]);   //imageurl, name, first, second, third를 받아오기
+                        address[0] = localUserInfo.getAddress();
+                        phone[0] = localUserInfo.getPhone();
+                        save_feed(first[0], second[0], third[0], localurl[0], localname[0], address[0], phone[0]);   //imageurl, name, first, second, third를 받아오기
                     }
                 }
             }
@@ -141,21 +153,20 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
             }
         });
     }
-    public void save_feed(final String first, final String second, final String third, final String localurl, final String localname){    //feed db에 저장
+    public void save_feed(final String first, final String second, final String third, final String localurl, final String localname, final String address, final String phone){    //feed db에 저장
         //userid, localurl, localname, picture, extratext
         final String extratext = ((EditText)findViewById(R.id.extratext)).getText().toString();
         user = FirebaseAuth.getInstance().getCurrentUser();
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReference();
-
         if(filePath == null){
             StorageReference pathReference = storageReference.child("images/p8.jpg");
             pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
                     basicPath = uri;
-                    FeedInfo feedInfo = new FeedInfo(user.getUid(),localurl, localname, String.valueOf(basicPath),extratext);
+                    FeedInfo feedInfo = new FeedInfo(user.getUid(), localurl, localname, address, phone, String.valueOf(basicPath), extratext);
                     uploader(feedInfo, first, second, third);
 
                 }
@@ -176,7 +187,7 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
-                            FeedInfo feedInfo = new FeedInfo(user.getUid(), localurl, localname, String.valueOf(filePath), extratext);
+                            FeedInfo feedInfo = new FeedInfo(user.getUid(), localurl,  localname, address, phone, String.valueOf(filePath), extratext);
                             uploader(feedInfo, first, second, third);
                         }
                     })
@@ -230,23 +241,11 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
                     }
                 });
     }
-    public void check(){
+    public void check() {
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
         startActivityForResult(Intent.createChooser(intent, "이미지를 선택하세요."), 0);
-        /*if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)){
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-            }
-            else{
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-                startToast("권한 거부");
-            }
-        }
-        else{
-            startActivity(GalleryActivity.class);
-        }*/
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {   //왜 uri가 null인가 -> startActivityForResult를 안해줌
@@ -254,10 +253,7 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
         //request코드가 0이고 OK를 선택했고 data에 뭔가가 들어 있다면
         if(requestCode == 0 && resultCode == RESULT_OK){
             filePath = data.getData();
-            //Log.d("TAG", "uri:" + String.valueOf(filePath));
             try {
-                //Uri 파일을 Bitmap으로 만들어서 ImageView에 집어 넣는다.
-                Log.d("TAG", "uri:" + String.valueOf(filePath));
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 imageView.setImageBitmap(bitmap);
                 imageView.setVisibility(View.VISIBLE);

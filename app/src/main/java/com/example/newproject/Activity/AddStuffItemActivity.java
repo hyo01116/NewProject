@@ -36,6 +36,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -52,11 +53,11 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
     private FirebaseDatabase second_database;
     private DatabaseReference second_databaseReference;
 
-    private String localname, localurl, key, noti, address, phone;
+    private String localname, key, noti, address, phone, type_num;
     private BottomNavigationView generalbottom;
 
     ImageView btn_photo, imageView;
-    private Uri filePath, basicPath;
+    private Uri filePath, basicPath, localurl;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -66,18 +67,40 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
         imageView = (ImageView)findViewById(R.id.imageView);
 
         findViewById(R.id.imageView).setOnClickListener(onClickListener);   //아직 사진 안넣음
-        findViewById(R.id.btn_photo).setOnClickListener(onClickListener);
+
+        findViewById(R.id.btn_food).setOnClickListener(onClickListener);
+        findViewById(R.id.btn_wear).setOnClickListener(onClickListener);
+        findViewById(R.id.btn_item).setOnClickListener(onClickListener);
+        findViewById(R.id.btn_etc).setOnClickListener(onClickListener);
+
         findViewById(R.id.btn_gallery).setOnClickListener(onClickListener);
         findViewById(R.id.btn_update).setOnClickListener(onClickListener);
         findViewById(R.id.btn_delete).setOnClickListener(onClickListener);
 
         noti = "0";
+        type_num = "0";
 
         generalbottom = findViewById(R.id.navigation_view);
         generalbottom.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()){
+                    case R.id.btn_food:
+                        type_num = "1";
+                        startToast("분류 : 식품");
+                        break;
+                    case R.id.btn_wear:
+                        type_num = "2";
+                        startToast("분류 : 의류");
+                        break;
+                    case R.id.btn_item:
+                        type_num = "3";
+                        startToast("분류 : 생활용품");
+                        break;
+                    case R.id.btn_etc:
+                        type_num = "0";
+                        startToast("분류 : 기타");
+                        break;
                     case R.id.btn_noti:    //긴급
                         if(noti.equals("0")){
                             noti = "1";
@@ -100,15 +123,6 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
         @Override
         public void onClick(View v) {
             switch (v.getId()){
-                case R.id.btn_photo:
-                    CardView cardView = findViewById(R.id.btn_cardview);
-                    if(cardView.getVisibility() == View.VISIBLE){
-                        cardView.setVisibility(View.GONE);
-                    }
-                    else{
-                        cardView.setVisibility(View.VISIBLE);
-                    }
-                    break;
                 case R.id.imageView:
                     CardView cardView2 = findViewById(R.id.btn_cardview);
                     if(cardView2.getVisibility() == View.VISIBLE){
@@ -147,10 +161,10 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
                         second[0] = localUserInfo.getSecond();
                         third[0] = localUserInfo.getThird();
                         localname = localUserInfo.getName();
-                        localurl = localUserInfo.getImageurl();
+                        localurl = Uri.parse(localUserInfo.getImageurl());
                         address = localUserInfo.getAddress();
                         phone = localUserInfo.getPhone();
-                        addstuffinfo(first[0], second[0], third[0], phone, address, localname, localurl);
+                        addstuffinfo(first[0], second[0], third[0], phone, address, localname, String.valueOf(localurl));
                     }
                 }
             }
@@ -209,30 +223,6 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
                             Toast.makeText(getApplicationContext(), "업로드 실패!", Toast.LENGTH_SHORT).show();
                         }
                     });
-            /*try{
-                InputStream stream = new FileInputStream(new File(String.valueOf(filePath)));
-                final UploadTask uploadTask = mounatainImagesRef.putStream(stream);
-                uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                    @Override
-                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                        if(!task.isSuccessful()){
-                            throw task.getException();
-                        }
-                        return mounatainImagesRef.getDownloadUrl();
-                    }
-                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Uri> task) {
-                        if(task.isSuccessful()){
-                            filePath = task.getResult();
-                            StuffItemInfo stuffItemInfo = new StuffItemInfo(user.getUid(), localname, address, localurl, String.valueOf(filePath), textname, stuff, datelimit, extratext, "open", null);
-                            uploader(stuffItemInfo, first, second, third);
-                        }
-                    }
-                });
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }*/
         }
     }
     public void uploader(final StuffItemInfo stuffItemInfo, String first, String second, String third){
@@ -280,20 +270,8 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
     public void check(){
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
         startActivityForResult(Intent.createChooser(intent, "이미지를 선택하세요."), 0);
-        /*if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)){
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-            }
-            else{
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-                startToast("권한 거부");
-            }
-        }
-        else{
-            startActivity(GalleryActivity.class);
-        }*/
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {   //왜 uri가 null인가 -> startActivityForResult를 안해줌
@@ -301,13 +279,10 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
         //request코드가 0이고 OK를 선택했고 data에 뭔가가 들어 있다면
         if(requestCode == 0 && resultCode == RESULT_OK){
             filePath = data.getData();
-            Log.d("TAG", "uri:" + String.valueOf(filePath));
             try {
-                //Uri 파일을 Bitmap으로 만들어서 ImageView에 집어 넣는다.
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 imageView.setImageBitmap(bitmap);
                 imageView.setVisibility(View.VISIBLE);
-
             } catch (IOException e) {
                 e.printStackTrace();
             }

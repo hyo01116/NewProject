@@ -4,6 +4,8 @@ import android.app.Service;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.File;
+
 public class ServiceItemInfo implements Parcelable {
     //parcelable사용시에는 writetoparcel, describecontent를 정의
     //봉사활동에 대한 정보를 데이터베이스에서 받아올 때 사용하는 객체

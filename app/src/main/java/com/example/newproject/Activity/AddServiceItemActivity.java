@@ -36,6 +36,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -50,9 +51,8 @@ public class AddServiceItemActivity extends AppCompatActivity {
     private FirebaseDatabase second_database;
     private DatabaseReference second_databaseReference;
 
-    private String localname, localurl, key, noti;
+    private String localurl, localname, key, noti, type_num;
     private BottomNavigationView generalbottom;
-
     ImageView imageView;
     private Uri filePath, basicPath;
 
@@ -63,9 +63,15 @@ public class AddServiceItemActivity extends AppCompatActivity {
 
         imageView = (ImageView)findViewById(R.id.imageView);
         noti = "0";
+        type_num = "0";
 
         findViewById(R.id.btn_photo).setOnClickListener(onClickListener);
-        findViewById(R.id.imageView).setOnClickListener(onClickListener);
+
+        findViewById(R.id.btn_med).setOnClickListener(onClickListener);
+        findViewById(R.id.btn_emer).setOnClickListener(onClickListener);
+        findViewById(R.id.btn_loc).setOnClickListener(onClickListener);
+        findViewById(R.id.btn_etc).setOnClickListener(onClickListener);
+
         findViewById(R.id.btn_gallery).setOnClickListener(onClickListener);
         findViewById(R.id.btn_update).setOnClickListener(onClickListener);
         findViewById(R.id.btn_delete).setOnClickListener(onClickListener);
@@ -76,6 +82,18 @@ public class AddServiceItemActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()){
+                    case R.id.btn_med:
+                        type_num = "1";
+                        break;
+                    case R.id.btn_emer:
+                        type_num = "2";
+                        break;
+                    case R.id.btn_loc:
+                        type_num = "3";
+                        break;
+                    case R.id.btn_etc:
+                        type_num = "0";
+                        break;
                     case R.id.btn_noti:    //긴급
                         if(noti.equals("0")){
                             noti = "1";
@@ -280,20 +298,8 @@ public class AddServiceItemActivity extends AppCompatActivity {
     public void check(){
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
         startActivityForResult(Intent.createChooser(intent, "이미지를 선택하세요."), 0);
-        /*if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)){
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-            }
-            else{
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-                startToast("권한 거부");
-            }
-        }
-        else{
-            startActivity(GalleryActivity.class);
-        }*/
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {   //왜 uri가 null인가 -> startActivityForResult를 안해줌

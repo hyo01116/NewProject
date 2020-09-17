@@ -17,35 +17,50 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:visibility="gone"
         android:elevation="10dp"
-        app:cardCornerRadius="15dp">
+        app:cardCornerRadius="10dp">
 
         <LinearLayout
+            android:background="@color/toolbarcolor"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            android:visibility="gone"
             android:padding="5dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textSize="20dp"
+                android:textSize="17dp"
                 android:textStyle="bold"
                 android:textColor="@android:color/background_dark"
                 android:text="게시글 작성"/>
-
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/recycler_line"/>
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
             <Button
                 android:id="@+id/btn_stuff"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/background_dark"
-                android:text="물품" />
+                android:layout_height="60dp"
+                android:backgroundTint="#FFFFFF"
+                android:textColor="#000000"
+                android:textSize="15dp"
+                android:text="기부 물품" >
+            </Button>
+            </LinearLayout>
             <Button
                 android:id="@+id/btn_service"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/background_dark"
+                android:layout_height="60dp"
+                android:textColor="#000000"
+                android:backgroundTint="#FFFFFF"
+                android:textSize="15dp"
                 android:text="봉사활동" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>

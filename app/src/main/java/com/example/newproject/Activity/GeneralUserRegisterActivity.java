@@ -188,7 +188,7 @@ public class GeneralUserRegisterActivity extends AppCompatActivity {
     public void check(){
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
         startActivityForResult(Intent.createChooser(intent, "이미지를 선택하세요."), 0);
     }
 

@@ -36,17 +36,17 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp">
+            android:padding="10dp">
             <ImageView
                 android:id="@+id/like"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                app:srcCompat="@drawable/ic_baseline_turned_in_not_24"/>
+                app:srcCompat="@drawable/ic_baseline_favorite_border_24"/>
             <ImageView
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:id="@+id/comment"
-                app:srcCompat="@drawable/ic_baseline_email_24"
+                app:srcCompat="@drawable/ic_baseline_chat_24"
                 android:layout_marginStart="10dp"
                 android:layout_toRightOf="@+id/like"
                 android:layout_marginLeft="10dp" />
@@ -70,7 +70,7 @@
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:id="@+id/address"
-            android:text="address"
+            android:text="주소"
             android:textColor="#000000"/>
         <TextView
             android:layout_marginRight="5dp"
@@ -79,7 +79,7 @@
             android:layout_height="wrap_content"
             android:textStyle="italic"
             android:id="@+id/day"
-            android:text="2020/02/01"
+            android:text="2020/10/01"
             android:textColor="#000000"/>
     </RelativeLayout>
         <TextView

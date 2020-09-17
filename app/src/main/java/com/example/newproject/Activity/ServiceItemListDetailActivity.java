@@ -33,6 +33,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -45,7 +46,7 @@ public class ServiceItemListDetailActivity extends AppCompatActivity {
     private ImageView imageurl, localurl;
     private TextView textname, localname, extratext;
 
-    private String first, second, third, local_url, local_name, extra_text, text_name;
+    private String first, second, third, local_name, extra_text, text_name;
 
     private FirebaseUser user;
     private FirebaseDatabase database;
@@ -54,7 +55,7 @@ public class ServiceItemListDetailActivity extends AppCompatActivity {
     private FirebaseDatabase second_database;
     private DatabaseReference second_databaseReference;
 
-    private Uri filePath;
+    private Uri filePath, local_url;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -131,7 +132,7 @@ public class ServiceItemListDetailActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ServiceItemInfo serviceItemInfo = snapshot.getValue(ServiceItemInfo.class);
-                local_url = serviceItemInfo.getLocalurl();
+                local_url = Uri.parse(serviceItemInfo.getLocalurl());
                 local_name = serviceItemInfo.getLocalname();
                 filePath = Uri.parse(serviceItemInfo.getImageurl());
                 extra_text = serviceItemInfo.getExtratext();
@@ -204,7 +205,7 @@ public class ServiceItemListDetailActivity extends AppCompatActivity {
         day = year.format(currentTime) + "/"+ month.format(currentTime) +"/"+date.format(currentTime);
 
 
-        ServiceItemInfo serviceItemInfo = new ServiceItemInfo(user.getUid(), day, noti, datelimit, local_name, local_url, String.valueOf(filePath), text_name, extra_text, "open", null);
+        ServiceItemInfo serviceItemInfo = new ServiceItemInfo(user.getUid(), day, noti, datelimit, local_name, String.valueOf(local_url), String.valueOf(filePath), text_name, extra_text, "open", null);
 
         database = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
         database.getReference("service").child(first).child(second).child(third).child(itemkey).setValue(serviceItemInfo);
@@ -212,7 +213,7 @@ public class ServiceItemListDetailActivity extends AppCompatActivity {
     public void check(){
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
         startActivityForResult(Intent.createChooser(intent, "이미지를 선택하세요."), 0);
     }
     @Override

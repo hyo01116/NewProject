@@ -2,6 +2,8 @@ package com.example.newproject.Class;
 
 import com.google.firebase.firestore.GeoPoint;
 
+import java.io.File;
+
 public class LocalUserInfo {
     private String email;
     private String name;

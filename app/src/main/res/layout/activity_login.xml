@@ -3,14 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearLayout"
+    android:layout_marginTop="60dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".Activity.LoginActivity">
 
     <LinearLayout
+        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="20dp"
         android:orientation="vertical">
@@ -19,16 +21,16 @@
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_gravity="center"
-            app:srcCompat="@drawable/ic_baseline_person_24" />
+            app:srcCompat="@drawable/icon" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:text="Welcome to APP"
-            android:textColor="@color/textInputOutlineColor"
-            android:textSize="20dp"
+            android:text="슬기로운 돌봄생활"
+            android:textColor="#000000"
+            android:textSize="25dp"
             android:textStyle="bold" />
 
         <EditText
@@ -36,9 +38,9 @@
             android:layout_width="330dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="60dp"
             android:autofillHints=""
-            android:hint="Email Address"
+            android:hint="이메일"
             android:inputType="textEmailAddress"
             android:padding="15dp"
             android:textColorHint="@color/textInputOutlineColor"
@@ -50,34 +52,29 @@
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
             android:drawablePadding="10dp"
-            android:hint="Password"
+            android:hint="비밀번호"
             android:inputType="textEmailAddress"
             android:padding="15dp"
             android:textColorHint="@color/textInputOutlineColor"
             android:textStyle="bold"
             android:autofillHints="" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="35dp"
-            android:fontFamily="sans-serif-medium"
-            android:text="Forgot Password"
-            android:textColor="@color/textInputOutlineColor"
-            android:textSize="20dp" />
-
-        <ImageButton
+        <Button
             android:id="@+id/btn_login"
-            android:background="@drawable/btn_bg"
+            android:backgroundTint="#FFFFEB3B"
             android:layout_width="330dp"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
-            android:text="Login" />
-
-
-
+            android:textColor="#000000"
+            android:text="로그인" />
     </LinearLayout>
+    <Button
+        android:backgroundTint="#FFFFFF"
+        android:id="@+id/btn_register"
+        android:layout_width="match_parent"
+        android:textColor="#000000"
+        android:text="회원가입"
+        android:layout_height="60dp"/>
+
 </LinearLayout>

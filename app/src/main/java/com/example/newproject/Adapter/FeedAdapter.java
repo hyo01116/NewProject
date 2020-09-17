@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.newproject.Class.FeedInfo;
 import com.example.newproject.R;
-
 import java.util.ArrayList;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder> {
@@ -43,12 +42,13 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
         Glide.with(holder.itemView)
                 .load(mDataset.get(position).getLocalurl())
                 .into(holder.localurl);
-        Glide.with(holder.itemView)
+        Glide.with(holder.itemView.getContext())
                 .load(mDataset.get(position).getPicture())
                 .into(holder.picture);
-
         holder.localname.setText(feedInfo.getLocalname());
         holder.extratext.setText(feedInfo.getExtratext());
+        holder.address.setText(feedInfo.getAddress());
+        holder.phone.setText(feedInfo.getPhone());
     }
 
     @Override
@@ -61,6 +61,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
         ImageView picture;
         TextView localname;
         TextView extratext;
+        TextView address;
+        TextView phone;
 
         public FeedViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -68,7 +70,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
             this.picture = itemView.findViewById(R.id.picture);
             this.localname = itemView.findViewById(R.id.localname);
             this.extratext = itemView.findViewById(R.id.extratext);
-
+            this.address = itemView.findViewById(R.id.address);
+            this.phone = itemView.findViewById(R.id.phone);
             itemView.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v){

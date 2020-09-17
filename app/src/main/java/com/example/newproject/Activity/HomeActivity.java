@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
@@ -28,6 +29,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class HomeActivity extends Fragment {
     private FirebaseUser user;
     Toolbar toolbar;
+    TextView toolbar_title;
 
     private String first, second, third;
 
@@ -49,6 +51,7 @@ public class HomeActivity extends Fragment {
         viewPager.setAdapter(myPagerAdapter);
 
         toolbar = (Toolbar)view.findViewById(R.id.top_toolbar);
+        toolbar_title = (TextView)view.findViewById(R.id.toolbar_title);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -97,7 +100,7 @@ public class HomeActivity extends Fragment {
                         first = localUserInfo.getFirst();
                         second = localUserInfo.getSecond();
                         third = localUserInfo.getThird();
-                        toolbar.setTitle(third);       //중간정렬 안됨
+                        toolbar_title.setText(third);
                     }
                 }
             }

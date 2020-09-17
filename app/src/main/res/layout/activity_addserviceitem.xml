@@ -32,47 +32,68 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/recycler_line"/>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="220dp"
                 android:orientation="vertical"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginLeft="5dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:text="사진 추가"/>
-                <LinearLayout
-                    android:layout_marginTop="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <ImageView
-                        android:id="@+id/btn_photo"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        app:srcCompat="@drawable/ic_baseline_photo_camera_24"></ImageView>
-                    <ImageView
-                        android:layout_marginLeft="5dp"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:id="@+id/imageView"/>
-                </LinearLayout>
+                <ImageView
+                    android:layout_gravity="center"
+                    android:layout_marginTop="80dp"
+                    android:id="@+id/btn_photo"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    app:srcCompat="@drawable/ic_baseline_photo_camera_24"></ImageView>
             </LinearLayout>
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@color/toolbarcolor"
                 android:background="@drawable/recycler_line"/>
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+                <LinearLayout
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <Button
+                        android:id="@+id/btn_med"
+                        android:layout_marginLeft="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="보건의료"
+                        android:textColor="@color/colorPrimary"
+                        android:backgroundTint="@color/toolbarcolor"/>
+                    <Button
+                        android:id="@+id/btn_emer"
+                        android:layout_marginLeft="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="재해/재난"
+                        android:textColor="@color/colorPrimary"
+                        android:backgroundTint="@color/toolbarcolor"/>
+                    <Button
+                        android:id="@+id/btn_loc"
+                        android:layout_marginLeft="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="농/어촌"
+                        android:textColor="@color/colorPrimary"
+                        android:backgroundTint="@color/toolbarcolor"/>
+                    <Button
+                        android:id="@+id/btn_etc"
+                        android:layout_marginLeft="10dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="기타"
+                        android:textColor="@color/colorPrimary"
+                        android:backgroundTint="@color/toolbarcolor"/>
+                </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -80,18 +101,14 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginLeft="5dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textStyle="bold"
-                        android:textSize="15dp"
-                        android:text="제목"/>
                     <EditText
+                        android:layout_marginTop="10dp"
                         android:id="@+id/textname"
-                        android:textSize="10dp"
+                        android:textSize="15dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="제목을 작성해주세요"/>
+                        android:textColorHint="@color/colorPrimary"
+                        android:hint="제목"/>
                 </LinearLayout>
                 <ImageView
                     android:layout_width="match_parent"
@@ -104,18 +121,14 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginLeft="5dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textStyle="bold"
-                        android:textSize="15dp"
-                        android:text="모집기간"/>
                     <EditText
-                        android:id="@+id/date"
-                        android:textSize="10dp"
+                        android:layout_marginTop="10dp"
+                        android:id="@+id/datelimit"
+                        android:textSize="15dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="모집기간을 작성해주세요"/>
+                        android:textColorHint="@color/colorPrimary"
+                        android:hint="모집기간"/>
                 </LinearLayout>
                 <ImageView
                     android:layout_width="match_parent"
@@ -128,18 +141,16 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginLeft="5dp">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textStyle="bold"
-                        android:textSize="15dp"
-                        android:text="기타"/>
                     <EditText
+                        android:inputType="textMultiLine"
+                        android:layout_marginTop="10dp"
                         android:id="@+id/extratext"
-                        android:textSize="10dp"
+                        android:textSize="15dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="기타 내용을 작성해주세요(상세설명)"/>
+                        android:textColorHint="@color/colorPrimary"
+                        android:lines="7"
+                        android:hint="기타(기부가 필요한 물품을 상세히 작성해주세요)"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

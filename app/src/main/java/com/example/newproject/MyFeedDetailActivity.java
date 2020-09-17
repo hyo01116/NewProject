@@ -32,6 +32,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.File;
 import java.io.IOException;
 
 public class MyFeedDetailActivity extends AppCompatActivity {
@@ -44,8 +45,11 @@ public class MyFeedDetailActivity extends AppCompatActivity {
     ImageView localurl, imageView;
     TextView localname, extratext;
 
-    private String first, second, third, key, secondkey;
-    private String local_url, local_name, picture, text;
+    private String first, second, third, key, secondkey, address, phone;
+    private String local_url;
+    private String local_name;
+    private String picture;
+    private String text;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -124,6 +128,8 @@ public class MyFeedDetailActivity extends AppCompatActivity {
                         third = localUserInfo.getThird();
                         local_url = localUserInfo.getImageurl();
                         local_name = localUserInfo.getName();
+                        address = localUserInfo.getAddress();
+                        phone = localUserInfo.getPhone();
                         findfeed(first, second, third);
                     }
                 }
@@ -143,6 +149,8 @@ public class MyFeedDetailActivity extends AppCompatActivity {
                 local_name = feedInfo.getLocalname();
                 filePath = Uri.parse(feedInfo.getPicture());
                 text = feedInfo.getExtratext();
+                address = feedInfo.getAddress();
+                phone = feedInfo.getPhone();
                 localname.setText(feedInfo.getLocalname());
                 extratext.setText(feedInfo.getExtratext());
             }
@@ -164,7 +172,7 @@ public class MyFeedDetailActivity extends AppCompatActivity {
     public void update() {
         user = FirebaseAuth.getInstance().getCurrentUser();
         text = ((EditText) findViewById(R.id.extratext)).getText().toString();
-        FeedInfo feedInfo = new FeedInfo(user.getUid(), local_url, local_name, String.valueOf(filePath), text);
+        FeedInfo feedInfo = new FeedInfo(user.getUid(), local_url, local_name, address, phone, String.valueOf(filePath), text);
 
         database = FirebaseDatabase.getInstance("https://newproject-ab6cb-feed.firebaseio.com/");
         database.getReference().child(first).child(second).child(third).child(key).setValue(feedInfo);
@@ -172,7 +180,7 @@ public class MyFeedDetailActivity extends AppCompatActivity {
     public void check(){
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
         startActivityForResult(Intent.createChooser(intent, "이미지를 선택하세요."), 0);
     }
     @Override

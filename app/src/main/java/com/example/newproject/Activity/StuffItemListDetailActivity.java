@@ -26,6 +26,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -136,8 +137,8 @@ public class StuffItemListDetailActivity extends AppCompatActivity {
     }
     public void update() {
         user = FirebaseAuth.getInstance().getCurrentUser();
-        String localurl = null;
-        String imageurl = null;     //사진 수정버튼 만들기
+        File localurl = null;
+        File imageurl = null;     //사진 수정버튼 만들기
         String noti = "0";
         String datelimit="0";
         String day;
@@ -153,14 +154,14 @@ public class StuffItemListDetailActivity extends AppCompatActivity {
 
         day = year.format(currentTime) + "/"+ month.format(currentTime) +"/"+date.format(currentTime);
 
-        StuffItemInfo stuffItemInfo = new StuffItemInfo(user.getUid(), day, noti, datelimit, phone, address, localname, localurl, imageurl, textname, extratext, "open", null);
+        StuffItemInfo stuffItemInfo = new StuffItemInfo(user.getUid(), day, noti, datelimit, phone, address, localname, String.valueOf(localurl), String.valueOf(imageurl), textname, extratext, "open", null);
         database = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
         database.getReference("stuff").child(first).child(second).child(third).child(itemkey).setValue(stuffItemInfo);
     }
     public void check(){
         Intent intent = new Intent();
         intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
         startActivityForResult(Intent.createChooser(intent, "이미지를 선택하세요."), 0);
         /*if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
             if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)){

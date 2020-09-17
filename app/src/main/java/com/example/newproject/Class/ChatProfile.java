@@ -1,5 +1,7 @@
 package com.example.newproject.Class;
 
+import java.io.File;
+
 public class ChatProfile {
     //현재 나와 채팅을 진행하고 있는 사람의 리스트를 나타낼때, 사진과 이름 보여줌
     String profile;

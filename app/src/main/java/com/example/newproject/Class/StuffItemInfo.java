@@ -1,5 +1,6 @@
 package com.example.newproject.Class;
 
+import java.io.File;
 import java.io.Serializable;
 
 public class StuffItemInfo implements Serializable {

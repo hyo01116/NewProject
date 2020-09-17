@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         findViewById(R.id.btn_login).setOnClickListener(onClickListener);
-        //findViewById(R.id.btn_register).setOnClickListener(onClickListener);
+        findViewById(R.id.btn_register).setOnClickListener(onClickListener);
         getHashKey();
     }
     View.OnClickListener onClickListener = new View.OnClickListener(){
@@ -57,9 +57,9 @@ public class LoginActivity extends AppCompatActivity {
                 case R.id.btn_login:
                     login();
                     break;
-                /*case R.id.btn_register:
+                case R.id.btn_register:
                     startActivity(UserRegisterActivity.class);
-                    break;*/
+                    break;
             }
         }
     };

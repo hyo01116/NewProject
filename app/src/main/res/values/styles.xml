@@ -5,6 +5,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:statusBarColor">#FFFFEB3B</item>
     </style>
     <style name="Theme.Shrine" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
