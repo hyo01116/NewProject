@@ -51,10 +51,11 @@ public class AddServiceItemActivity extends AppCompatActivity {
     private FirebaseDatabase second_database;
     private DatabaseReference second_databaseReference;
 
-    private String localurl, localname, key, noti, type_num;
+    private String localname, key, noti, type_num, address, phone;
     private BottomNavigationView generalbottom;
+
     ImageView imageView;
-    private Uri filePath, basicPath;
+    private Uri filePath, basicPath, localurl;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -62,6 +63,8 @@ public class AddServiceItemActivity extends AppCompatActivity {
         setContentView(R.layout.activity_addserviceitem);
 
         imageView = (ImageView)findViewById(R.id.imageView);
+        findViewById(R.id.imageView).setOnClickListener(onClickListener);   //아직 사진 안넣음
+
         noti = "0";
         type_num = "0";
 
@@ -114,15 +117,6 @@ public class AddServiceItemActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             switch (v.getId()){
-                /*case R.id.btn_photo:
-                    CardView cardView = findViewById(R.id.btn_cardview);
-                    if(cardView.getVisibility() == View.VISIBLE){
-                        cardView.setVisibility(View.GONE);
-                    }
-                    else{
-                        cardView.setVisibility(View.VISIBLE);
-                    }
-                    break;*/
                 case R.id.imageView:
                     CardView cardView2 = findViewById(R.id.btn_cardview);
                     if(cardView2.getVisibility() == View.VISIBLE){
@@ -162,14 +156,16 @@ public class AddServiceItemActivity extends AppCompatActivity {
                         second[0] = localUserInfo.getSecond();
                         third[0] = localUserInfo.getThird();
                         localname = localUserInfo.getName();
-                        localurl = localUserInfo.getImageurl();
-                        addserviceinfo(first[0], second[0], third[0], localname, localurl);
+                        localurl = Uri.parse(localUserInfo.getImageurl());
+                        address = localUserInfo.getAddress();
+                        phone = localUserInfo.getPhone();
+                        addserviceinfo(first[0], second[0], third[0], address, phone, localname, String.valueOf(localurl));
                     }
                 }
             }
         });
     }
-    public void addserviceinfo(final String first, final String second, final String third, final String localname, final String localurl){
+    public void addserviceinfo(final String first, final String second, final String third, final String address, final String phone, final String localname, final String localurl){
         final String textname = ((EditText)findViewById(R.id.textname)).getText().toString();
         final String extratext =((EditText)findViewById(R.id.extratext)).getText().toString();
         final String datelimit= ((EditText)findViewById(R.id.date)).getText().toString();
@@ -191,7 +187,7 @@ public class AddServiceItemActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(Uri uri) {
                     basicPath = uri;
-                    ServiceItemInfo serviceItemInfo = new ServiceItemInfo(user.getUid(), day, noti, datelimit, localname, localurl, String.valueOf(basicPath), textname, extratext, "open", null);
+                    ServiceItemInfo serviceItemInfo = new ServiceItemInfo(user.getUid(), type_num, address, phone, day, noti, datelimit, localname, localurl, String.valueOf(basicPath), textname, extratext, "open", null);
                     uploader(serviceItemInfo, first, second, third);
 
                 }
@@ -212,7 +208,7 @@ public class AddServiceItemActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
-                            ServiceItemInfo serviceItemInfo = new ServiceItemInfo(user.getUid(), day, noti, datelimit, localname, localurl, String.valueOf(filePath), textname, extratext, "open", null);
+                            ServiceItemInfo serviceItemInfo = new ServiceItemInfo(user.getUid(), type_num, address, phone, day, noti, datelimit, localname, localurl, String.valueOf(filePath), textname, extratext, "open", null);
                             uploader(serviceItemInfo, first, second, third);
                         }
                     })

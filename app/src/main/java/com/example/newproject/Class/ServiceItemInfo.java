@@ -10,7 +10,10 @@ public class ServiceItemInfo implements Parcelable {
     //parcelable사용시에는 writetoparcel, describecontent를 정의
     //봉사활동에 대한 정보를 데이터베이스에서 받아올 때 사용하는 객체
     //클래스는 다른 액티비티에서 정의해서 사용함
+    private String type_num;
     private String userid;        //cloud 접근해서 (사진, 회사명, 주소)
+    private String address;
+    private String phone;
     private String localname;     //회사명
     private String localurl;      //cloud이미지
     private String imageurl;      //이미지 (없으면 cloud이미지)
@@ -22,9 +25,12 @@ public class ServiceItemInfo implements Parcelable {
     private String datelimit;
     private String day;
 
-    public ServiceItemInfo(String userid,String day, String noti, String datelimit, String localname, String localurl, String imageurl, String textname, String extratext, String state, String key) {
+    public ServiceItemInfo(String userid, String type_num, String address, String phone, String day, String noti, String datelimit, String localname, String localurl, String imageurl, String textname, String extratext, String state, String key) {
         this.userid = userid;
         this.localname = localname;
+        this.type_num = type_num;
+        this.address = address;
+        this.phone = phone;
         this.day = day;
         this.noti = noti;
         this.datelimit = datelimit;
@@ -47,6 +53,15 @@ public class ServiceItemInfo implements Parcelable {
     public void setUserid(String userid) {
         this.userid = userid;
     }
+
+    public String getAddress(){ return address; }
+    public void setAddress(String address){ this.address = address;}
+
+    public String getPhone(){ return phone;}
+    public void setPhone(String phone){ this.phone = phone; }
+
+    public String getType_num(){ return type_num; }
+    public void setType_num(String type_num){ this.type_num = type_num; }
 
     public String getDay(){ return day;}
     public void setDay(String day){ this.day = day; }

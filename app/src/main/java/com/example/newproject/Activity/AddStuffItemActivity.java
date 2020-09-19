@@ -46,7 +46,6 @@ import java.util.Locale;
 
 public class AddStuffItemActivity extends AppCompatActivity {    //activity로 바꾸기
     private FirebaseUser user;
-    private FirebaseFirestore db;
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
 
@@ -56,7 +55,7 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
     private String localname, key, noti, address, phone, type_num;
     private BottomNavigationView generalbottom;
 
-    ImageView btn_photo, imageView;
+    ImageView  imageView;
     private Uri filePath, basicPath, localurl;
 
     @Override

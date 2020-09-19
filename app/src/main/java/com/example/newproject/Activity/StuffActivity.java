@@ -205,7 +205,9 @@ public class StuffActivity extends Fragment implements StuffItemAdapter.OnItemCl
                     StuffItemInfo stuffItemInfo = dataSnapshot.getValue(StuffItemInfo.class);
                     //getvalue를 통해 객체에 받아온 정보를 넣고 open 이라면 arraylist에 대입
                     if(stuffItemInfo.getType_num().equals(type) && stuffItemInfo.getNoti().equals("0")){
-                        arrayList_type.add(stuffItemInfo);
+                        if(stuffItemInfo.getState().equals("open")) {
+                            arrayList_type.add(stuffItemInfo);
+                        }
                     }
                 }
                 recyclerView.removeAllViewsInLayout();

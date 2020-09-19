@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,7 @@ import com.example.newproject.Adapter.StuffItemAdapter;
 import com.example.newproject.Class.GeneralUserInfo;
 import com.example.newproject.Class.StuffItemInfo;
 import com.example.newproject.Interface.OnServiceItemClickListener;
+import com.example.newproject.Interface.OnStuffItemClickListener;
 import com.example.newproject.R;
 import com.example.newproject.Adapter.ServiceItemAdapter;
 import com.example.newproject.Class.ServiceItemInfo;
@@ -54,10 +56,11 @@ public class ServiceActivity extends Fragment implements ServiceItemAdapter.OnIt
     private FirebaseUser user;
     private FirebaseFirestore db;
 
-    private String first, second, third, phone;
+    private String first, second, third, name;
 
     TextView et_phone;
 
+    Button btn_med, btn_emer, btn_loc, btn_etc;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container, @NonNull Bundle savedInstanceState) {
@@ -78,11 +81,43 @@ public class ServiceActivity extends Fragment implements ServiceItemAdapter.OnIt
         recyclerView_noti.setLayoutManager(layoutManager);
         recyclerView_noti.addItemDecoration(dividerItemDecoration);
 
-        findLocationinfo();
+        btn_med = (Button) view.findViewById(R.id.btn_med);
+        btn_med.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findLocationinfo("1");
+                System.out.println("med");
+            }
+        });
+        btn_emer = (Button) view.findViewById(R.id.btn_emer);
+        btn_emer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findLocationinfo("2");
+                System.out.println("emer");
+            }
+        });
+        btn_loc = (Button) view.findViewById(R.id.btn_loc);
+        btn_loc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findLocationinfo("3");
+                System.out.println("loc");
+            }
+        });
+        btn_etc = (Button) view.findViewById(R.id.btn_etc);
+        btn_etc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findLocationinfo("0");
+                System.out.println("etc");
+            }
+        });
+        findLocationinfo("-1");
 
         return view;
     }
-    public void findLocationinfo() {
+    public void findLocationinfo(String type) {
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
         database = FirebaseDatabase.getInstance();
@@ -100,13 +135,71 @@ public class ServiceActivity extends Fragment implements ServiceItemAdapter.OnIt
                         first = generalUserInfo.getFirst();
                         second = generalUserInfo.getSecond();
                         third = generalUserInfo.getThird();
-                        findservice(first, second, third);
+                        name = generalUserInfo.getName();
+                        if(type.equals("-1")){
+                            findnoti(first, second, third);
+                        }
+                        else {
+                            findservice(type, first, second, third, name);
+                        }
                     }
                 }
             }
         });
     }
-    public void findservice(String first, String second, String third){
+    public void findnoti(final String first, final String second, final String third) {
+        database = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
+        databaseReference = database.getReference("service").child(first).child(second).child(third);
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            //리스너를 사용해서 해당시점의 datasnapshot를 받아옴
+            // ondatachange 콜백함수를 사용해서 이벤트가 발생하면 다른 메소드를 호출해서 알려줌 -> 데이터 존재하면 화면에 나타냄
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    ServiceItemInfo serviceItemInfo = dataSnapshot.getValue(ServiceItemInfo.class);
+                    //getvalue를 통해 객체에 받아온 정보를 넣고 open 이라면 arraylist에 대입
+                    if (serviceItemInfo.getState().equals("open")) {
+                        if (serviceItemInfo.getNoti().equals("1")) {
+                            arrayList_noti.add(serviceItemInfo);
+                        } else {
+                            arrayList.add(serviceItemInfo);
+                        }
+                    }
+                }
+                adapter_noti = new ServiceItemAdapter(arrayList_noti, getContext());
+                recyclerView_noti.setAdapter(adapter_noti);
+                adapter_noti.setOnItemClickListener(new OnServiceItemClickListener() {
+                    @Override
+                    public void onItemClick(ServiceItemAdapter.ServiceItemViewHolder holder, View view, int position) {
+                        ServiceItemAdapter.ServiceItemViewHolder viewHolder = (ServiceItemAdapter.ServiceItemViewHolder) recyclerView_noti.findViewHolderForAdapterPosition(position);
+                        Intent intent = new Intent(getContext(), ServiceItemDetailActivity.class);
+                        intent.putExtra("Serialize", arrayList_noti.get(position));
+                        intent.putExtra("name", name);
+                        startActivity(intent);
+                    }
+                });
+                adapter = new ServiceItemAdapter(arrayList, getContext());
+                recyclerView.setAdapter(adapter);
+                adapter.setOnItemClickListener(new OnServiceItemClickListener() {
+                    @Override
+                    public void onItemClick(ServiceItemAdapter.ServiceItemViewHolder holder, View view, int position) {
+                        ServiceItemAdapter.ServiceItemViewHolder viewHolder = (ServiceItemAdapter.ServiceItemViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
+                        Intent intent = new Intent(getContext(), ServiceItemDetailActivity.class);
+                        intent.putExtra("Serialize", arrayList.get(position));
+                        intent.putExtra("name", name);
+                        startActivity(intent);
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                //사용자가 데이터를 읽을 권한이 없는 경우
+            }
+        });
+    }
+    public void findservice(final String type, final String first, final String second, final String third, final String name){
+        ArrayList<ServiceItemInfo> arrayList_type = new ArrayList<ServiceItemInfo>();
         database  = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
         databaseReference = database.getReference("service").child(first).child(second).child(third);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -116,47 +209,29 @@ public class ServiceActivity extends Fragment implements ServiceItemAdapter.OnIt
                 //비동기 해결하기 위해 구현하는데 그 이유는 다른 일 하다가 데이터가 준비되면 콜백함수내의 작업들을 실행하라고
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
                     ServiceItemInfo serviceItemInfo = dataSnapshot.getValue(ServiceItemInfo.class);
-                    if(serviceItemInfo.getState().equals("open")){
+                    if(serviceItemInfo.getType_num().equals(type) && serviceItemInfo.getNoti().equals("1")){
                         if(serviceItemInfo.getNoti().equals("1")){
-                            arrayList_noti.add(serviceItemInfo);
-                        }
-                        else {
-                            arrayList.add(serviceItemInfo);
+                            arrayList_type.add(serviceItemInfo);
                         }
                     }
                 }
-                adapter_noti = new ServiceItemAdapter(arrayList_noti, getContext());
-                recyclerView_noti.setAdapter(adapter_noti);
-                adapter_noti.setOnItemClickListener(new OnServiceItemClickListener() {
-                    //인터페이스 사용 -> onitemclick을 무조건 재정의, 여기서는 클릭시 화면 이동 + 인텐트로 현재 정보를 넘기는것
-                    //인텐트는 화면간 정보전달
-                    @Override
-                    public void onItemClick(ServiceItemAdapter.ServiceItemViewHolder holder, View view, int position) {
-                        ServiceItemAdapter.ServiceItemViewHolder viewHolder = (ServiceItemAdapter.ServiceItemViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
-                        Intent intent = new Intent(getContext(), ServiceItemDetailActivity.class);
-                        intent.putExtra("parcel", arrayList.get(position));
-                        startActivity(intent);
-                    }
-                });
-
-                adapter = new ServiceItemAdapter(arrayList, getContext());
+                recyclerView.removeAllViewsInLayout();
+                adapter = new ServiceItemAdapter(arrayList_type, getContext());
                 recyclerView.setAdapter(adapter);
                 adapter.setOnItemClickListener(new OnServiceItemClickListener() {
-                    //인터페이스 사용 -> onitemclick을 무조건 재정의, 여기서는 클릭시 화면 이동 + 인텐트로 현재 정보를 넘기는것
-                    //인텐트는 화면간 정보전달
                     @Override
                     public void onItemClick(ServiceItemAdapter.ServiceItemViewHolder holder, View view, int position) {
                         ServiceItemAdapter.ServiceItemViewHolder viewHolder = (ServiceItemAdapter.ServiceItemViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
                         Intent intent = new Intent(getContext(), ServiceItemDetailActivity.class);
-                        intent.putExtra("parcel", arrayList.get(position));
+                        intent.putExtra("Serialize", arrayList_type.get(position));
+                        intent.putExtra("name", name);
                         startActivity(intent);
                     }
                 });
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                //사용자가 데이터를 읽을 권한이 없는 경우
             }
         });
     }

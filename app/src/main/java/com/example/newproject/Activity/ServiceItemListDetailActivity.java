@@ -46,7 +46,7 @@ public class ServiceItemListDetailActivity extends AppCompatActivity {
     private ImageView imageurl, localurl;
     private TextView textname, localname, extratext;
 
-    private String first, second, third, local_name, extra_text, text_name;
+    private String first, second, third, local_name, extra_text, text_name, type_num, address, phone;
 
     private FirebaseUser user;
     private FirebaseDatabase database;
@@ -137,6 +137,9 @@ public class ServiceItemListDetailActivity extends AppCompatActivity {
                 filePath = Uri.parse(serviceItemInfo.getImageurl());
                 extra_text = serviceItemInfo.getExtratext();
                 text_name = serviceItemInfo.getTextname();
+                type_num = serviceItemInfo.getType_num();
+                address = serviceItemInfo.getAddress();
+                phone = serviceItemInfo.getPhone();
                 Glide.with(ServiceItemListDetailActivity.this).load(serviceItemInfo.getImageurl()).into(imageurl);
                 Glide.with(ServiceItemListDetailActivity.this).load(serviceItemInfo.getLocalurl()).into(localurl);
                 textname.setText(serviceItemInfo.getTextname());
@@ -205,7 +208,7 @@ public class ServiceItemListDetailActivity extends AppCompatActivity {
         day = year.format(currentTime) + "/"+ month.format(currentTime) +"/"+date.format(currentTime);
 
 
-        ServiceItemInfo serviceItemInfo = new ServiceItemInfo(user.getUid(), day, noti, datelimit, local_name, String.valueOf(local_url), String.valueOf(filePath), text_name, extra_text, "open", null);
+        ServiceItemInfo serviceItemInfo = new ServiceItemInfo(user.getUid(), type_num, address, phone, day, noti, datelimit, local_name, String.valueOf(local_url), String.valueOf(filePath), text_name, extra_text, "open", null);
 
         database = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
         database.getReference("service").child(first).child(second).child(third).child(itemkey).setValue(serviceItemInfo);
