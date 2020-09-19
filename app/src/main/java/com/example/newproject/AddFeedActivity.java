@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -24,11 +25,13 @@ import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.newproject.Class.FeedInfo;
+import com.example.newproject.Class.GeneralUserInfo;
 import com.example.newproject.Class.LocalUserInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -51,24 +54,44 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
     private DatabaseReference databaseReference, second_databaseReference;
 
     private Uri filePath, basicPath;
+    private BottomNavigationView bottomNavigationView;
+    ImageView imageView;
 
-    ImageView imageView, localurl;
-    TextView localname;
+    private String user_level = "1";
 
+    MyApplication myApplication;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_addfeed);
 
         findViewById(R.id.imageView).setOnClickListener(onClickListener);
-        findViewById(R.id.btn_add).setOnClickListener(onClickListener);
         findViewById(R.id.btn_gallery).setOnClickListener(onClickListener);
         findViewById(R.id.btn_update).setOnClickListener(onClickListener);
         findViewById(R.id.btn_delete).setOnClickListener(onClickListener);
         imageView = (ImageView)findViewById(R.id.imageView);
-        localurl = (ImageView)findViewById(R.id.localurl);
-        localname = (TextView)findViewById(R.id.localname);
 
+        myApplication = (MyApplication) getApplicationContext();
+        user_level = myApplication.getUser_level();
+        System.out.println(user_level);
+
+        bottomNavigationView = findViewById(R.id.btn_navi);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.btn_add:
+                        if(user_level.equals("1")){
+                            findgeneraluserinfo();
+                        }
+                        else {
+                            findlocaluserinfo();
+                        }
+                    break;
+                }
+                return false;
+            }
+        });
         setuserinfo();
     }
     View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -84,9 +107,6 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
                         cardView.setVisibility(View.VISIBLE);
                     }
                     break;
-                case R.id.btn_add:
-                    finduserinfo();
-                    break;
                 case R.id.btn_gallery:
                     check();
                     break;
@@ -99,7 +119,38 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
             }
         }
     };
-    public void finduserinfo(){     //feed db에 저장 후 key를 받아서 write db에 저장
+    public void findgeneraluserinfo(){
+        final String[] first = new String[1];
+        final String[] second = new String[1];
+        final String[] third = new String[1];
+        final String[] generalurl = new String[1];
+        final String[] generalname = new String[1];
+        final String[] address = new String[1];
+        final String[] phone = new String[1];
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final DocumentReference documentReference = db.collection("Users").document(user.getUid());    //현재 로그인한 사람의 주소
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot documentSnapshot = task.getResult();
+                    if (documentSnapshot.exists()) {
+                        GeneralUserInfo generalUserInfo = documentSnapshot.toObject(GeneralUserInfo.class);
+                        generalurl[0] = generalUserInfo.getImageurl();
+                        generalname[0] = generalUserInfo.getName();
+                        first[0] = generalUserInfo.getFirst();
+                        second[0] = generalUserInfo.getSecond();
+                        third[0] = generalUserInfo.getThird();
+                        address[0] = "1";      //level = 1은 주소와 전화번호 표시 안함
+                        phone[0] = "1";
+                        save_feed(first[0], second[0], third[0], generalurl[0], generalname[0], address[0], phone[0]);   //imageurl, name, first, second, third를 받아오기
+                    }
+                }
+            }
+        });
+    }
+    public void findlocaluserinfo(){     //feed db에 저장 후 key를 받아서 write db에 저장
         final String[] first = new String[1];
         final String[] second = new String[1];
         final String[] third = new String[1];
@@ -146,8 +197,6 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
                         LocalUserInfo localUserInfo = documentSnapshot.toObject(LocalUserInfo.class);
                         picture[0] = localUserInfo.getImageurl();
                         name[0] = localUserInfo.getName();
-                        localname.setText(name[0]);
-                        Glide.with(AddFeedActivity.this).load(picture[0]).into(localurl);
                     }
                 }
             }
@@ -242,18 +291,21 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
                 });
     }
     public void check() {
-        Intent intent = new Intent();
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("image/*");
-        intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
         startActivityForResult(Intent.createChooser(intent, "이미지를 선택하세요."), 0);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {   //왜 uri가 null인가 -> startActivityForResult를 안해줌
         super.onActivityResult(requestCode, resultCode, data);
-        //request코드가 0이고 OK를 선택했고 data에 뭔가가 들어 있다면
         if(requestCode == 0 && resultCode == RESULT_OK){
             filePath = data.getData();
+            final int takeFlags = data.getFlags()
+                    & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             try {
+                this.getContentResolver().takePersistableUriPermission(filePath, takeFlags);
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 imageView.setImageBitmap(bitmap);
                 imageView.setVisibility(View.VISIBLE);

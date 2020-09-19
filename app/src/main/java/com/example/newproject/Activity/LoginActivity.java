@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.newproject.MyApplication;
 import com.example.newproject.R;
 import com.example.newproject.Class.UserLevelInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -38,8 +39,9 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseUser user;
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
-
     private String userlevel;
+
+    MyApplication myApplication;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,8 @@ public class LoginActivity extends AppCompatActivity {
 
         findViewById(R.id.btn_login).setOnClickListener(onClickListener);
         findViewById(R.id.btn_register).setOnClickListener(onClickListener);
+
+        myApplication = (MyApplication) getApplicationContext();
         getHashKey();
     }
     View.OnClickListener onClickListener = new View.OnClickListener(){
@@ -113,9 +117,11 @@ public class LoginActivity extends AppCompatActivity {
                 UserLevelInfo userLevelInfo = snapshot.getValue(UserLevelInfo.class);
                 userlevel = userLevelInfo.getLevel();
                 if(userlevel.equals("1")){
+                    myApplication.setUser_level("1");
                     startActivity(GeneralUserActivity.class);
                 }
                 else if(userlevel.equals("2")){
+                    myApplication.setUser_level("2");
                     startActivity(LocalUserActivity.class);
                 }
             }

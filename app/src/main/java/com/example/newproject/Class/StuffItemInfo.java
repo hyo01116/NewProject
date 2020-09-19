@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.Serializable;
 
 public class StuffItemInfo implements Serializable {
+    private String type_num;
     private String userid;        //cloud 접근해서 (사진, 회사명, 주소)
     private String localname;     //회사명
     private String phone;
@@ -18,8 +19,9 @@ public class StuffItemInfo implements Serializable {
     private String datelimit;
     private String day;
 
-    public StuffItemInfo(String userid, String day, String noti, String datelimit, String phone, String address, String localname, String localurl, String imageurl, String textname, String extratext, String state, String key) {
+    public StuffItemInfo(String type_num, String userid, String day, String noti, String datelimit, String phone, String address, String localname, String localurl, String imageurl, String textname, String extratext, String state, String key) {
         this.userid = userid;
+        this.type_num = type_num;
         this.day = day;
         this.noti = noti;
         this.datelimit = datelimit;
@@ -37,6 +39,10 @@ public class StuffItemInfo implements Serializable {
     public StuffItemInfo(){
 
     }
+
+
+    public String getType_num() {return type_num;}
+    public void setType_num(String type_num){ this.type_num = type_num; }
 
     public String getUserid() { return userid; }
     public void setUserid(String userid) { this.userid = userid; }

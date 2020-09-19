@@ -7,8 +7,8 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/top_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white">
+        android:layout_height="60dp"
+        android:background="@color/toolbarcolor">
         <TextView
             android:textStyle="bold"
             android:layout_width="wrap_content"
@@ -19,44 +19,12 @@
             android:textSize="20dp">
         </TextView>
     </androidx.appcompat.widget.Toolbar>
-    <androidx.cardview.widget.CardView
-        app:cardCornerRadius="4dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginBottom="10dp">
     <LinearLayout
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <LinearLayout
-            android:layout_margin="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:background="@drawable/avatar"
-            android:id="@+id/localurl"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-
-            android:scaleType="centerCrop"/>
-        <TextView
-            android:textStyle="bold"
-            android:id="@+id/localname"
-            android:layout_gravity="center"
-            android:layout_marginLeft="20dp"
-            android:textSize="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="localname"
-            android:textColor="@android:color/black"/>
-        </LinearLayout>
     <LinearLayout
-        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -64,13 +32,13 @@
             android:scaleType="fitXY"
             android:id="@+id/imageView"
             android:layout_width="match_parent"
-            android:layout_height="220dp"/>
+            android:layout_height="300dp"/>
     </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-        </LinearLayout>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/toolbarcolor"
+        android:src="@drawable/recycler_line"/>
         <LinearLayout
             android:layout_margin="10dp"
             android:layout_width="match_parent"
@@ -79,11 +47,12 @@
             <EditText
                 android:background="@null"
                 android:id="@+id/extratext"
+                android:hint="내용"
+                android:inputType="textMultiLine"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"/>
         </LinearLayout>
     </LinearLayout>
-
     <androidx.cardview.widget.CardView
         android:id="@+id/btn_cardview"
         android:layout_width="match_parent"
@@ -116,28 +85,11 @@
                 android:text="사진 삭제" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-    </androidx.cardview.widget.CardView>
-    <LinearLayout
-        android:layout_gravity="center"
-        android:layout_marginTop="50dp"
-        android:layout_width="wrap_content"
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/navigation_view"
+        app:itemTextColor="@color/colorPrimary"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <Button
-            android:id="@+id/btn_update"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="수정"
-            android:textColor="@android:color/black"
-            ></Button>
-    <Button
-        android:layout_marginLeft="10dp"
-        android:id="@+id/btn_delete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="삭제"
-        android:textColor="@android:color/black"
-        ></Button>
-    </LinearLayout>
+        app:menu="@menu/menu_feeddetail"/>
 
 </LinearLayout>

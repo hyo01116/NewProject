@@ -192,7 +192,7 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
                 @Override
                 public void onSuccess(Uri uri) {
                     basicPath = uri;
-                    StuffItemInfo stuffItemInfo = new StuffItemInfo(user.getUid(), day, noti, datelimit, phone, address, localname, localurl, String.valueOf(basicPath), textname, extratext, "open", null);
+                    StuffItemInfo stuffItemInfo = new StuffItemInfo(type_num, user.getUid(), day, noti, datelimit, phone, address, localname, localurl, String.valueOf(basicPath), textname, extratext, "open", null);
                     uploader(stuffItemInfo, first, second, third);
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -212,7 +212,7 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
-                            StuffItemInfo stuffItemInfo = new StuffItemInfo(user.getUid(), day, noti, datelimit, phone, address, localname, localurl, String.valueOf(filePath), textname, extratext, "open", null);
+                            StuffItemInfo stuffItemInfo = new StuffItemInfo(type_num, user.getUid(), day, noti, datelimit, phone, address, localname, localurl, String.valueOf(filePath), textname, extratext, "open", null);
                             uploader(stuffItemInfo, first, second, third);
                         }
                     })

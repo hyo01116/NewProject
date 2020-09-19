@@ -8,14 +8,14 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/top_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white">
+        android:layout_height="60dp"
+        android:background="@color/toolbarcolor">
         <TextView
             android:textStyle="bold"
             android:textColor="@android:color/black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Register"
+            android:text="회원가입"
             android:layout_gravity="center"
             android:id="@+id/toolbar_title"
             android:textSize="20sp" />
@@ -24,17 +24,17 @@
         android:layout_margin="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal">
     <Button
         android:id="@+id/btn_generaluser"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:text="General UserRegister"
         android:textColor="@android:color/background_dark"/>
     <Button
         android:id="@+id/btn_localuser"
         android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:text="Local UserRegister"
         android:textColor="@android:color/background_dark"/>

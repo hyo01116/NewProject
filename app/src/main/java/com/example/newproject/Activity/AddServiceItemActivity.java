@@ -65,8 +65,6 @@ public class AddServiceItemActivity extends AppCompatActivity {
         noti = "0";
         type_num = "0";
 
-        findViewById(R.id.btn_photo).setOnClickListener(onClickListener);
-
         findViewById(R.id.btn_med).setOnClickListener(onClickListener);
         findViewById(R.id.btn_emer).setOnClickListener(onClickListener);
         findViewById(R.id.btn_loc).setOnClickListener(onClickListener);
@@ -116,9 +114,7 @@ public class AddServiceItemActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             switch (v.getId()){
-                case R.id.btn_photo:
-                    //가독성이 좋게 하기 위해 사용
-                    // 리사이클러뷰에서 다음 데이터와 구분시켜보이게 하기 위해서 사용하기도 함
+                /*case R.id.btn_photo:
                     CardView cardView = findViewById(R.id.btn_cardview);
                     if(cardView.getVisibility() == View.VISIBLE){
                         cardView.setVisibility(View.GONE);
@@ -126,7 +122,7 @@ public class AddServiceItemActivity extends AppCompatActivity {
                     else{
                         cardView.setVisibility(View.VISIBLE);
                     }
-                    break;
+                    break;*/
                 case R.id.imageView:
                     CardView cardView2 = findViewById(R.id.btn_cardview);
                     if(cardView2.getVisibility() == View.VISIBLE){

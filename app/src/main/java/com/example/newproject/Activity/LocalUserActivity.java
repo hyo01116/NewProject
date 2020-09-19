@@ -47,6 +47,7 @@ public class LocalUserActivity extends AppCompatActivity{    //작성자 사용�
                         hometransaction.commit();
                         break;
                     case R.id.bottom_add:
+                        System.out.println("1");
                         CardView cardView = findViewById(R.id.btn_cardview);
                         if(cardView.getVisibility() == View.VISIBLE){
                             cardView.setVisibility(View.GONE);

@@ -2,7 +2,8 @@
 <resources>
     <color name="textInputOutlineColor">#FBB8AC</color>
     <color name="colorPrimary">#000000</color>
-    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorPrimaryDark">#E8E1E1</color>
+    <color name="gray">#FFE8E1E1</color>
     <color name="colorAccent">#FEDBD0</color>
     <color name="textColorPrimary">#FEDBD0</color>
     <color name="toolbarIconColor">@color/textColorPrimary</color>

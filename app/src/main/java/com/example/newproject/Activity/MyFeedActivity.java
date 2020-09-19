@@ -56,20 +56,9 @@ public class MyFeedActivity extends AppCompatActivity implements MyFeedAdapter.O
         recyclerView.setLayoutManager(layoutManager);
         //recyclerView.addItemDecoration(dividerItemDecoration);
         //버튼클릭시 이동
-        findViewById(R.id.btn_add).setOnClickListener(onClickListener);
 
         finduserinfo();
     }
-    View.OnClickListener onClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()){
-                case R.id.btn_add:
-                    startActivity(AddFeedActivity.class);
-                    break;
-            }
-        }
-    };
 
     public void finduserinfo() {
         final String[] first = new String[1];
@@ -96,11 +85,8 @@ public class MyFeedActivity extends AppCompatActivity implements MyFeedAdapter.O
     }
     public void findMyFeed(final String first, final String second, final String third){    //클릭시 상세페이지로 이동하여 수정하기
         //현재는 내가 작성한 피드를 보여줌
-        final String[] key = {null};
-        final String[] secondkey = {null};
         user = FirebaseAuth.getInstance().getCurrentUser();
         database  = FirebaseDatabase.getInstance("https://newproject-ab6cb-write.firebaseio.com/");
-        second_database = FirebaseDatabase.getInstance("https://newproject-ab6cb-feed.firebaseio.com/");
         databaseReference = database.getReference().child(user.getUid()).child("feed");
         //기관 사용자가 데이터를 쓰거나(봉사, 기부글 또는 피드글) 두개의 데이터베이스에 접근해야함
         //피드 db 또는 write db + 사용자 별 피드, 글을 저장하는 데이터베이스
@@ -111,42 +97,51 @@ public class MyFeedActivity extends AppCompatActivity implements MyFeedAdapter.O
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {     //write에서 피드 키 찾음
-                for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    key[0] = String.valueOf(dataSnapshot.getValue());
-                    secondkey[0] = String.valueOf(dataSnapshot.getKey());
-                    System.out.println("key: "+key[0]);
-                    /*arrayList_key.add(key[0]);    //base에서의 key
-                    arrayList_secondkey.add(dataSnapshot.getKey());   //write에서의 key*/
-                    second_databaseReference = second_database.getReference(first).child(second).child(third).child(key[0]);
-                    second_databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            FeedInfo feedInfo = snapshot.getValue(FeedInfo.class);
-                            arrayList.add(feedInfo);
-                            adapter = new MyFeedAdapter(arrayList, MyFeedActivity.this);
-                            recyclerView.setAdapter(adapter);
-                            adapter.setOnItemClickListener(new OnMyFeedItemListClickListener() {
-                                @Override
-                                public void onItemClick(MyFeedAdapter.MyFeedViewHolder holder, View view, int position) {
-                                    MyFeedAdapter.MyFeedViewHolder viewHolder = (MyFeedAdapter.MyFeedViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
-                                    //first, second, third, key[0]을 넘김 (수정, 삭제 페이지로 이동)
-                                    Intent intent = new Intent(getApplicationContext(), MyFeedDetailActivity.class);
-                                    intent.putExtra("first", first);
-                                    intent.putExtra("second", second);
-                                    intent.putExtra("third",third);
-                                    intent.putExtra("key", key[0]);
-                                    intent.putExtra("secondkey", secondkey[0]);
-                                    startActivity(intent);
-                                }
-                            });
-                        }    //클릭시 상세 페이지 이동 후 수정, 삭제 가능하게 함
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    arrayList_key.add(String.valueOf(dataSnapshot.getValue()));    //feed에서의 key
+                    arrayList_secondkey.add(String.valueOf(dataSnapshot.getKey()));   //write에서의 key
                 }
+                find_second(first, second, third, arrayList_key, arrayList_secondkey);
             }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    public void find_second(final String first, final String second, final String third, ArrayList<String> first_array, ArrayList<String> second_array){
+        second_database = FirebaseDatabase.getInstance("https://newproject-ab6cb-feed.firebaseio.com/");
+        System.out.println(first_array.size());
+        System.out.println(second_array.size());
+        second_databaseReference = second_database.getReference().child(first).child(second).child(third);
+        second_databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    if (first_array.contains(dataSnapshot.getKey())) {
+                        System.out.println(dataSnapshot.getKey());
+                        FeedInfo feedInfo = dataSnapshot.getValue(FeedInfo.class);
+                        arrayList.add(feedInfo);
+                        System.out.println(feedInfo.getExtratext());
+                    }
+                }
+                adapter = new MyFeedAdapter(arrayList, MyFeedActivity.this);
+                recyclerView.setAdapter(adapter);
+                adapter.setOnItemClickListener(new OnMyFeedItemListClickListener() {
+                    @Override
+                    public void onItemClick(MyFeedAdapter.MyFeedViewHolder holder, View view, int position) {
+                        MyFeedAdapter.MyFeedViewHolder viewHolder = (MyFeedAdapter.MyFeedViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
+                        //first, second, third, key[0]을 넘김 (수정, 삭제 페이지로 이동)
+                        Intent intent = new Intent(getApplicationContext(), MyFeedDetailActivity.class);
+                        intent.putExtra("first", first);
+                        intent.putExtra("second", second);
+                        intent.putExtra("third", third);
+                        intent.putExtra("key", arrayList_key.get(position));
+                        intent.putExtra("secondkey", arrayList_secondkey.get(position));
+                        startActivity(intent);
+                    }
+                });
+            }    //클릭시 상세 페이지 이동 후 수정, 삭제 가능하게 함
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {

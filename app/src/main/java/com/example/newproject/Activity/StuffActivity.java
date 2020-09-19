@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -53,6 +54,8 @@ public class StuffActivity extends Fragment implements StuffItemAdapter.OnItemCl
 
     TextView et_phone;
 
+    Button btn_food, btn_wear, btn_item, btn_etc;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container, @NonNull Bundle savedInstanceState) {
@@ -73,11 +76,42 @@ public class StuffActivity extends Fragment implements StuffItemAdapter.OnItemCl
         recyclerView_noti.setLayoutManager(layoutManager);
         recyclerView_noti.addItemDecoration(dividerItemDecoration);
 
-        findLocationinfo();
-
+        btn_food = (Button) view.findViewById(R.id.btn_food);
+        btn_food.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findLocationinfo("1");
+                System.out.println("food");
+            }
+        });
+        btn_wear = (Button) view.findViewById(R.id.btn_wear);
+        btn_wear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findLocationinfo("2");
+                System.out.println("wear");
+            }
+        });
+        btn_item = (Button) view.findViewById(R.id.btn_item);
+        btn_item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findLocationinfo("3");
+                System.out.println("item");
+            }
+        });
+        btn_etc = (Button) view.findViewById(R.id.btn_etc);
+        btn_etc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findLocationinfo("0");
+                System.out.println("etc");
+            }
+        });
+        findLocationinfo("-1");
         return view;
     }
-    public void findLocationinfo() {
+    public void findLocationinfo(String type) {
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
         database = FirebaseDatabase.getInstance();
@@ -94,13 +128,18 @@ public class StuffActivity extends Fragment implements StuffItemAdapter.OnItemCl
                         second = generalUserInfo.getSecond();
                         third = generalUserInfo.getThird();
                         name = generalUserInfo.getName();
-                        findstuff(first, second, third, name);
+                        if(type.equals("-1")){
+                            findnoti(first, second, third);
+                        }
+                        else {
+                            findstuff(type, first, second, third, name);
+                        }
                     }
                 }
             }
         });
     }
-    public void findstuff(final String first, final String second, final String third, final String name){
+    public void findnoti(final String first, final String second, final String third){
         database  = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
         databaseReference = database.getReference("stuff").child(first).child(second).child(third);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -108,14 +147,13 @@ public class StuffActivity extends Fragment implements StuffItemAdapter.OnItemCl
             // ondatachange 콜백함수를 사용해서 이벤트가 발생하면 다른 메소드를 호출해서 알려줌 -> 데이터 존재하면 화면에 나타냄
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     StuffItemInfo stuffItemInfo = dataSnapshot.getValue(StuffItemInfo.class);
                     //getvalue를 통해 객체에 받아온 정보를 넣고 open 이라면 arraylist에 대입
-                    if(stuffItemInfo.getState().equals("open")){
-                        if(stuffItemInfo.getNoti().equals("1")){
+                    if (stuffItemInfo.getState().equals("open")) {
+                        if (stuffItemInfo.getNoti().equals("1")) {
                             arrayList_noti.add(stuffItemInfo);
-                        }
-                        else{
+                        } else {
                             arrayList.add(stuffItemInfo);
                         }
                     }
@@ -125,14 +163,13 @@ public class StuffActivity extends Fragment implements StuffItemAdapter.OnItemCl
                 adapter_noti.setOnItemClickListener(new OnStuffItemClickListener() {
                     @Override
                     public void onItemClick(StuffItemAdapter.StuffItemViewHolder holder, View view, int position) {
-                        StuffItemAdapter.StuffItemViewHolder viewHolder = (StuffItemAdapter.StuffItemViewHolder)recyclerView_noti.findViewHolderForAdapterPosition(position);
+                        StuffItemAdapter.StuffItemViewHolder viewHolder = (StuffItemAdapter.StuffItemViewHolder) recyclerView_noti.findViewHolderForAdapterPosition(position);
                         Intent intent = new Intent(getContext(), StuffItemDetailActivity.class);
                         intent.putExtra("Serialize", arrayList_noti.get(position));
                         intent.putExtra("name", name);
                         startActivity(intent);
                     }
                 });
-
                 adapter = new StuffItemAdapter(arrayList, getContext());
                 recyclerView.setAdapter(adapter);
                 adapter.setOnItemClickListener(new OnStuffItemClickListener() {
@@ -143,6 +180,45 @@ public class StuffActivity extends Fragment implements StuffItemAdapter.OnItemCl
                         //(class에 serializable을 상속시켜놓음, stuffiteminfo를 직렬화하여 intent로 다음 액티비티에 넘김)
                         //원래는 intent로 넘겼지만, 객체 통째로 넘김
                         intent.putExtra("Serialize", arrayList.get(position));
+                        intent.putExtra("name", name);
+                        startActivity(intent);
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                //사용자가 데이터를 읽을 권한이 없는 경우
+            }
+        });
+    }
+    public void findstuff(final String type, final String first, final String second, final String third, final String name){
+        ArrayList<StuffItemInfo> arrayList_type = new ArrayList<StuffItemInfo>();
+        database  = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
+        databaseReference = database.getReference("stuff").child(first).child(second).child(third);
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            //리스너를 사용해서 해당시점의 datasnapshot를 받아옴
+            // ondatachange 콜백함수를 사용해서 이벤트가 발생하면 다른 메소드를 호출해서 알려줌 -> 데이터 존재하면 화면에 나타냄
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    StuffItemInfo stuffItemInfo = dataSnapshot.getValue(StuffItemInfo.class);
+                    //getvalue를 통해 객체에 받아온 정보를 넣고 open 이라면 arraylist에 대입
+                    if(stuffItemInfo.getType_num().equals(type) && stuffItemInfo.getNoti().equals("0")){
+                        arrayList_type.add(stuffItemInfo);
+                    }
+                }
+                recyclerView.removeAllViewsInLayout();
+                adapter = new StuffItemAdapter(arrayList_type, getContext());
+                recyclerView.setAdapter(adapter);
+                adapter.setOnItemClickListener(new OnStuffItemClickListener() {
+                    @Override
+                    public void onItemClick(StuffItemAdapter.StuffItemViewHolder holder, View view, int position) {
+                        StuffItemAdapter.StuffItemViewHolder viewHolder = (StuffItemAdapter.StuffItemViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
+                        Intent intent = new Intent(getContext(), StuffItemDetailActivity.class);
+                        //(class에 serializable을 상속시켜놓음, stuffiteminfo를 직렬화하여 intent로 다음 액티비티에 넘김)
+                        //원래는 intent로 넘겼지만, 객체 통째로 넘김
+                        intent.putExtra("Serialize", arrayList_type.get(position));
                         intent.putExtra("name", name);
                         startActivity(intent);
                     }

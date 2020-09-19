@@ -48,6 +48,7 @@ public class StuffItemListDetailActivity extends AppCompatActivity {
     private DatabaseReference second_databaseReference;
 
     private Uri filePath;
+    private StuffItemInfo stuffItemInfo;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -109,7 +110,7 @@ public class StuffItemListDetailActivity extends AppCompatActivity {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                StuffItemInfo stuffItemInfo = snapshot.getValue(StuffItemInfo.class);
+                stuffItemInfo = snapshot.getValue(StuffItemInfo.class);
                 Glide.with(StuffItemListDetailActivity.this).load(stuffItemInfo.getImageurl()).into(imageurl);
                 Glide.with(StuffItemListDetailActivity.this).load(stuffItemInfo.getLocalurl()).into(localurl);
                 textname.setText(stuffItemInfo.getTextname());
@@ -137,13 +138,14 @@ public class StuffItemListDetailActivity extends AppCompatActivity {
     }
     public void update() {
         user = FirebaseAuth.getInstance().getCurrentUser();
-        File localurl = null;
-        File imageurl = null;     //사진 수정버튼 만들기
-        String noti = "0";
-        String datelimit="0";
+        String localurl = stuffItemInfo.getLocalurl();
+        String imageurl = stuffItemInfo.getImageurl();     //사진 수정버튼 만들기
+        String noti = stuffItemInfo.getNoti();
+        String datelimit= stuffItemInfo.getDatelimit();
+        String type_num = stuffItemInfo.getType_num();
         String day;
-        String phone = "0109999999";
-        String address = "주소";
+        String phone = stuffItemInfo.getPhone();
+        String address = stuffItemInfo.getAddress();
         String localname = ((TextView)findViewById(R.id.localname)).getText().toString();
         String textname = ((EditText) findViewById(R.id.textname)).getText().toString();
         String extratext = ((EditText) findViewById(R.id.extratext)).getText().toString();
@@ -154,7 +156,7 @@ public class StuffItemListDetailActivity extends AppCompatActivity {
 
         day = year.format(currentTime) + "/"+ month.format(currentTime) +"/"+date.format(currentTime);
 
-        StuffItemInfo stuffItemInfo = new StuffItemInfo(user.getUid(), day, noti, datelimit, phone, address, localname, String.valueOf(localurl), String.valueOf(imageurl), textname, extratext, "open", null);
+        StuffItemInfo stuffItemInfo = new StuffItemInfo(type_num, user.getUid(), day, noti, datelimit, phone, address, localname, String.valueOf(localurl), String.valueOf(imageurl), textname, extratext, "open", null);
         database = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
         database.getReference("stuff").child(first).child(second).child(third).child(itemkey).setValue(stuffItemInfo);
     }

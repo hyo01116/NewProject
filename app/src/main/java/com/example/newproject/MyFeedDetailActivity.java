@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -21,6 +22,7 @@ import com.example.newproject.Class.FeedInfo;
 import com.example.newproject.Class.LocalUserInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -51,6 +53,8 @@ public class MyFeedDetailActivity extends AppCompatActivity {
     private String picture;
     private String text;
 
+    private BottomNavigationView bottomNavigationView;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,9 +63,25 @@ public class MyFeedDetailActivity extends AppCompatActivity {
         findViewById(R.id.btn_gallery).setOnClickListener(onClickListener);
         findViewById(R.id.btn_updatepicture).setOnClickListener(onClickListener);
         findViewById(R.id.btn_deletepicture).setOnClickListener(onClickListener);
-        findViewById(R.id.btn_update).setOnClickListener(onClickListener);
-        findViewById(R.id.btn_delete).setOnClickListener(onClickListener);
         findViewById(R.id.imageView).setOnClickListener(onClickListener);
+
+        bottomNavigationView = findViewById(R.id.navigation_view);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {   //버튼 안됨
+                switch (menuItem.getItemId()){
+                    case R.id.btn_update:
+                        System.out.println("1");
+                        update();
+                        startToast("게시물이 수정되었습니다.");
+                        break;
+                    case R.id.btn_delete:
+                        delete();
+                        startToast("게시물이 삭제되었습니다.");
+                }
+                return true;
+            }
+        });
 
         first = getIntent().getStringExtra("first");
         second = getIntent().getStringExtra("second");
@@ -69,8 +89,6 @@ public class MyFeedDetailActivity extends AppCompatActivity {
         key = getIntent().getStringExtra("key");
         secondkey = getIntent().getStringExtra("secondkey");
 
-        localurl = (ImageView) findViewById(R.id.localurl);
-        localname = (TextView) findViewById(R.id.localname);
         imageView = (ImageView)findViewById(R.id.imageView);
         extratext = (TextView) findViewById(R.id.extratext);
         finduserinfo();
@@ -79,16 +97,6 @@ public class MyFeedDetailActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.btn_update:    //변화된게 없다면 고대로 다시 저장
-                    update();
-                    startToast("게시물이 수정되었습니다.");
-                    //startfunction();
-                    break;
-                case R.id.btn_delete:    //db에서 해당 글 모두 삭제
-                    delete();
-                    startToast("게시물이 삭제되었습니다.");
-                    //startfunction();
-                    break;
                 case R.id.imageView:
                     CardView cardView = findViewById(R.id.btn_cardview);
                     if(cardView.getVisibility() == View.VISIBLE){
@@ -143,16 +151,15 @@ public class MyFeedDetailActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 FeedInfo feedInfo = snapshot.getValue(FeedInfo.class);
-                Glide.with(MyFeedDetailActivity.this).load(feedInfo.getLocalurl()).into(localurl);
-                Glide.with(MyFeedDetailActivity.this).load(feedInfo.getPicture()).into(imageView);
                 local_url = feedInfo.getLocalurl();
                 local_name = feedInfo.getLocalname();
                 filePath = Uri.parse(feedInfo.getPicture());
                 text = feedInfo.getExtratext();
                 address = feedInfo.getAddress();
                 phone = feedInfo.getPhone();
-                localname.setText(feedInfo.getLocalname());
-                extratext.setText(feedInfo.getExtratext());
+
+                Glide.with(MyFeedDetailActivity.this).load(filePath).into(imageView);
+                extratext.setText(text);
             }
 
             @Override
@@ -164,7 +171,7 @@ public class MyFeedDetailActivity extends AppCompatActivity {
     public void delete() {
         user = FirebaseAuth.getInstance().getCurrentUser();
         database = FirebaseDatabase.getInstance("https://newproject-ab6cb-write.firebaseio.com/");
-        database.getReference(user.getUid()).child("service").child(secondkey).removeValue();
+        database.getReference(user.getUid()).child("feed").child(secondkey).removeValue();
 
         second_database = FirebaseDatabase.getInstance("https://newproject-ab6cb-feed.firebaseio.com/");
         second_database.getReference().child(first).child(second).child(third).child(key).removeValue();

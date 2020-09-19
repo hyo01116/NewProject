@@ -1,74 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
-
-    <LinearLayout
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/top_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="60dp"
+        android:background="@color/toolbarcolor">
+        <TextView
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="마이페이지"
+            android:layout_gravity="center"
+            android:id="@+id/toolbar_title"
+            android:textSize="20sp" />
+    </androidx.appcompat.widget.Toolbar>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="130dp"
-            android:orientation="horizontal">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:background="@drawable/avatar"
-                android:id="@+id/imageView2"
-                android:layout_margin="10dp"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_gravity="center"
-
-                android:scaleType="centerCrop"/>
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
             <LinearLayout
+                android:layout_marginLeft="10dp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_margin="20dp">
+                android:layout_height="130dp"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:layout_marginTop="10dp"
-                    android:id="@+id/user_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@android:color/black"
-                    android:hint="name"
-                    android:textSize="20sp" />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:background="@drawable/avatar"
+                    android:id="@+id/imageView2"
+                    android:layout_margin="10dp"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center"
 
-                <TextView
-                    android:layout_marginTop="10dp"
-                    android:id="@+id/user_email"
+                    android:scaleType="centerCrop"/>
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@android:color/black"
-                    android:hint="email"
-                    android:textSize="17sp" />
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_margin="20dp">
+
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:id="@+id/user_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimary"
+                        android:hint="name"
+                        android:textStyle="bold"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:layout_marginTop="5dp"
+                        android:id="@+id/user_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimary"
+                        android:textStyle="bold"
+                        android:hint="email"
+                        android:textSize="17sp" />
+                </LinearLayout>
+
             </LinearLayout>
 
+            <Button
+                android:id="@+id/btn_myaccount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#FFFFFF"
+                android:gravity="left"
+                android:padding="20dp"
+                android:text="나의 계정"
+                android:textColor="@android:color/black"/>
+            <Button
+                android:id="@+id/btn_myfeed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#FFFFFF"
+                android:gravity="left"
+                android:padding="20dp"
+                android:text="후기 관리"
+                android:textColor="@android:color/black"/>
+            <Button
+                android:id="@+id/btn_mylocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#FFFFFF"
+                android:gravity="left"
+                android:padding="20dp"
+                android:text="위치 설정"
+                android:textColor="@android:color/black"/>
         </LinearLayout>
-
-        <Button
-            android:id="@+id/btn_myaccount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:gravity="left"
-            android:padding="20dp"
-            android:text="나의 계정"
-            android:textColor="@android:color/black"/>
-        <Button
-            android:id="@+id/btn_mylocation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:gravity="left"
-            android:padding="20dp"
-            android:text="위치 설정"
-            android:textColor="@android:color/black"/>
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+</LinearLayout>

@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.example.newproject.Activity.MyFeedActivity;
 import com.example.newproject.Class.GeneralUserInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -43,6 +44,7 @@ public class GeneralPageActivity extends Fragment {
 
         btn_myaccount = (Button) view.findViewById(R.id.btn_myaccount);
         btn_mylocation = (Button) view.findViewById(R.id.btn_mylocation);
+        btn_myfeed = (Button) view.findViewById(R.id.btn_myfeed);
 
         btn_myaccount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,6 +55,12 @@ public class GeneralPageActivity extends Fragment {
             @Override
             public void onClick(View v) {
                 startActivity(MyLocationActivity.class);
+            }
+        });
+        btn_myfeed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(MyFeedActivity.class);
             }
         });
         return view;

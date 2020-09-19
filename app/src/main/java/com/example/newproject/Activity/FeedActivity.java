@@ -1,5 +1,6 @@
 package com.example.newproject.Activity;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,11 +19,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.newproject.Adapter.FeedAdapter;
+import com.example.newproject.AddFeedActivity;
 import com.example.newproject.Class.FeedInfo;
 import com.example.newproject.Class.LocalUserInfo;
 import com.example.newproject.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -50,6 +53,8 @@ public class FeedActivity extends Fragment implements FeedAdapter.OnListItemSele
     Toolbar toolbar;
     TextView toolbar_title;
 
+    private FloatingActionButton btn_add;
+
     private String first, second, third;
     private ArrayList<FeedInfo> arrayList = new ArrayList<FeedInfo>();
     @Override
@@ -70,11 +75,24 @@ public class FeedActivity extends Fragment implements FeedAdapter.OnListItemSele
         //recyclerView.addItemDecoration(dividerItemDecoration);
         //버튼클릭시 이동
 
+        btn_add = (FloatingActionButton)view.findViewById(R.id.btn_add);
+        btn_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(AddFeedActivity.class);
+            }
+        });
+        user = FirebaseAuth.getInstance().getCurrentUser();
         finduserinfo();
         return view;
     }
+    public void startActivity(Class c){
+        Intent intent = new Intent(getActivity(), c);
+        startActivityForResult(intent, 0);
+    }
+    public void finduserlevel(){
+    }
     public void finduserinfo(){
-        user = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final DocumentReference documentReference = db.collection("Users").document(user.getUid());    //현재 로그인한 사람의 주소
         documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {

@@ -9,14 +9,14 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/top_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="50dp">
+            android:layout_height="60dp">
 
             <TextView
                 android:id="@+id/toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="글 작성하기"
+                android:text="기부 물품"
                 android:textColor="@android:color/black"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -25,10 +25,7 @@
     <ScrollView
         android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp">
+        android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -37,21 +34,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/recycler_line"/>
-            <LinearLayout
+            <ImageView
+                android:id="@+id/imageView"
                 android:layout_width="match_parent"
-                android:layout_height="220dp"
-                android:orientation="vertical"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginLeft="5dp">
-                    <ImageView
-                        android:layout_gravity="center"
-                        android:layout_marginTop="80dp"
-                        android:id="@+id/imageView"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        app:srcCompat="@drawable/ic_baseline_photo_camera_24"></ImageView>
-            </LinearLayout>
+                android:layout_height="230dp"
+                android:orientation="vertical">
+            </ImageView>
             <ImageView
                 android:backgroundTint="@color/toolbarcolor"
                 android:layout_width="match_parent"
@@ -68,7 +56,7 @@
                         android:orientation="horizontal">
                         <Button
                             android:id="@+id/btn_food"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginLeft="15dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="식품"

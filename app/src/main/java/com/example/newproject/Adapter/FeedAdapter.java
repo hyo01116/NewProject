@@ -47,8 +47,10 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
                 .into(holder.picture);
         holder.localname.setText(feedInfo.getLocalname());
         holder.extratext.setText(feedInfo.getExtratext());
-        holder.address.setText(feedInfo.getAddress());
-        holder.phone.setText(feedInfo.getPhone());
+        if (!feedInfo.getAddress().equals("1")) {
+            holder.address.setText(feedInfo.getAddress());     //일반사용자(level = 1)은 주소와 전화번호 표시안함
+            holder.phone.setText(feedInfo.getPhone());
+        }
     }
 
     @Override
