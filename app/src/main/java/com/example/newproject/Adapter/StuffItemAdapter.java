@@ -54,7 +54,6 @@ public class StuffItemAdapter extends RecyclerView.Adapter<StuffItemAdapter.Stuf
         StuffItemInfo stuffItemInfo =  mDataset.get(position);
         Glide.with(holder.itemView)
                 .load(mDataset.get(position).getLocalurl())
-                .error(R.drawable.picture19)
                 .into(holder.et_localurl);
         holder.et_localname.setText(stuffItemInfo.getLocalname());
         holder.et_textname.setText(stuffItemInfo.getTextname());

@@ -110,8 +110,8 @@ public class GeneralUserRegisterActivity extends AppCompatActivity {
         final String name= ((EditText) findViewById(R.id.name)).getText().toString();
         final String phone = ((EditText) findViewById(R.id.phone)).getText().toString();
         final String first = "서울특별시";
-        final String second = "강남구";
-        final String third = "서초동";
+        final String second = "강서구";
+        final String third = "화곡동";
 
         if (name.length() > 0 && email.length() > 0 && password.length() > 0 && phone.length() > 7) {
             mAuth.createUserWithEmailAndPassword(email, password)
@@ -199,10 +199,16 @@ public class GeneralUserRegisterActivity extends AppCompatActivity {
         if(requestCode == 0 && resultCode == RESULT_OK){
             filePath = data.getData();
             Log.d("TAG", "uri:" + String.valueOf(filePath));
+            final int takeFlags = data.getFlags()
+                    & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             try {
                 //Uri 파일을 Bitmap으로 만들어서 ImageView에 집어 넣는다.
+                this.getContentResolver().takePersistableUriPermission(filePath, takeFlags);
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 imageView.setImageBitmap(bitmap);
+                imageView.setVisibility(View.VISIBLE);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }

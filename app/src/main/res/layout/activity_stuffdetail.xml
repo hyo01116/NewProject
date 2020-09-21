@@ -38,7 +38,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:background="@drawable/avatar"
                     android:id="@+id/localurl"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
@@ -106,7 +105,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/datelimit"
-                android:text="서초동 5시간 전"
                 android:textSize="17dp"
                 android:layout_marginLeft="10dp"/>
             </LinearLayout>
@@ -125,6 +123,10 @@
                 android:overScrollMode="ifContentScrolls"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
+            <com.naver.maps.map.MapView
+                android:id="@+id/loc_map"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"/>
         <ImageView
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"

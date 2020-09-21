@@ -3,6 +3,7 @@ package com.example.newproject;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -32,6 +33,7 @@ public class MyLocationActivity extends AppCompatActivity implements OnMapReadyC
         mapView = findViewById(R.id.map_view);
         mapView.onCreate(savedInstanceState);
 
+        mLocationSource = new FusedLocationSource(this, 0);
         findViewById(R.id.btn_save_mylocation).setOnClickListener(onClickListener);
     }
 
@@ -65,10 +67,11 @@ public class MyLocationActivity extends AppCompatActivity implements OnMapReadyC
                                            @NonNull int[] grandResults) {
 
         super.onRequestPermissionsResult(permsRequestCode, permissions, grandResults);
-        if (mLocationSource.onRequestPermissionsResult(permsRequestCode, permissions, grandResults)) {
-            return;
+        if(permsRequestCode == 0){
+            if(grandResults.length > 0 && grandResults[0] == PackageManager.PERMISSION_GRANTED){
+                mNavermap.setLocationTrackingMode(LocationTrackingMode.Follow);
+            }
         }
-        super.onRequestPermissionsResult(permsRequestCode, permissions, grandResults);
     }
     public void startActivity(MyLocationActivity myLocationActivity, Class c) {
         Intent intent = new Intent(this, c);

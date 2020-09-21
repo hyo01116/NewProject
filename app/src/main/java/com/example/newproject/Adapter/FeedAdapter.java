@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.example.newproject.Class.FeedInfo;
 import com.example.newproject.R;
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder> {
     private ArrayList<FeedInfo> mDataset;
@@ -39,7 +40,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
     @Override
     public void onBindViewHolder(@NonNull FeedAdapter.FeedViewHolder holder, int position) {
         FeedInfo feedInfo = mDataset.get(position);
-        Glide.with(holder.itemView)
+        Glide.with(holder.itemView.getContext())
                 .load(mDataset.get(position).getLocalurl())
                 .into(holder.localurl);
         Glide.with(holder.itemView.getContext())
@@ -52,7 +53,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
             holder.phone.setText(feedInfo.getPhone());
         }
     }
-
     @Override
     public int getItemCount() {
         return mDataset.size();

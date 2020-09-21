@@ -39,6 +39,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class FeedActivity extends Fragment implements FeedAdapter.OnListItemSelectedInterface {
 
@@ -57,6 +58,7 @@ public class FeedActivity extends Fragment implements FeedAdapter.OnListItemSele
 
     private String first, second, third;
     private ArrayList<FeedInfo> arrayList = new ArrayList<FeedInfo>();
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container, @NonNull Bundle savedInstanceState){
         //미리 정의해둔 xml을 view로 변환하는 것

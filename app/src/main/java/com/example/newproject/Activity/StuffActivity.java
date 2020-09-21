@@ -23,6 +23,7 @@ import com.example.newproject.Adapter.StuffItemAdapter;
 import com.example.newproject.Class.UserLocationInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -37,6 +38,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 
 public class StuffActivity extends Fragment implements StuffItemAdapter.OnItemClickListener {
+
+    private FirebaseAnalytics firebaseAnalytics;
     private RecyclerView recyclerView;
     private RecyclerView recyclerView_noti;
     private StuffItemAdapter adapter_noti;
@@ -63,6 +66,8 @@ public class StuffActivity extends Fragment implements StuffItemAdapter.OnItemCl
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
         dividerItemDecoration.setDrawable(getContext().getResources().getDrawable(R.drawable.recycler_line));
+
+        firebaseAnalytics = FirebaseAnalytics.getInstance(getContext());
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);

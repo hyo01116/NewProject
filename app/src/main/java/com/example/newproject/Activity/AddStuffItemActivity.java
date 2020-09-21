@@ -181,7 +181,7 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
 
         Date currentTime = Calendar.getInstance().getTime();
         SimpleDateFormat year = new SimpleDateFormat("yyyy", Locale.getDefault());
-        SimpleDateFormat month = new SimpleDateFormat("mm", Locale.getDefault());
+        SimpleDateFormat month = new SimpleDateFormat("MM", Locale.getDefault());
         SimpleDateFormat date = new SimpleDateFormat("dd", Locale.getDefault());
         day = year.format(currentTime) + "/"+ month.format(currentTime) +"/"+date.format(currentTime);
 
@@ -278,7 +278,11 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
         //request코드가 0이고 OK를 선택했고 data에 뭔가가 들어 있다면
         if(requestCode == 0 && resultCode == RESULT_OK){
             filePath = data.getData();
+            final int takeFlags = data.getFlags()
+                    & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             try {
+                this.getContentResolver().takePersistableUriPermission(filePath, takeFlags);
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 imageView.setImageBitmap(bitmap);
                 imageView.setVisibility(View.VISIBLE);

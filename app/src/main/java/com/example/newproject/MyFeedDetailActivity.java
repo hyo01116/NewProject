@@ -197,8 +197,12 @@ public class MyFeedDetailActivity extends AppCompatActivity {
         if(requestCode == 0 && resultCode == RESULT_OK){
             filePath = data.getData();
             Log.d("TAG", "uri:" + String.valueOf(filePath));
+            final int takeFlags = data.getFlags()
+                    & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             try {
                 //Uri 파일을 Bitmap으로 만들어서 ImageView에 집어 넣는다.
+                this.getContentResolver().takePersistableUriPermission(filePath, takeFlags);
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 imageView.setImageBitmap(bitmap);
                 imageView.setVisibility(View.VISIBLE);

@@ -177,7 +177,7 @@ public class AddServiceItemActivity extends AppCompatActivity {
 
         Date currentTime = Calendar.getInstance().getTime();
         SimpleDateFormat year = new SimpleDateFormat("yyyy", Locale.getDefault());
-        SimpleDateFormat month = new SimpleDateFormat("mm", Locale.getDefault());
+        SimpleDateFormat month = new SimpleDateFormat("MM", Locale.getDefault());
         SimpleDateFormat date = new SimpleDateFormat("dd", Locale.getDefault());
         day = year.format(currentTime) + "/"+ month.format(currentTime) +"/"+date.format(currentTime);
 
@@ -300,9 +300,13 @@ public class AddServiceItemActivity extends AppCompatActivity {
         if(requestCode == 0 && resultCode == RESULT_OK){
             filePath = data.getData();
             //Log.d("TAG", "uri:" + String.valueOf(filePath));
+            final int takeFlags = data.getFlags()
+                    & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             try {
                 //Uri 파일을 Bitmap으로 만들어서 ImageView에 집어 넣는다.
                 Log.d("TAG", "uri:" + String.valueOf(filePath));
+                this.getContentResolver().takePersistableUriPermission(filePath, takeFlags);
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 imageView.setImageBitmap(bitmap);
                 imageView.setVisibility(View.VISIBLE);

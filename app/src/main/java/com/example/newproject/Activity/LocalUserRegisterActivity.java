@@ -113,12 +113,12 @@ public class LocalUserRegisterActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         final String email = ((EditText) findViewById(R.id.email)).getText().toString();
         final String password = ((EditText)findViewById(R.id.password)).getText().toString();
-        final String address = "주소";
+        final String address = ((EditText)findViewById(R.id.address)).getText().toString();
         final String name= ((EditText) findViewById(R.id.name)).getText().toString();    //name에서 좌표로 변환시키기
         final String phone = ((EditText)findViewById(R.id.phone)).getText().toString();
         final String first = "서울특별시";
-        final String second = "강남구";
-        final String third = "서초동";
+        final String second = "강서구";
+        final String third = "화곡동";
 
         if (name.length() > 0 && email.length() > 0 && password.length() > 0 && phone.length() > 7) {
             mAuth.createUserWithEmailAndPassword(email, password)
@@ -244,10 +244,15 @@ public class LocalUserRegisterActivity extends AppCompatActivity {
         if(requestCode == 0 && resultCode == RESULT_OK){
             filePath = data.getData();
             Log.d("TAG", "uri:" + String.valueOf(filePath));
+            final int takeFlags = data.getFlags()
+                    & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             try {
                 //Uri 파일을 Bitmap으로 만들어서 ImageView에 집어 넣는다.
+                this.getContentResolver().takePersistableUriPermission(filePath, takeFlags);
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 imageView.setImageBitmap(bitmap);
+                imageView.setVisibility(View.VISIBLE);
             } catch (IOException e) {
                 e.printStackTrace();
             }
