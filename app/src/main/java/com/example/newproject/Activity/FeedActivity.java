@@ -127,7 +127,7 @@ public class FeedActivity extends Fragment implements FeedAdapter.OnListItemSele
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     //key[0] = String.valueOf(dataSnapshot.getKey());      //문서의 key
                     FeedInfo feedInfo = dataSnapshot.getValue(FeedInfo.class);
-                    arrayList.add(feedInfo);
+                    arrayList.add(0, feedInfo);
                 }
                 adapter = new FeedAdapter(arrayList, getContext(), FeedActivity.this);
                 recyclerView.setAdapter(adapter);

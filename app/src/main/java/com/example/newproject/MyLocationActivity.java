@@ -32,6 +32,8 @@ public class MyLocationActivity extends AppCompatActivity implements OnMapReadyC
 
         mapView = findViewById(R.id.map_view);
         mapView.onCreate(savedInstanceState);
+        mLocationSource = new FusedLocationSource(this, 0);
+        mapView.getMapAsync(this);
 
         mLocationSource = new FusedLocationSource(this, 0);
         findViewById(R.id.btn_save_mylocation).setOnClickListener(onClickListener);

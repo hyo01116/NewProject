@@ -160,9 +160,9 @@ public class ServiceActivity extends Fragment implements ServiceItemAdapter.OnIt
                     //getvalue를 통해 객체에 받아온 정보를 넣고 open 이라면 arraylist에 대입
                     if (serviceItemInfo.getState().equals("open")) {
                         if (serviceItemInfo.getNoti().equals("1")) {
-                            arrayList_noti.add(serviceItemInfo);
+                            arrayList_noti.add(0, serviceItemInfo);
                         } else {
-                            arrayList.add(serviceItemInfo);
+                            arrayList.add(0, serviceItemInfo);
                         }
                     }
                 }
