@@ -4,6 +4,9 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.PointF;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -12,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.naver.maps.geometry.LatLng;
+import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapView;
 import com.naver.maps.map.NaverMap;
@@ -20,15 +24,24 @@ import com.naver.maps.map.UiSettings;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.util.FusedLocationSource;
 
+import java.io.IOException;
+import java.util.List;
+
 public class MyLocationActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private FusedLocationSource mLocationSource;
     private MapView mapView;
     private NaverMap mNavermap;
+    private Geocoder geocoder;
+    List<Address> list = null;
+    Double latitude;
+    Double longitude;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mylocation);
+
+        geocoder = new Geocoder(this);
 
         mapView = findViewById(R.id.map_view);
         mapView.onCreate(savedInstanceState);
@@ -56,13 +69,41 @@ public class MyLocationActivity extends AppCompatActivity implements OnMapReadyC
     public void onMapReady(@NonNull NaverMap naverMap) {
         mNavermap = naverMap;
         mNavermap.setLocationSource(mLocationSource);
-        mNavermap.setLocationTrackingMode(LocationTrackingMode.Follow);
+        //mNavermap.setLocationTrackingMode(LocationTrackingMode.None)
 
+        Marker marker = new Marker();
         naverMap.addOnLocationChangeListener(location ->
-                Toast.makeText(this,
-                        location.getLatitude() + ", " + location.getLongitude(),
-                        Toast.LENGTH_SHORT).show());
+        {marker.setPosition(new LatLng(location.getLatitude(), location.getLongitude()));
+                marker.setMap(naverMap);
+            naverMap.moveCamera(CameraUpdate.scrollTo(new LatLng(location.getLatitude(), location.getLongitude())));
+        });
+        naverMap.setOnMapClickListener(new NaverMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(@NonNull PointF pointF, @NonNull LatLng latLng) {
+                System.out.println(latLng.latitude + " " + latLng.longitude);
+                marker.setPosition(new LatLng(latLng.latitude, latLng.longitude));
+                marker.setMap(naverMap);
+                naverMap.moveCamera(CameraUpdate.scrollTo(new LatLng(latLng.latitude, latLng.longitude)));
+                latitude = latLng.latitude;
+                longitude  = latLng.longitude;
+                try {
+                    list = geocoder.getFromLocation(latitude, longitude, 10);
+                    if(list != null){
+                        if(list.size() == 0){
+                            System.out.println("해당되는 주소가 없습니다.");
+                        }
+                        else{
+                            System.out.println(list.get(0).toString());
+                        }
+                    }
+                }
+                catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        });
     }
+
     @Override
     public void onRequestPermissionsResult(int permsRequestCode,
                                            @NonNull String[] permissions,
@@ -71,7 +112,7 @@ public class MyLocationActivity extends AppCompatActivity implements OnMapReadyC
         super.onRequestPermissionsResult(permsRequestCode, permissions, grandResults);
         if(permsRequestCode == 0){
             if(grandResults.length > 0 && grandResults[0] == PackageManager.PERMISSION_GRANTED){
-                mNavermap.setLocationTrackingMode(LocationTrackingMode.Follow);
+                mNavermap.setLocationTrackingMode(LocationTrackingMode.NoFollow);
             }
         }
     }
