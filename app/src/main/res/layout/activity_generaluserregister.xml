@@ -120,22 +120,29 @@
                 app:cardCornerRadius="15dp">
 
                 <LinearLayout
+                    android:background="@color/toolbarcolor"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:padding="5dp">
 
                     <Button
+                        android:backgroundTint="#FFFFFF"
+                        android:textColor="@color/colorPrimary"
                         android:id="@+id/btn_gallery"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="갤러리" />
                     <Button
+                        android:backgroundTint="#FFFFFF"
+                        android:textColor="@color/colorPrimary"
                         android:id="@+id/btn_update"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="사진 수정" />
                     <Button
+                        android:backgroundTint="#FFFFFF"
+                        android:textColor="@color/colorPrimary"
                         android:id="@+id/btn_delete"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

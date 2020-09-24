@@ -54,7 +54,7 @@ public class StuffItemListActivity extends Fragment implements StuffItemListAdap
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container, @NonNull Bundle savedInstanceState) {
-        ViewGroup view = (ViewGroup) inflater.inflate(R.layout.activity_stuff, container, false);
+        ViewGroup view = (ViewGroup) inflater.inflate(R.layout.activity_stufflist, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);

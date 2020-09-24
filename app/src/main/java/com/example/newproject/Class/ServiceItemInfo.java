@@ -5,8 +5,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.io.File;
+import java.io.Serializable;
 
-public class ServiceItemInfo implements Parcelable {
+public class ServiceItemInfo implements Parcelable{
     //parcelable사용시에는 writetoparcel, describecontent를 정의
     //봉사활동에 대한 정보를 데이터베이스에서 받아올 때 사용하는 객체
     //클래스는 다른 액티비티에서 정의해서 사용함
@@ -28,18 +29,19 @@ public class ServiceItemInfo implements Parcelable {
     public ServiceItemInfo(String userid, String type_num, String address, String phone, String day, String noti, String datelimit, String localname, String localurl, String imageurl, String textname, String extratext, String state, String key) {
         this.userid = userid;
         this.localname = localname;
-        this.type_num = type_num;
-        this.address = address;
-        this.phone = phone;
-        this.day = day;
-        this.noti = noti;
-        this.datelimit = datelimit;
         this.localurl = localurl;
         this.imageurl = imageurl;
         this.textname = textname;
         this.extratext = extratext;
         this.state = state;
         this.key = key;
+
+        this.type_num = type_num;
+        this.address = address;
+        this.phone = phone;
+        this.day = day;
+        this.noti = noti;
+        this.datelimit = datelimit;
     }
 
     //생성자 : 필드의 값을 초기화시켜주는 것 (this는 클래스 내부의 필드의 값, 매개변수로 받아온 값을 this를 통해 객체의 필드 값을 초기화 시켜줌)
@@ -139,6 +141,12 @@ public class ServiceItemInfo implements Parcelable {
         dest.writeString(this.extratext);
         dest.writeString(this.state);
         dest.writeString(this.key);
+        dest.writeString(this.type_num);
+        dest.writeString(this.address);
+        dest.writeString(this.phone);
+        dest.writeString(this.day);
+        dest.writeString(this.noti);
+        dest.writeString(this.datelimit);
     }
 
     protected ServiceItemInfo(Parcel in) {
@@ -150,6 +158,12 @@ public class ServiceItemInfo implements Parcelable {
         this.extratext = in.readString();
         this.state = in.readString();
         this.key = in.readString();
+        this.type_num = in.readString();
+        this.address = in.readString();
+        this.phone = in.readString();
+        this.day = in.readString();
+        this.noti = in.readString();
+        this.datelimit = in.readString();
     }
 
     public static final Parcelable.Creator<ServiceItemInfo> CREATOR = new Parcelable.Creator<ServiceItemInfo>() {

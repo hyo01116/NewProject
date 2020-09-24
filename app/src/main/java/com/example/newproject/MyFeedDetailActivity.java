@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
@@ -18,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import com.bumptech.glide.Glide;
+import com.example.newproject.Activity.MyFeedActivity;
 import com.example.newproject.Class.FeedInfo;
 import com.example.newproject.Class.LocalUserInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -71,13 +73,10 @@ public class MyFeedDetailActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {   //버튼 안됨
                 switch (menuItem.getItemId()){
                     case R.id.btn_update:
-                        System.out.println("1");
                         update();
-                        startToast("게시물이 수정되었습니다.");
                         break;
                     case R.id.btn_delete:
                         delete();
-                        startToast("게시물이 삭제되었습니다.");
                 }
                 return true;
             }
@@ -107,7 +106,6 @@ public class MyFeedDetailActivity extends AppCompatActivity {
                     }
                     break;
                 case R.id.btn_gallery:
-                    System.out.println("gallery");
                     check();
                     break;
                 case R.id.btn_updatepicture:
@@ -175,6 +173,14 @@ public class MyFeedDetailActivity extends AppCompatActivity {
 
         second_database = FirebaseDatabase.getInstance("https://newproject-ab6cb-feed.firebaseio.com/");
         second_database.getReference().child(first).child(second).child(third).child(key).removeValue();
+        startToast("게시물이 삭제되었습니다.");
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(MyFeedActivity.class);
+            }
+        }, 1000);
     }
     public void update() {
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -183,6 +189,14 @@ public class MyFeedDetailActivity extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance("https://newproject-ab6cb-feed.firebaseio.com/");
         database.getReference().child(first).child(second).child(third).child(key).setValue(feedInfo);
+        startToast("게시물이 수정되었습니다.");
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(MyFeedActivity.class);
+            }
+        }, 1000);
     }
     public void check(){
         Intent intent = new Intent();
@@ -218,5 +232,10 @@ public class MyFeedDetailActivity extends AppCompatActivity {
     public void startToast(String msg){
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
-
+    public void startActivity(Class c){
+        Intent intent = new Intent(this, c);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
+    }
 }

@@ -16,6 +16,7 @@ import com.example.newproject.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class LocalUserActivity extends AppCompatActivity{    //작성자 사용화면
     private BottomNavigationView bottomNavigationView;
+    private CardView cardView;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,8 +48,7 @@ public class LocalUserActivity extends AppCompatActivity{    //작성자 사용�
                         hometransaction.commit();
                         break;
                     case R.id.bottom_add:
-                        System.out.println("1");
-                        CardView cardView = findViewById(R.id.btn_cardview);
+                        cardView = findViewById(R.id.btn_cardview);
                         if(cardView.getVisibility() == View.VISIBLE){
                             cardView.setVisibility(View.GONE);
                         }
@@ -83,9 +83,21 @@ public class LocalUserActivity extends AppCompatActivity{    //작성자 사용�
             switch(v.getId()){
                 case R.id.btn_stuff:
                     startActivity(AddStuffItemActivity.class);
+                    if(cardView.getVisibility() == View.VISIBLE){
+                        cardView.setVisibility(View.GONE);
+                    }
+                    else{
+                        cardView.setVisibility(View.VISIBLE);
+                    }
                     break;
                 case R.id.btn_service:
                     startActivity(AddServiceItemActivity.class);
+                    if(cardView.getVisibility() == View.VISIBLE){
+                        cardView.setVisibility(View.GONE);
+                    }
+                    else{
+                        cardView.setVisibility(View.VISIBLE);
+                    }
                     break;
             }
         }

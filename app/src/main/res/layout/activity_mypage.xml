@@ -71,7 +71,6 @@
         </LinearLayout>
 
     </LinearLayout>
-
     <Button
         android:id="@+id/btn_myaccount"
         android:layout_width="match_parent"
@@ -89,7 +88,7 @@
         android:gravity="left"
         android:padding="20dp"
         android:text="나의 글 작성목록"
-        android:textColor="@android:color/black" />
+        android:textColor="@color/colorPrimary" />
     <Button
         android:id="@+id/btn_myfeed"
         android:layout_width="match_parent"

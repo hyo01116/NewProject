@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
 
 import com.example.newproject.Class.LocalUserInfo;
 import com.example.newproject.Class.ServiceItemInfo;
@@ -55,6 +56,7 @@ public class AddServiceItemActivity extends AppCompatActivity {
     private BottomNavigationView generalbottom;
 
     ImageView imageView;
+    private CardView cardView;
     private Uri filePath, basicPath, localurl;
 
     @Override
@@ -83,18 +85,6 @@ public class AddServiceItemActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()){
-                    case R.id.btn_med:
-                        type_num = "1";
-                        break;
-                    case R.id.btn_emer:
-                        type_num = "2";
-                        break;
-                    case R.id.btn_loc:
-                        type_num = "3";
-                        break;
-                    case R.id.btn_etc:
-                        type_num = "0";
-                        break;
                     case R.id.btn_noti:    //긴급
                         if(noti.equals("0")){
                             noti = "1";
@@ -118,13 +108,29 @@ public class AddServiceItemActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.imageView:
-                    CardView cardView2 = findViewById(R.id.btn_cardview);
-                    if(cardView2.getVisibility() == View.VISIBLE){
-                        cardView2.setVisibility(View.GONE);
+                    cardView = findViewById(R.id.btn_cardview);
+                    if(cardView.getVisibility() == View.VISIBLE){
+                        cardView.setVisibility(View.GONE);
                     }
                     else{
-                        cardView2.setVisibility(View.VISIBLE);
+                        cardView.setVisibility(View.VISIBLE);
                     }
+                    break;
+                case R.id.btn_med:
+                    type_num = "1";
+                    startToast("'보건의료'로 등록됩니다.");
+                    break;
+                case R.id.btn_emer:
+                    type_num = "2";
+                    startToast("'재해/재난'으로 등록됩니다.");
+                    break;
+                case R.id.btn_loc:
+                    type_num = "3";
+                    startToast("'농/어촌'으로 등록됩니다.");
+                    break;
+                case R.id.btn_etc:
+                    type_num = "0";
+                    startToast("기타");
                     break;
                 case R.id.btn_gallery:
                     check();
@@ -134,6 +140,7 @@ public class AddServiceItemActivity extends AppCompatActivity {
                     break;
                 case R.id.btn_delete:
                     delete_picture();
+                    startToast("사진이 삭제되었습니다.");
                     break;
             }
         }
@@ -187,6 +194,7 @@ public class AddServiceItemActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(Uri uri) {
                     basicPath = uri;
+                    startToast("게시글이 등록되었습니다.");
                     ServiceItemInfo serviceItemInfo = new ServiceItemInfo(user.getUid(), type_num, address, phone, day, noti, datelimit, localname, localurl, String.valueOf(basicPath), textname, extratext, "open", null);
                     uploader(serviceItemInfo, first, second, third);
 
@@ -207,7 +215,7 @@ public class AddServiceItemActivity extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
+                            startToast("게시글이 등록되었습니다.");
                             ServiceItemInfo serviceItemInfo = new ServiceItemInfo(user.getUid(), type_num, address, phone, day, noti, datelimit, localname, localurl, String.valueOf(filePath), textname, extratext, "open", null);
                             uploader(serviceItemInfo, first, second, third);
                         }
@@ -216,33 +224,8 @@ public class AddServiceItemActivity extends AppCompatActivity {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getApplicationContext(), "업로드 실패!", Toast.LENGTH_SHORT).show();
                         }
                     });
-            /*try{
-                InputStream stream = new FileInputStream(new File(imageurl));
-                final UploadTask uploadTask = mounatainImagesRef.putStream(stream);
-                uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                    @Override
-                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                        if(!task.isSuccessful()){
-                            throw task.getException();
-                        }
-                        return mounatainImagesRef.getDownloadUrl();
-                    }
-                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Uri> task) {
-                        if(task.isSuccessful()){
-                            Uri downloadUri = task.getResult();
-                            ServiceItemInfo serviceItemInfo = new ServiceItemInfo(user.getUid(), localname, address, localurl, imageurl, textname, service, datelimit, extratext, "open", null);
-                            uploader(serviceItemInfo, first, second, third);
-                        }
-                    }
-                });
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }*/
         }
     }
     public void uploader(final ServiceItemInfo serviceItemInfo, String first, String second, String third){
@@ -255,15 +238,20 @@ public class AddServiceItemActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        startToast("등록에 성공하였습니다.");
                         key = newdatabaseReference.getKey();
+                        Handler handler =new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                startActivity(LocalUserActivity.class);
+                            }
+                        }, 1000);
                         second_uploader(key);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        startToast("등록에 실패했습니다.");
                     }
                 });
     }
@@ -305,7 +293,12 @@ public class AddServiceItemActivity extends AppCompatActivity {
                     | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             try {
                 //Uri 파일을 Bitmap으로 만들어서 ImageView에 집어 넣는다.
-                Log.d("TAG", "uri:" + String.valueOf(filePath));
+                if(cardView.getVisibility() == View.VISIBLE){
+                    cardView.setVisibility(View.GONE);
+                }
+                else{
+                    cardView.setVisibility(View.VISIBLE);
+                }
                 this.getContentResolver().takePersistableUriPermission(filePath, takeFlags);
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 imageView.setImageBitmap(bitmap);
@@ -325,6 +318,8 @@ public class AddServiceItemActivity extends AppCompatActivity {
     }
     public void startActivity(Class c){
         Intent intent = new Intent(this, c);
-        startActivityForResult(intent, 0);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
     }
 }

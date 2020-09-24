@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
 
 import com.example.newproject.Class.LocalUserInfo;
 import com.example.newproject.Class.StuffItemInfo;
@@ -54,6 +56,7 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
 
     private String localname, key, noti, address, phone, type_num;
     private BottomNavigationView generalbottom;
+    private CardView cardView;
 
     ImageView  imageView;
     private Uri filePath, basicPath, localurl;
@@ -84,22 +87,6 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()){
-                    case R.id.btn_food:
-                        type_num = "1";
-                        startToast("분류 : 식품");
-                        break;
-                    case R.id.btn_wear:
-                        type_num = "2";
-                        startToast("분류 : 의류");
-                        break;
-                    case R.id.btn_item:
-                        type_num = "3";
-                        startToast("분류 : 생활용품");
-                        break;
-                    case R.id.btn_etc:
-                        type_num = "0";
-                        startToast("분류 : 기타");
-                        break;
                     case R.id.btn_noti:    //긴급
                         if(noti.equals("0")){
                             noti = "1";
@@ -122,13 +109,29 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
         @Override
         public void onClick(View v) {
             switch (v.getId()){
+                case R.id.btn_food:
+                    type_num = "1";
+                    startToast("'식품'으로 등록됩니다.");
+                    break;
+                case R.id.btn_wear:
+                    type_num = "2";
+                    startToast("'의류'로 등록됩니다.");
+                    break;
+                case R.id.btn_item:
+                    type_num = "3";
+                    startToast("'생활용품'으로 등록됩니다.");
+                    break;
+                case R.id.btn_etc:
+                    type_num = "0";
+                    startToast("기타");
+                    break;
                 case R.id.imageView:
-                    CardView cardView2 = findViewById(R.id.btn_cardview);
-                    if(cardView2.getVisibility() == View.VISIBLE){
-                        cardView2.setVisibility(View.GONE);
+                    cardView = findViewById(R.id.btn_cardview);
+                    if(cardView.getVisibility() == View.VISIBLE){
+                        cardView.setVisibility(View.GONE);
                     }
                     else{
-                        cardView2.setVisibility(View.VISIBLE);
+                        cardView.setVisibility(View.VISIBLE);
                     }
                     break;
                 case R.id.btn_gallery:
@@ -139,6 +142,8 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
                     break;
                 case R.id.btn_delete:
                     delete();
+                    startToast("사진이 삭제되었습니다.");
+                    break;
             }
         }
     };
@@ -191,6 +196,7 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
                 @Override
                 public void onSuccess(Uri uri) {
                     basicPath = uri;
+                    startToast("게시글이 등록되었습니다.");
                     StuffItemInfo stuffItemInfo = new StuffItemInfo(type_num, user.getUid(), day, noti, datelimit, phone, address, localname, localurl, String.valueOf(basicPath), textname, extratext, "open", null);
                     uploader(stuffItemInfo, first, second, third);
                 }
@@ -210,7 +216,7 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
+                            startToast("게시글이 등록되었습니다.");
                             StuffItemInfo stuffItemInfo = new StuffItemInfo(type_num, user.getUid(), day, noti, datelimit, phone, address, localname, localurl, String.valueOf(filePath), textname, extratext, "open", null);
                             uploader(stuffItemInfo, first, second, third);
                         }
@@ -219,7 +225,6 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getApplicationContext(), "업로드 실패!", Toast.LENGTH_SHORT).show();
                         }
                     });
         }
@@ -234,15 +239,20 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        startToast("등록에 성공하였습니다.");
                         key = newdatabaseReference.getKey();
                         second_uploader(key);
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                startActivity(LocalUserActivity.class);
+                            }
+                        }, 1000);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        startToast("등록에 실패했습니다.");
                     }
                 });
     }
@@ -282,6 +292,12 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
                     & (Intent.FLAG_GRANT_READ_URI_PERMISSION
                     | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             try {
+                if(cardView.getVisibility() == View.VISIBLE){
+                    cardView.setVisibility(View.GONE);
+                }
+                else{
+                    cardView.setVisibility(View.VISIBLE);
+                }
                 this.getContentResolver().takePersistableUriPermission(filePath, takeFlags);
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 imageView.setImageBitmap(bitmap);
@@ -300,6 +316,8 @@ public class AddStuffItemActivity extends AppCompatActivity {    //activity로 �
     }
     public void startActivity(Class c){
         Intent intent = new Intent(this, c);
-        startActivityForResult(intent, 0);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
     }
 }

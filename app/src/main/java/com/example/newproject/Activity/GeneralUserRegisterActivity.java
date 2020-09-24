@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -79,15 +80,6 @@ public class GeneralUserRegisterActivity extends AppCompatActivity {
                     break;
                 case R.id.btn_save_add:
                     generaluserregister();
-                    /*Handler timer = new Handler();
-                    timer.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Intent intent = new Intent(getContext(), LoginActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                        }
-                    }, 2000);*/
                     break;
                 case R.id.btn_gallery:
                     check();
@@ -126,6 +118,7 @@ public class GeneralUserRegisterActivity extends AppCompatActivity {
                                         @Override
                                         public void onSuccess(Uri uri) {
                                             basicPath = uri;
+                                            startToast("회원가입 완료");
                                             GeneralUserInfo generalUserInfo = new GeneralUserInfo(email, name,String.valueOf(basicPath), first, second, third);
                                             UserLocationInfo userLocationInfo = new UserLocationInfo(first, second, third);
                                             userUpload(generalUserInfo, userLocationInfo, user.getUid());
@@ -144,7 +137,7 @@ public class GeneralUserRegisterActivity extends AppCompatActivity {
                                             .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                                 @Override
                                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                                    Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
+                                                    startToast("회원가입 완료");
                                                     GeneralUserInfo generalUserInfo = new GeneralUserInfo(email, name,  String.valueOf(filePath), first,second, third);
                                                     UserLocationInfo userLocationInfo = new UserLocationInfo(first, second, third);
                                                     userUpload(generalUserInfo, userLocationInfo, user.getUid());
@@ -154,7 +147,6 @@ public class GeneralUserRegisterActivity extends AppCompatActivity {
                                             .addOnFailureListener(new OnFailureListener() {
                                                 @Override
                                                 public void onFailure(@NonNull Exception e) {
-                                                    Toast.makeText(getApplicationContext(), "업로드 실패!", Toast.LENGTH_SHORT).show();
                                                 }
                                             });
                                 }
@@ -173,7 +165,13 @@ public class GeneralUserRegisterActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                               startActivity(LoginActivity.class);
+                            }
+                        }, 1000);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -220,10 +218,12 @@ public class GeneralUserRegisterActivity extends AppCompatActivity {
     }
     public void startActivity(Class c){
         Intent intent = new Intent(this, c);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
+        finish();
     }
-    /*public void startToast(String msg){
-        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-    }*/
+    public void startToast(String msg){
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
 
 }

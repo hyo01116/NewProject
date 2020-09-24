@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -19,9 +21,11 @@ import androidx.cardview.widget.CardView;
 import com.bumptech.glide.Glide;
 import com.example.newproject.Class.LocalUserInfo;
 import com.example.newproject.Class.ServiceItemInfo;
+import com.example.newproject.MyItemListActivity;
 import com.example.newproject.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -43,32 +47,36 @@ import java.util.Locale;
 public class ServiceItemListDetailActivity extends AppCompatActivity {
 
     private String itemkey, secondkey;
-    private ImageView imageurl, localurl;
-    private TextView textname, localname, extratext;
+    private ImageView imageView;
+    private TextView textname, datelimit, extratext;
 
-    private String first, second, third, local_name, extra_text, text_name, type_num, address, phone;
+    private String first, second, third, type_num;
+    private BottomNavigationView generalbottom;
 
     private FirebaseUser user;
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
-
     private FirebaseDatabase second_database;
     private DatabaseReference second_databaseReference;
 
-    private Uri filePath, local_url;
+    private Uri filePath;
+    private ServiceItemInfo serviceItemInfo;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_serviceitemdetail);
 
-        findViewById(R.id.imageurl).setOnClickListener(onClickListener);
+        findViewById(R.id.imageView).setOnClickListener(onClickListener);
+        findViewById(R.id.btn_med).setOnClickListener(onClickListener);
+        findViewById(R.id.btn_emer).setOnClickListener(onClickListener);
+        findViewById(R.id.btn_loc).setOnClickListener(onClickListener);
+        findViewById(R.id.btn_etc).setOnClickListener(onClickListener);
+
         findViewById(R.id.btn_gallery).setOnClickListener(onClickListener);
         findViewById(R.id.btn_updatepicture).setOnClickListener(onClickListener);
         findViewById(R.id.btn_deletepicture).setOnClickListener(onClickListener);
-        findViewById(R.id.btn_update).setOnClickListener(onClickListener);
-        findViewById(R.id.btn_delete).setOnClickListener(onClickListener);
-        findViewById(R.id.btn_clear).setOnClickListener(onClickListener);
+
 
         itemkey = getIntent().getStringExtra("itemkey");
         secondkey = getIntent().getStringExtra("secondkey");
@@ -76,33 +84,44 @@ public class ServiceItemListDetailActivity extends AppCompatActivity {
         second = getIntent().getStringExtra("second");
         third = getIntent().getStringExtra("third");
         //userid = getIntent().getStringExtra("userid");   //글 올린사람의 id
-        imageurl = (ImageView) findViewById(R.id.imageurl);
+        imageView = (ImageView) findViewById(R.id.imageView);
         textname = (TextView) findViewById(R.id.textname);
-        localname = (TextView) findViewById(R.id.localname);
-        localurl = (ImageView)findViewById(R.id.localurl);
+        datelimit = (TextView) findViewById(R.id.datelimit);
         extratext = (TextView) findViewById(R.id.extratext);
-        finduserinfo();
+        generalbottom = findViewById(R.id.generalbottom);
+        generalbottom.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.btn_update:
+                        update();
+                        break;
+                    case R.id.btn_delete:
+                        delete();
+                        break;
+                }
+                return true;
+            }
+        });
+        findservice();
     }
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.btn_update:    //변화된게 없다면 고대로 다시 저장
-                    update();
-                    startToast("게시물이 수정되었습니다.");
-                    //startfunction();
+                case R.id.btn_med:
+                    type_num = "1";
                     break;
-                case R.id.btn_delete:    //db에서 해당 글 모두 삭제
-                    delete();
-                    startToast("게시물이 삭제되었습니다.");
-                    //startfunction();
+                case R.id.btn_emer:
+                    type_num = "2";
                     break;
-                case R.id.btn_clear:     //state를 close로 변화 + 리스트에 나타낼때 state가 close인 경우 회색으로 표시
-                    itemclear_basicdb();
-                    startToast("게시물이 거래완료 되었습니다.");
-                    //startfunction();
+                case R.id.btn_loc:
+                    type_num = "3";
                     break;
-                case R.id.imageurl:
+                case R.id.btn_etc:
+                    type_num = "0";
+                    break;
+                case R.id.imageView:
                     CardView cardView = findViewById(R.id.btn_cardview);
                     if(cardView.getVisibility() == View.VISIBLE){
                         cardView.setVisibility(View.GONE);
@@ -112,7 +131,6 @@ public class ServiceItemListDetailActivity extends AppCompatActivity {
                     }
                     break;
                 case R.id.btn_gallery:
-                    System.out.println("gallery");
                     check();
                     break;
                 case R.id.btn_updatepicture:
@@ -125,25 +143,16 @@ public class ServiceItemListDetailActivity extends AppCompatActivity {
         }
     };
 
-    public void findservice(String first, String second, String third) {
+    public void findservice() {
         database = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
         databaseReference = database.getReference("service").child(first).child(second).child(third).child(itemkey);
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ServiceItemInfo serviceItemInfo = snapshot.getValue(ServiceItemInfo.class);
-                local_url = Uri.parse(serviceItemInfo.getLocalurl());
-                local_name = serviceItemInfo.getLocalname();
-                filePath = Uri.parse(serviceItemInfo.getImageurl());
-                extra_text = serviceItemInfo.getExtratext();
-                text_name = serviceItemInfo.getTextname();
-                type_num = serviceItemInfo.getType_num();
-                address = serviceItemInfo.getAddress();
-                phone = serviceItemInfo.getPhone();
-                Glide.with(ServiceItemListDetailActivity.this).load(serviceItemInfo.getImageurl()).into(imageurl);
-                Glide.with(ServiceItemListDetailActivity.this).load(serviceItemInfo.getLocalurl()).into(localurl);
+                serviceItemInfo = snapshot.getValue(ServiceItemInfo.class);
+                Glide.with(ServiceItemListDetailActivity.this).load(serviceItemInfo.getImageurl()).into(imageView);
                 textname.setText(serviceItemInfo.getTextname());
-                localname.setText(serviceItemInfo.getLocalname());
+                datelimit.setText(serviceItemInfo.getDatelimit());
                 extratext.setText(serviceItemInfo.getExtratext());
             }
 
@@ -153,35 +162,6 @@ public class ServiceItemListDetailActivity extends AppCompatActivity {
             }
         });
     }
-    public void finduserinfo() {
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        database = FirebaseDatabase.getInstance();
-        final DocumentReference documentReference = db.collection("Users").document(user.getUid());
-        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot documentSnapshot = task.getResult();
-                    if (documentSnapshot.exists()) {
-                        LocalUserInfo localUserInfo = documentSnapshot.toObject(LocalUserInfo.class);
-                        first = localUserInfo.getFirst();
-                        second = localUserInfo.getSecond();
-                        third = localUserInfo.getThird();
-                        findservice(first, second, third);
-                    }
-                }
-            }
-        });
-    }
-    public void itemclear_basicdb() {
-        //완료된 작업에 대해서는 상태를 close로 바꿔서 더이상 리스트에 보이지 않게 수정
-        //값 수정시에는 setvalue사용
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        database = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
-        database.getReference("service").child(first).child(second).child(third).child(itemkey).child("state").setValue("close");
-    }
-
     public void delete() {
         //데이터 삭제시에 removevalue
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -190,28 +170,56 @@ public class ServiceItemListDetailActivity extends AppCompatActivity {
 
         second_database = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
         second_database.getReference("service").child(first).child(second).child(third).child(itemkey).removeValue();
+        startToast("게시글이 삭제되었습니다.");
+        Handler handler =new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(MyItemListActivity.class);
+            }
+        }, 1000);
     }
     public void update() {
         //데이터를 업데이트 하고 싶다면, 에디트텍스트로 내용을 받아서 새로운 객체를 생성 한뒤, setvalue로 새로운 객체 값을 넣어줌
         user = FirebaseAuth.getInstance().getCurrentUser();
-        text_name = ((EditText) findViewById(R.id.textname)).getText().toString();
-        extra_text = ((EditText) findViewById(R.id.extratext)).getText().toString();
-        String noti = "0";
-        String datelimit="0";
+        String localurl = null;
+        String imageurl = null;
+        if(serviceItemInfo.getLocalurl() != null) {
+            localurl = serviceItemInfo.getLocalurl();
+        }
+        if(serviceItemInfo.getImageurl() != null){
+            imageurl = serviceItemInfo.getImageurl();
+        }
+        String localname = serviceItemInfo.getLocalname();
+        String noti = serviceItemInfo.getNoti();
+        String type_num = serviceItemInfo.getType_num();
         String day;
+        String phone = serviceItemInfo.getPhone();
+        String address = serviceItemInfo.getAddress();
+
+        String datelimit = ((EditText)findViewById(R.id.datelimit)).getText().toString();
+        String textname = ((EditText) findViewById(R.id.textname)).getText().toString();
+        String extratext = ((EditText) findViewById(R.id.extratext)).getText().toString();
 
         Date currentTime = Calendar.getInstance().getTime();
         SimpleDateFormat year = new SimpleDateFormat("yyyy", Locale.getDefault());
-        SimpleDateFormat month = new SimpleDateFormat("mm", Locale.getDefault());
+        SimpleDateFormat month = new SimpleDateFormat("MM", Locale.getDefault());
         SimpleDateFormat date = new SimpleDateFormat("dd", Locale.getDefault());
 
         day = year.format(currentTime) + "/"+ month.format(currentTime) +"/"+date.format(currentTime);
 
-
-        ServiceItemInfo serviceItemInfo = new ServiceItemInfo(user.getUid(), type_num, address, phone, day, noti, datelimit, local_name, String.valueOf(local_url), String.valueOf(filePath), text_name, extra_text, "open", null);
+        ServiceItemInfo serviceItemInfo = new ServiceItemInfo(user.getUid(), type_num, address, phone, day, noti, datelimit, localname, String.valueOf(localurl), String.valueOf(filePath), textname, extratext, "open", null);
 
         database = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
         database.getReference("service").child(first).child(second).child(third).child(itemkey).setValue(serviceItemInfo);
+        startToast("게시물이 수정되었습니다.");
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(MyItemListActivity.class);
+            }
+        }, 1000);
     }
     public void check(){
         Intent intent = new Intent();
@@ -225,12 +233,15 @@ public class ServiceItemListDetailActivity extends AppCompatActivity {
         //request코드가 0이고 OK를 선택했고 data에 뭔가가 들어 있다면
         if(requestCode == 0 && resultCode == RESULT_OK){
             filePath = data.getData();
-            Log.d("TAG", "uri:" + String.valueOf(filePath));
+            final int takeFlags = data.getFlags()
+                    & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             try {
                 //Uri 파일을 Bitmap으로 만들어서 ImageView에 집어 넣는다.
+                this.getContentResolver().takePersistableUriPermission(filePath, takeFlags);
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                imageurl.setImageBitmap(bitmap);
-                imageurl.setVisibility(View.VISIBLE);
+                imageView.setImageBitmap(bitmap);
+                imageView.setVisibility(View.VISIBLE);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -239,10 +250,15 @@ public class ServiceItemListDetailActivity extends AppCompatActivity {
     }
     public void delete_picture(){
         filePath = null;
-        imageurl.setVisibility(View.INVISIBLE);
+        imageView.setVisibility(View.INVISIBLE);
     }
     public void startToast(String msg){
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
-
+    public void startActivity(Class c){
+        Intent intent = new Intent(this, c);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
+    }
 }

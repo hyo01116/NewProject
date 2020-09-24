@@ -54,7 +54,7 @@ public class ServiceItemListActivity extends Fragment implements ServiceItemList
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container, @NonNull Bundle savedInstanceState) {
-        ViewGroup view = (ViewGroup) inflater.inflate(R.layout.activity_service, container, false);
+        ViewGroup view = (ViewGroup) inflater.inflate(R.layout.activity_servicelist, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);

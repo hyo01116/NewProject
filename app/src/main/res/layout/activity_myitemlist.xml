@@ -7,13 +7,14 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/top_toolbar"
+        android:background="@color/toolbarcolor"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="60dp">
         <TextView
             android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="MyItem List"
+            android:text="글 작성목록"
             android:textColor="@android:color/black"
             android:textSize="20dp"
             android:textStyle="bold"></TextView>

@@ -173,7 +173,7 @@ public class ServiceActivity extends Fragment implements ServiceItemAdapter.OnIt
                     public void onItemClick(ServiceItemAdapter.ServiceItemViewHolder holder, View view, int position) {
                         ServiceItemAdapter.ServiceItemViewHolder viewHolder = (ServiceItemAdapter.ServiceItemViewHolder) recyclerView_noti.findViewHolderForAdapterPosition(position);
                         Intent intent = new Intent(getContext(), ServiceItemDetailActivity.class);
-                        intent.putExtra("Serialize", arrayList_noti.get(position));
+                        intent.putExtra("parcel", arrayList_noti.get(position));
                         intent.putExtra("name", name);
                         startActivity(intent);
                     }
@@ -185,7 +185,7 @@ public class ServiceActivity extends Fragment implements ServiceItemAdapter.OnIt
                     public void onItemClick(ServiceItemAdapter.ServiceItemViewHolder holder, View view, int position) {
                         ServiceItemAdapter.ServiceItemViewHolder viewHolder = (ServiceItemAdapter.ServiceItemViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
                         Intent intent = new Intent(getContext(), ServiceItemDetailActivity.class);
-                        intent.putExtra("Serialize", arrayList.get(position));
+                        intent.putExtra("parcel", arrayList.get(position));
                         intent.putExtra("name", name);
                         startActivity(intent);
                     }
@@ -209,8 +209,8 @@ public class ServiceActivity extends Fragment implements ServiceItemAdapter.OnIt
                 //비동기 해결하기 위해 구현하는데 그 이유는 다른 일 하다가 데이터가 준비되면 콜백함수내의 작업들을 실행하라고
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
                     ServiceItemInfo serviceItemInfo = dataSnapshot.getValue(ServiceItemInfo.class);
-                    if(serviceItemInfo.getType_num().equals(type) && serviceItemInfo.getNoti().equals("1")){
-                        if(serviceItemInfo.getNoti().equals("1")){
+                    if(serviceItemInfo.getType_num().equals(type) && serviceItemInfo.getState().equals("open")){
+                        if(serviceItemInfo.getNoti().equals("0")){
                             arrayList_type.add(serviceItemInfo);
                         }
                     }
@@ -223,7 +223,7 @@ public class ServiceActivity extends Fragment implements ServiceItemAdapter.OnIt
                     public void onItemClick(ServiceItemAdapter.ServiceItemViewHolder holder, View view, int position) {
                         ServiceItemAdapter.ServiceItemViewHolder viewHolder = (ServiceItemAdapter.ServiceItemViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
                         Intent intent = new Intent(getContext(), ServiceItemDetailActivity.class);
-                        intent.putExtra("Serialize", arrayList_type.get(position));
+                        intent.putExtra("parcel", arrayList_type.get(position));
                         intent.putExtra("name", name);
                         startActivity(intent);
                     }

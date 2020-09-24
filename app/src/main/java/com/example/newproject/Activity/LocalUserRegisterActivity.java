@@ -6,6 +6,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -84,15 +85,6 @@ public class LocalUserRegisterActivity extends AppCompatActivity {
                     break;
                 case R.id.btn_save_add:
                     localuserregister();
-                    /*Handler timer = new Handler();
-                    timer.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Intent intent = new Intent(getContext(), LoginActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                        }
-                    }, 2000);*/
                     break;
                 case R.id.btn_gallery:
                     check();
@@ -102,6 +94,7 @@ public class LocalUserRegisterActivity extends AppCompatActivity {
                     break;
                 case R.id.btn_delete:
                     delete();
+                    startToast("사진이 삭제되었습니다.");
                     break;
             }
 
@@ -133,6 +126,7 @@ public class LocalUserRegisterActivity extends AppCompatActivity {
                                         @Override
                                         public void onSuccess(Uri uri) {
                                             basicPath = uri;
+                                            startToast("회원가입 완료");
                                             LocalUserInfo localUserInfo = new LocalUserInfo(email, name, phone, address, String.valueOf(basicPath), null, first, second, third);
                                             UserLocationInfo userLocationInfo = new UserLocationInfo(first, second, third);
                                             userUpload(localUserInfo, userLocationInfo, user.getUid(), name);
@@ -154,6 +148,7 @@ public class LocalUserRegisterActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                                     //Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
+                                                    startToast("회원가입 완료");
                                                     LocalUserInfo localUserInfo = new LocalUserInfo(email, name, phone, address, String.valueOf(filePath), null, first, second, third);
                                                     UserLocationInfo userLocationInfo = new UserLocationInfo(first, second, third);
                                                     userUpload(localUserInfo, userLocationInfo, user.getUid(), name);
@@ -195,7 +190,13 @@ public class LocalUserRegisterActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                startActivity(LoginActivity.class);
+                            }
+                        }, 1000);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -215,11 +216,16 @@ public class LocalUserRegisterActivity extends AppCompatActivity {
                 System.out.println("해당되는 주소가 없습니다.");
             } else {
                 Address addr = list[0].get(0);
-                System.out.println("f: " +addr.getLocality()+" s: "+addr.getSubThoroughfare()+" t: "+addr.getAdminArea());
                 lat[0] = addr.getLatitude();
                 lon[0] = addr.getLongitude();
-                System.out.println("lat: " + lat + " lon: " + lon);
-                System.out.println("addr: " + addr);
+                System.out.println(addr.getThoroughfare());     //addr에서 현재 주소를 받아와서 행정구역명 찾을수있게 함
+                System.out.println(addr.getSubThoroughfare());
+                System.out.println(addr.getSubLocality());
+                System.out.println(addr.getAdminArea());
+                System.out.println(addr.getCountryName());
+                System.out.println(addr.getSubAdminArea());
+                System.out.println(addr.getLocality());
+                System.out.println(addr.getLocale());
                 geoPoint[0] = new GeoPoint(lat[0], lon[0]);
                 db.collection("Users").document(userid).update("geoPoint", geoPoint[0]);
             }
@@ -260,7 +266,9 @@ public class LocalUserRegisterActivity extends AppCompatActivity {
     }
     public void startActivity(Class c){
         Intent intent = new Intent(this, c);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
+        finish();
     }
     public void startToast(String msg){
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();

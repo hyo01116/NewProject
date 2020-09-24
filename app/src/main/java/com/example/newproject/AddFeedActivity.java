@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
@@ -24,6 +25,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
+import com.example.newproject.Activity.LocalUserActivity;
 import com.example.newproject.Class.FeedInfo;
 import com.example.newproject.Class.GeneralUserInfo;
 import com.example.newproject.Class.LocalUserInfo;
@@ -48,6 +50,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class AddFeedActivity extends AppCompatActivity {     //피드 작성
+    //피드 작성후에 자동으로 feedactivity가 실행되게함 (2초 후)
 
     private FirebaseUser user;
     private FirebaseDatabase database, second_database;
@@ -55,7 +58,11 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
 
     private Uri filePath, basicPath;
     private BottomNavigationView bottomNavigationView;
-    ImageView imageView;
+    ImageView imageView, imageView2;
+
+    private CardView cardView;
+
+    private TextView user_name, user_address;
 
     private String user_level = "1";
 
@@ -67,9 +74,12 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
 
         findViewById(R.id.imageView).setOnClickListener(onClickListener);
         findViewById(R.id.btn_gallery).setOnClickListener(onClickListener);
-        findViewById(R.id.btn_update).setOnClickListener(onClickListener);
+        //findViewById(R.id.btn_update).setOnClickListener(onClickListener);
         findViewById(R.id.btn_delete).setOnClickListener(onClickListener);
         imageView = (ImageView)findViewById(R.id.imageView);
+        user_name = (TextView)findViewById(R.id.user_name);
+        user_address = (TextView)findViewById(R.id.user_address);
+        imageView2 = (ImageView)findViewById(R.id.imageView2);
 
         myApplication = (MyApplication) getApplicationContext();
         user_level = myApplication.getUser_level();
@@ -89,7 +99,7 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
                         }
                     break;
                 }
-                return false;
+                return true;
             }
         });
         setuserinfo();
@@ -99,7 +109,7 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.imageView:
-                    CardView cardView = findViewById(R.id.btn_cardview);
+                    cardView = findViewById(R.id.btn_cardview);
                     if(cardView.getVisibility() == View.VISIBLE){
                         cardView.setVisibility(View.GONE);
                     }
@@ -110,9 +120,9 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
                 case R.id.btn_gallery:
                     check();
                     break;
-                case R.id.btn_update:
+                /*case R.id.btn_update:
                     check();
-                    break;
+                    break;*/
                 case R.id.btn_delete:
                     delete_picture();
                     break;
@@ -185,6 +195,7 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
     public void setuserinfo(){
         final String[] picture = new String[1];
         final String[] name = new String[1];
+        final String[] address = new String[1];
         user = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final DocumentReference documentReference = db.collection("Users").document(user.getUid());    //현재 로그인한 사람의 주소
@@ -194,9 +205,22 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
                 if (task.isSuccessful()) {
                     DocumentSnapshot documentSnapshot = task.getResult();
                     if (documentSnapshot.exists()) {
-                        LocalUserInfo localUserInfo = documentSnapshot.toObject(LocalUserInfo.class);
-                        picture[0] = localUserInfo.getImageurl();
-                        name[0] = localUserInfo.getName();
+                        if(user_level.equals("1")){
+                            GeneralUserInfo generalUserInfo = documentSnapshot.toObject(GeneralUserInfo.class);
+                            picture[0] = generalUserInfo.getImageurl();
+                            name[0] = generalUserInfo.getName();
+                            Glide.with(AddFeedActivity.this).load(picture[0]).into(imageView2);
+                            user_name.setText(name[0]);
+                        }
+                        else {
+                            LocalUserInfo localUserInfo = documentSnapshot.toObject(LocalUserInfo.class);
+                            picture[0] = localUserInfo.getImageurl();
+                            name[0] = localUserInfo.getName();
+                            address[0] = localUserInfo.getAddress();
+                            Glide.with(AddFeedActivity.this).load(picture[0]).into(imageView2);
+                            user_name.setText(name[0]);
+                            user_address.setText(address[0]);
+                        }
                     }
                 }
             }
@@ -215,6 +239,7 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
                 @Override
                 public void onSuccess(Uri uri) {
                     basicPath = uri;
+                    startToast("게시글이 저장되었습니다.");
                     FeedInfo feedInfo = new FeedInfo(user.getUid(), localurl, localname, address, phone, String.valueOf(basicPath), extratext);
                     uploader(feedInfo, first, second, third);
 
@@ -235,7 +260,8 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
+                            startToast("게시글이 저장되었습니다.");
                             FeedInfo feedInfo = new FeedInfo(user.getUid(), localurl,  localname, address, phone, String.valueOf(filePath), extratext);
                             uploader(feedInfo, first, second, third);
                         }
@@ -244,7 +270,7 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getApplicationContext(), "업로드 실패!", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getApplicationContext(), "업로드 실패!", Toast.LENGTH_SHORT).show();
                         }
                     });
         }
@@ -262,6 +288,13 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
                     public void onSuccess(Void aVoid) {
                         key[0] = newdatabaseReference.getKey();      //해당 피드의 키
                         second_uploader(key[0]);
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                startActivity(LocalUserActivity.class);
+                            }
+                        }, 1000);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -305,6 +338,12 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
                     & (Intent.FLAG_GRANT_READ_URI_PERMISSION
                     | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             try {
+                if(cardView.getVisibility() == View.VISIBLE){
+                    cardView.setVisibility(View.GONE);
+                }
+                else{
+                    cardView.setVisibility(View.VISIBLE);
+                }
                 this.getContentResolver().takePersistableUriPermission(filePath, takeFlags);
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 imageView.setImageBitmap(bitmap);
@@ -319,4 +358,14 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
         //이미지 삭제시 사라지게 하는법
         imageView.setVisibility(View.INVISIBLE);
     }
+    public void startActivity(Class c){
+        Intent intent = new Intent(this, c);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
+    }
+    public void startToast(String msg){
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
+
 }

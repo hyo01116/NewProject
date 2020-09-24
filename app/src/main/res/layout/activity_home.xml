@@ -26,7 +26,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
-                android:text="동네별"
                 android:textSize="22sp"
                 android:textStyle="bold" />
         </RelativeLayout>
@@ -34,9 +33,11 @@
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs"
+        app:tabSelectedTextColor="@color/colorPrimary"
+        app:tabIndicatorColor="@color/toolbarcolor"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:tabTextColor="@android:color/black" />
+        android:layout_height="60dp"
+        app:tabTextColor="@android:color/darker_gray" />
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager"

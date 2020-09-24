@@ -7,7 +7,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/top_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:background="@color/toolbarcolor">
         <TextView
             android:layout_width="380dp"
@@ -39,14 +39,53 @@
         android:background="@color/toolbarcolor"
         android:src="@drawable/recycler_line"/>
         <LinearLayout
-            android:layout_margin="10dp"
+            android:layout_marginLeft="10dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageView2"
+                android:layout_margin="10dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+
+                android:scaleType="centerCrop"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_margin="5dp">
+
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    android:textSize="17sp" />
+
+                <TextView
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/user_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_margin="15dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <EditText
                 android:background="@null"
                 android:id="@+id/extratext"
-                android:hint="내용"
+                android:hint="내용(피드로 게시될 내용을 작성해 주세요)"
                 android:inputType="textMultiLine"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"/>
@@ -62,22 +101,22 @@
         app:cardCornerRadius="15dp">
 
         <LinearLayout
+            android:background="#FFFFEB3B"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:padding="5dp">
 
             <Button
+                android:backgroundTint="#FFFFFF"
+                android:textColor="@color/colorPrimary"
                 android:id="@+id/btn_gallery"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="갤러리" />
             <Button
-                android:id="@+id/btn_update"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="사진 수정 " />
-            <Button
+                android:backgroundTint="#FFFFFF"
+                android:textColor="@color/colorPrimary"
                 android:id="@+id/btn_delete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

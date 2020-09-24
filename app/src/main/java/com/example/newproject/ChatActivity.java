@@ -55,7 +55,6 @@ public class ChatActivity extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         chat_userid = getIntent().getStringExtra("chat_userid");    //상대방 id
         my_userid = user.getUid();
-        nickname = getIntent().getStringExtra("nickname");
 
 
         chat_databaseReference = FirebaseDatabase.getInstance("https://newproject-ab6cb-chat.firebaseio.com/").getReference(my_userid).child(chat_userid);
@@ -76,8 +75,7 @@ public class ChatActivity extends AppCompatActivity {
                     ChatInfo chat = new ChatInfo();
                     chat.setData(msg);
                     chat.setUid(my_userid);
-                    chat.setNickname(nickname);
-                    et_textsend.setText(" ");
+                    et_textsend.setText("");
                     chat_databaseReference.push().setValue(chat);
                     chat_secondary_databseReference.push().setValue(chat);
                 }

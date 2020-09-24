@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -53,7 +54,7 @@ public class StuffActivity extends Fragment implements StuffItemAdapter.OnItemCl
     private FirebaseUser user;
     private FirebaseFirestore db;
 
-    private String first, second, third, name;
+    private String first, second, third, name, user_level;
 
     TextView et_phone;
 
@@ -68,6 +69,7 @@ public class StuffActivity extends Fragment implements StuffItemAdapter.OnItemCl
         dividerItemDecoration.setDrawable(getContext().getResources().getDrawable(R.drawable.recycler_line));
 
         firebaseAnalytics = FirebaseAnalytics.getInstance(getContext());
+        user_level = "1";
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
@@ -86,7 +88,9 @@ public class StuffActivity extends Fragment implements StuffItemAdapter.OnItemCl
             @Override
             public void onClick(View v) {
                 findLocationinfo("1");
-                System.out.println("food");
+                Bundle stuff_food = new Bundle();
+                stuff_food.putString("user_level", user_level);
+                firebaseAnalytics.logEvent("stuff_food", stuff_food);
             }
         });
         btn_wear = (Button) view.findViewById(R.id.btn_wear);
@@ -94,7 +98,9 @@ public class StuffActivity extends Fragment implements StuffItemAdapter.OnItemCl
             @Override
             public void onClick(View v) {
                 findLocationinfo("2");
-                System.out.println("wear");
+                Bundle stuff_wear = new Bundle();
+                stuff_wear.putString("user_level", user_level);
+                firebaseAnalytics.logEvent("stuff_wear", stuff_wear);
             }
         });
         btn_item = (Button) view.findViewById(R.id.btn_item);
@@ -102,7 +108,9 @@ public class StuffActivity extends Fragment implements StuffItemAdapter.OnItemCl
             @Override
             public void onClick(View v) {
                 findLocationinfo("3");
-                System.out.println("item");
+                Bundle stuff_item = new Bundle();
+                stuff_item.putString("user_level", user_level);
+                firebaseAnalytics.logEvent("stuff_item", stuff_item);
             }
         });
         btn_etc = (Button) view.findViewById(R.id.btn_etc);
@@ -110,7 +118,9 @@ public class StuffActivity extends Fragment implements StuffItemAdapter.OnItemCl
             @Override
             public void onClick(View v) {
                 findLocationinfo("0");
-                System.out.println("etc");
+                Bundle stuff_etc = new Bundle();
+                stuff_etc.putString("user_level", user_level);
+                firebaseAnalytics.logEvent("stuff_etc", stuff_etc);
             }
         });
         findLocationinfo("-1");
@@ -155,11 +165,12 @@ public class StuffActivity extends Fragment implements StuffItemAdapter.OnItemCl
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     StuffItemInfo stuffItemInfo = dataSnapshot.getValue(StuffItemInfo.class);
                     //getvalue를 통해 객체에 받아온 정보를 넣고 open 이라면 arraylist에 대입
+                    //거꾸로 나오게 해야하는데ㅠㅠ
                     if (stuffItemInfo.getState().equals("open")) {
                         if (stuffItemInfo.getNoti().equals("1")) {
-                            arrayList_noti.add(stuffItemInfo);
+                            arrayList_noti.add(0, stuffItemInfo);
                         } else {
-                            arrayList.add(stuffItemInfo);
+                            arrayList.add(0, stuffItemInfo);
                         }
                     }
                 }

@@ -39,9 +39,15 @@ public class HomeActivity extends Fragment {
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.activity_home, container, false);
         setHasOptionsMenu(true);
 
+        final int[] ICONS = new int[]{
+                R.drawable.ic_baseline_card_giftcard_24,
+                R.drawable.ic_baseline_emoji_people_24,
+        };
+
         TabLayout tabs = (TabLayout) view.findViewById(R.id.tabs);
-        tabs.addTab(tabs.newTab().setText("물품"));
-        tabs.addTab(tabs.newTab().setText("봉사활동"));
+        tabs.addTab(tabs.newTab().setText("물품").setIcon(ICONS[0]));
+        tabs.addTab(tabs.newTab().setText("봉사활동").setIcon(ICONS[1]));
+
         tabs.setTabGravity(tabs.GRAVITY_FILL);
         //tab 설정
 

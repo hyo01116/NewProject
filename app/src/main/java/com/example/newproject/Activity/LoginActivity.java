@@ -99,6 +99,7 @@ public class LoginActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 findlogin();
+                                startToast("환영합니다");
                             } else {
                                 startToast("이메일 또는 비밀번호가 맞지않습니다.");
                             }

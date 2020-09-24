@@ -46,7 +46,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="4dp"
-                android:text="마지막 채팅내용 넣어야됨\n줄 띄어쓰기 가능함"
                 android:textColor="@android:color/black"
                 android:textSize="13sp"/>
             <TextView
@@ -55,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="4dp"
-                android:text="2020/02/01"
+                android:text="2020/09/24"
                 android:textColor="@android:color/black"
                 android:textSize="13sp"/>
         </LinearLayout>

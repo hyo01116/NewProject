@@ -81,6 +81,7 @@ public class FeedActivity extends Fragment implements FeedAdapter.OnListItemSele
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 startActivity(AddFeedActivity.class);
             }
         });

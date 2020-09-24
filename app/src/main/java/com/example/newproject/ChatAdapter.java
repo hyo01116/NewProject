@@ -17,13 +17,12 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 
+import static android.view.View.TEXT_ALIGNMENT_TEXT_END;
+
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder>{
     private ArrayList<ChatInfo> mDataset;
-
+    public String userid;
     private Context context;
-    public String mynickname;
-    private String nickname;
-    private FirebaseUser user;
 
     @NonNull
     @Override
@@ -32,28 +31,23 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
         ChatViewHolder holder = new ChatViewHolder(v);
         return holder;
     }
-    public ChatAdapter(ArrayList<ChatInfo> chatInfo, Context context, String mynickname){
+    public ChatAdapter(ArrayList<ChatInfo> chatInfo, Context context, String userid){
         mDataset = chatInfo;
-        this.mynickname = mynickname;
+        this.context = context;
+        this.userid = userid;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ChatViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ChatAdapter.ChatViewHolder holder, int position) {
         ChatInfo chat = mDataset.get(position);
-        /*Glide.with(holder.itemView)
-                .load(mDataset.get(position).getProfile())
-                .into(holder.et_profile);*/
-        holder.et_nickname.setText(chat.getNickname());
-        holder.et_data.setText(chat.getData());
-
-        if(chat.getUid() == null){
-            System.out.println("null");
-        }
-        if(chat.getUid().equals(this.mynickname)){
-            holder.et_data.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+        if(chat.getUid().equals(userid)){
+            System.out.println("same");
+            holder.et_data.setTextAlignment(TEXT_ALIGNMENT_TEXT_END);
+            holder.et_data.setText(chat.getData());
         }
         else{
-            holder.et_data.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+            holder.et_data.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
+            holder.et_data.setText(chat.getData());
         }
     }
     @Override
@@ -63,18 +57,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
 
     public class ChatViewHolder extends RecyclerView.ViewHolder {
         public TextView et_data;
-        public TextView et_nickname;
-        public View rootview;
         public ChatViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.et_nickname= itemView.findViewById(R.id.et_nickname);
-            this.et_data= itemView.findViewById(R.id.et_data);
-            rootview = itemView;
+            this.et_data = itemView.findViewById(R.id.et_data);
         }
     }
     public void addChat(ChatInfo chat){
         mDataset.add(chat);
         notifyItemInserted(mDataset.size() -1);
     }
-
 }

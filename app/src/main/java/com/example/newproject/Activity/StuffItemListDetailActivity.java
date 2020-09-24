@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -14,10 +16,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 
 import com.bumptech.glide.Glide;
 import com.example.newproject.Class.StuffItemInfo;
+import com.example.newproject.MyItemListActivity;
 import com.example.newproject.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -36,10 +42,11 @@ import java.util.Locale;
 public class StuffItemListDetailActivity extends AppCompatActivity {
 
     private String itemkey, secondkey;
-    private ImageView imageurl, localurl;
-    private TextView textname, localname,  extratext;
+    private ImageView imageView;
+    private TextView textname, extratext, datelimit;
 
-    private String first, second, third;
+    private String first, second, third, type_num;
+    private BottomNavigationView generalbottom;
 
     private FirebaseUser user;
     private FirebaseDatabase database;
@@ -55,9 +62,16 @@ public class StuffItemListDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stuffitemdetail);
 
-        findViewById(R.id.btn_update).setOnClickListener(onClickListener);
-        findViewById(R.id.btn_delete).setOnClickListener(onClickListener);
-        findViewById(R.id.btn_clear).setOnClickListener(onClickListener);
+        findViewById(R.id.btn_food).setOnClickListener(onClickListener);
+        findViewById(R.id.btn_wear).setOnClickListener(onClickListener);
+        findViewById(R.id.btn_item).setOnClickListener(onClickListener);
+        findViewById(R.id.btn_etc).setOnClickListener(onClickListener);
+        findViewById(R.id.imageView).setOnClickListener(onClickListener);
+        findViewById(R.id.btn_gallery).setOnClickListener(onClickListener);
+        findViewById(R.id.btn_updatepicture).setOnClickListener(onClickListener);
+        findViewById(R.id.btn_deletepicture).setOnClickListener(onClickListener);
+
+
         first = getIntent().getStringExtra("first");
         second = getIntent().getStringExtra("second");
         third = getIntent().getStringExtra("third");
@@ -65,31 +79,57 @@ public class StuffItemListDetailActivity extends AppCompatActivity {
         secondkey = getIntent().getStringExtra("secondkey");    //write db에서의 아이템의 key
         //System.out.println("key: "+itemkey);
         //userid = getIntent().getStringExtra("userid");   //글 올린사람의 id
-        imageurl = (ImageView) findViewById(R.id.imageurl);
+        imageView = (ImageView) findViewById(R.id.imageView);
         textname = (TextView) findViewById(R.id.textname);
-        localname = (TextView) findViewById(R.id.localname);
-        localurl = (ImageView)findViewById(R.id.localurl);
+        datelimit = (TextView) findViewById(R.id.datelimit);
         extratext = (TextView) findViewById(R.id.extratext);
+
+        generalbottom = findViewById(R.id.navigation_view);
+        generalbottom.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.btn_update:
+                        update();
+                        break;
+                    case R.id.btn_delete:
+                        delete();
+                        break;
+                }
+                return true;
+            }
+        });
+
         findstuff();
     }
+
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.btn_update:    //변화된게 없다면 고대로 다시 저장
-                    update();
-                    startToast("게시물이 수정되었습니다.");
-                    //startfunction();
+                case R.id.imageView:
+                    CardView cardView2 = findViewById(R.id.btn_cardview);
+                    if (cardView2.getVisibility() == View.VISIBLE) {
+                        cardView2.setVisibility(View.GONE);
+                    } else {
+                        cardView2.setVisibility(View.VISIBLE);
+                    }
                     break;
-                case R.id.btn_delete:    //db에서 해당 글 모두 삭제
-                    delete();
-                    startToast("게시물이 삭제되었습니다.");
-                    //startfunction();
+                case R.id.btn_food:
+                    type_num = "1";
+                    startToast("분류 : 식품");
                     break;
-                case R.id.btn_clear:     //state를 close로 변화 + 리스트에 나타낼때 state가 close인 경우 회색으로 표시
-                    itemclear_basicdb();
-                    startToast("게시물이 거래완료 되었습니다.");
-                    //startfunction();
+                case R.id.btn_wear:
+                    type_num = "2";
+                    startToast("분류 : 의류");
+                    break;
+                case R.id.btn_item:
+                    type_num = "3";
+                    startToast("분류 : 생활용품");
+                    break;
+                case R.id.btn_etc:
+                    type_num = "0";
+                    startToast("분류 : 기타");
                     break;
                 case R.id.btn_gallery:
                     check();
@@ -111,22 +151,17 @@ public class StuffItemListDetailActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 stuffItemInfo = snapshot.getValue(StuffItemInfo.class);
-                Glide.with(StuffItemListDetailActivity.this).load(stuffItemInfo.getImageurl()).into(imageurl);
-                Glide.with(StuffItemListDetailActivity.this).load(stuffItemInfo.getLocalurl()).into(localurl);
+                Glide.with(StuffItemListDetailActivity.this).load(stuffItemInfo.getImageurl()).into(imageView);
                 textname.setText(stuffItemInfo.getTextname());
-                localname.setText(stuffItemInfo.getLocalname());
+                datelimit.setText(stuffItemInfo.getDatelimit());
                 extratext.setText(stuffItemInfo.getExtratext());
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
-    }
-    public void itemclear_basicdb() {
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        database = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
-        database.getReference("stuff").child(first).child(second).child(third).child(itemkey).child("state").setValue("close");
     }
 
     public void delete() {
@@ -135,71 +170,92 @@ public class StuffItemListDetailActivity extends AppCompatActivity {
         database.getReference(user.getUid()).child("stuff").child(secondkey).removeValue();
         second_database = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
         second_database.getReference("stuff").child(first).child(second).child(third).child(itemkey).removeValue();
+        startToast("게시글이 삭제되었습니다.");
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(MyItemListActivity.class);
+            }
+        }, 1000);
     }
+
     public void update() {
         user = FirebaseAuth.getInstance().getCurrentUser();
         String localurl = stuffItemInfo.getLocalurl();
+        String localname = stuffItemInfo.getLocalname();
         String imageurl = stuffItemInfo.getImageurl();     //사진 수정버튼 만들기
         String noti = stuffItemInfo.getNoti();
-        String datelimit= stuffItemInfo.getDatelimit();
         String type_num = stuffItemInfo.getType_num();
         String day;
         String phone = stuffItemInfo.getPhone();
         String address = stuffItemInfo.getAddress();
-        String localname = ((TextView)findViewById(R.id.localname)).getText().toString();
+
+        String datelimit = ((EditText) findViewById(R.id.datelimit)).getText().toString();
         String textname = ((EditText) findViewById(R.id.textname)).getText().toString();
         String extratext = ((EditText) findViewById(R.id.extratext)).getText().toString();
+
         Date currentTime = Calendar.getInstance().getTime();
         SimpleDateFormat year = new SimpleDateFormat("yyyy", Locale.getDefault());
-        SimpleDateFormat month = new SimpleDateFormat("mm", Locale.getDefault());
+        SimpleDateFormat month = new SimpleDateFormat("MM", Locale.getDefault());
         SimpleDateFormat date = new SimpleDateFormat("dd", Locale.getDefault());
 
-        day = year.format(currentTime) + "/"+ month.format(currentTime) +"/"+date.format(currentTime);
+        day = year.format(currentTime) + "/" + month.format(currentTime) + "/" + date.format(currentTime);
 
-        StuffItemInfo stuffItemInfo = new StuffItemInfo(type_num, user.getUid(), day, noti, datelimit, phone, address, localname, String.valueOf(localurl), String.valueOf(imageurl), textname, extratext, "open", null);
+        System.out.println(textname);
+        StuffItemInfo stuffItemInfo = new StuffItemInfo(type_num, user.getUid(), day, noti, datelimit, phone, address, localname, String.valueOf(localurl), String.valueOf(filePath), textname, extratext, "open", null);
         database = FirebaseDatabase.getInstance("https://newproject-ab6cb-base.firebaseio.com/");
         database.getReference("stuff").child(first).child(second).child(third).child(itemkey).setValue(stuffItemInfo);
+        startToast("게시글이 수정되었습니다.");
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(MyItemListActivity.class);
+            }
+        }, 1000);
     }
-    public void check(){
+
+    public void check() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
         startActivityForResult(Intent.createChooser(intent, "이미지를 선택하세요."), 0);
-        /*if(ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)){
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-            }
-            else{
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-                startToast("권한 거부");
-            }
-        }
-        else{
-            startActivity(GalleryActivity.class);
-        }*/
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {   //왜 uri가 null인가 -> startActivityForResult를 안해줌
         super.onActivityResult(requestCode, resultCode, data);
         //request코드가 0이고 OK를 선택했고 data에 뭔가가 들어 있다면
-        if(requestCode == 0 && resultCode == RESULT_OK){
+        if (requestCode == 0 && resultCode == RESULT_OK) {
             filePath = data.getData();
-            Log.d("TAG", "uri:" + String.valueOf(filePath));
+            final int takeFlags = data.getFlags()
+                    & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             try {
-                //Uri 파일을 Bitmap으로 만들어서 ImageView에 집어 넣는다.
+                this.getContentResolver().takePersistableUriPermission(filePath, takeFlags);
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                imageurl.setImageBitmap(bitmap);
+                imageView.setImageBitmap(bitmap);
+                imageView.setVisibility(View.VISIBLE);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
-    public void delete_picture(){
+
+    public void delete_picture() {
         filePath = null;
-        localurl.setImageResource(R.drawable.ic_baseline_photo_camera_24);
+        imageView.setVisibility(View.INVISIBLE);
     }
-    public void startToast(String msg){
+
+    public void startToast(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
+    public void startActivity(Class c) {
+        Intent intent = new Intent(this, c);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
+    }
 }

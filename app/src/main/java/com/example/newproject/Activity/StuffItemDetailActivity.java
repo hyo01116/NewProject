@@ -34,12 +34,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.naver.maps.geometry.LatLng;
+import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapView;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.util.FusedLocationSource;
+
+import net.daum.android.map.MapController;
 
 import org.w3c.dom.Text;
 
@@ -70,8 +73,6 @@ public class StuffItemDetailActivity extends AppCompatActivity implements OnMapR
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stuffdetail);
         stuffItemInfo = (StuffItemInfo) getIntent().getSerializableExtra("Serialize");
-        name = getIntent().getStringExtra("name");
-
         geocoder = new Geocoder(this);
 
         imageurl = (ImageView) findViewById(R.id.imageurl);
@@ -83,11 +84,9 @@ public class StuffItemDetailActivity extends AppCompatActivity implements OnMapR
         extratext = (TextView) findViewById(R.id.extratext);
         map = (MapView) findViewById(R.id.loc_map);
         map.onCreate(savedInstanceState);
-
-
-        addr= String.valueOf(address);
         mLocationSource = new FusedLocationSource(this, 0);
         map.getMapAsync(this);
+
         generalbottom = findViewById(R.id.navigation_view);
         generalbottom.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -111,7 +110,6 @@ public class StuffItemDetailActivity extends AppCompatActivity implements OnMapR
         userid = stuffItemInfo.getUserid();
         Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtra("chat_userid", userid);
-        intent.putExtra("nickname", name);
         startActivity(intent);
     }
     public void findstuff(){
@@ -132,6 +130,7 @@ public class StuffItemDetailActivity extends AppCompatActivity implements OnMapR
         address.setText(stuffItemInfo.getAddress());
         textname.setText(stuffItemInfo.getTextname());
         extratext.setText(stuffItemInfo.getExtratext());
+        addr = stuffItemInfo.getAddress();
         //등록된 주소로 map의 위치 찾아서 나타내기
     }
 
@@ -154,6 +153,8 @@ public class StuffItemDetailActivity extends AppCompatActivity implements OnMapR
                 Marker marker = new Marker();
                 marker.setPosition(new LatLng(lat, lon));
                 marker.setMap(naverMap);
+                marker.setIconPerspectiveEnabled(true);   //원근감 표시
+                naverMap.moveCamera(CameraUpdate.scrollTo(new LatLng(lat, lon)));
             }
         }
     }
