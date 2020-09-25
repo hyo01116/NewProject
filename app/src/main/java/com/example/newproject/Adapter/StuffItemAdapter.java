@@ -59,6 +59,7 @@ public class StuffItemAdapter extends RecyclerView.Adapter<StuffItemAdapter.Stuf
         holder.et_textname.setText(stuffItemInfo.getTextname());
         holder.et_datelimit.setText(stuffItemInfo.getDatelimit());
         holder.et_day.setText(stuffItemInfo.getDay());
+        holder.et_phone.setText(stuffItemInfo.getPhone());
     }
 
     public int getItemCount() {
@@ -71,6 +72,7 @@ public class StuffItemAdapter extends RecyclerView.Adapter<StuffItemAdapter.Stuf
         TextView et_textname;
         TextView et_datelimit;
         TextView et_day;
+        TextView et_phone;
 
         public StuffItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -79,6 +81,7 @@ public class StuffItemAdapter extends RecyclerView.Adapter<StuffItemAdapter.Stuf
             this.et_textname = itemView.findViewById(R.id.et_textname);
             this.et_datelimit = itemView.findViewById(R.id.et_datelimit);
             this.et_day = itemView.findViewById(R.id.et_day);
+            this.et_phone = itemView.findViewById(R.id.et_phone);
 
             itemView.setOnClickListener(new View.OnClickListener(){
                 @Override

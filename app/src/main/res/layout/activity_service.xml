@@ -47,7 +47,7 @@
                 android:id="@+id/recyclerView_noti"/>
         </LinearLayout>
         <LinearLayout
-            android:layout_marginTop="7dp"
+            android:layout_marginTop="3dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">

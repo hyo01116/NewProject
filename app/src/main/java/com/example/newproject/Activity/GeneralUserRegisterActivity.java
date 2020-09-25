@@ -127,6 +127,7 @@ public class GeneralUserRegisterActivity extends AppCompatActivity {
                                     }).addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
+                                            startToast(task.getException().toString());
                                         }
                                     });
                                 }
@@ -147,12 +148,13 @@ public class GeneralUserRegisterActivity extends AppCompatActivity {
                                             .addOnFailureListener(new OnFailureListener() {
                                                 @Override
                                                 public void onFailure(@NonNull Exception e) {
+                                                    startToast(task.getException().toString());
                                                 }
                                             });
                                 }
                             } else {
                                 if (task.getException() != null) {
-                                    //startToast(task.getException().toString());
+                                    startToast(task.getException().toString());
                                 }
                             }
                         }
