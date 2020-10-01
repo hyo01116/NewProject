@@ -213,6 +213,7 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
                             user_name.setText(name[0]);
                         }
                         else {
+                            //
                             LocalUserInfo localUserInfo = documentSnapshot.toObject(LocalUserInfo.class);
                             picture[0] = localUserInfo.getImageurl();
                             name[0] = localUserInfo.getName();
