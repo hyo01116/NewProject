@@ -1,15 +1,11 @@
 package com.example.newproject;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -18,11 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.newproject.Activity.LocalUserActivity;
@@ -34,7 +27,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -46,8 +38,20 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.kakao.kakaolink.v2.KakaoLinkResponse;
+import com.kakao.kakaolink.v2.KakaoLinkService;
+import com.kakao.message.template.ButtonObject;
+import com.kakao.message.template.ContentObject;
+import com.kakao.message.template.FeedTemplate;
+import com.kakao.message.template.LinkObject;
+import com.kakao.network.ErrorResult;
+import com.kakao.network.callback.ResponseCallback;
 
 public class AddFeedActivity extends AppCompatActivity {     //피드 작성
     //피드 작성후에 자동으로 feedactivity가 실행되게함 (2초 후)
@@ -74,7 +78,7 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
 
         findViewById(R.id.imageView).setOnClickListener(onClickListener);
         findViewById(R.id.btn_gallery).setOnClickListener(onClickListener);
-        //findViewById(R.id.btn_update).setOnClickListener(onClickListener);
+        findViewById(R.id.kakaolink).setOnClickListener(onClickListener);
         findViewById(R.id.btn_delete).setOnClickListener(onClickListener);
         imageView = (ImageView)findViewById(R.id.imageView);
         user_name = (TextView)findViewById(R.id.user_name);
@@ -120,15 +124,60 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
                 case R.id.btn_gallery:
                     check();
                     break;
-                /*case R.id.btn_update:
-                    check();
-                    break;*/
                 case R.id.btn_delete:
                     delete_picture();
+                    break;
+                case R.id.kakaolink:
+                    share_kakao();
                     break;
             }
         }
     };
+    public void share_kakao(){
+        /*FeedTemplate params = FeedTemplate
+                .newBuilder(ContentObject.newBuilder("슬봄",
+                        "http://mud-kage.kakao.co.kr/dn/NTmhS/btqfEUdFAUf/FjKzkZsnoeE4o19klTOVI1/openlink_640x640s.jpg",
+                        LinkObject.newBuilder().setWebUrl("https://developers.kakao.com")
+                .setMobileWebUrl("https://developers.kakao.com").build())
+                .setDescrption("카카오링크")
+                .build())
+                .addButton(new ButtonObject("웹에서보기", LinkObject.newBuilder().setWebUrl("https://developers.kakao.com").setMobileWebUrl("https://developers.kakao.com").build()))
+                .addButton(new ButtonObject("앱에서보기", LinkObject.newBuilder()
+                .setWebUrl("https://developers.kakao.com")
+                .setMobileWebUrl("https://developers.kakao.com")
+                .setAndroidExecutionParams("key1= value1")
+                .setIosExecutionParams("key1=value1")
+                .build()))
+                .build();
+
+        Map<String, String> serverCallbackArgs = new HashMap<String, String>();
+        serverCallbackArgs.put("user_id", "${current_user_id}");
+        serverCallbackArgs.put("product_id", "${shared_product_id}");
+
+        KakaoLinkService.getInstance().sendDefault(this, params, new ResponseCallback<KakaoLinkResponse>() {
+            @Override
+            public void onFailure(ErrorResult errorResult) {
+
+            }
+
+            @Override
+            public void onSuccess(KakaoLinkResponse result) {
+
+            }
+        });*/
+        String strLink = null;
+        try{
+            strLink = String.format("http://twitter.com/intent/tweet?text=%s",
+                    URLEncoder.encode("공유할 텍스트 입력: ", "utf-8"));
+        }
+        catch (UnsupportedEncodingException e1){
+            e1.printStackTrace();
+        }
+
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(strLink));
+        startActivity(intent);
+    }
+
     public void findgeneraluserinfo(){
         final String[] first = new String[1];
         final String[] second = new String[1];
