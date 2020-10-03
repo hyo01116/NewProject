@@ -34,6 +34,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".KakaoLoginActivity"/>
         <activity android:name=".FindMapActivity"/>
         <activity android:name=".MyFeedDetailActivity"/>
         <activity android:name=".AddFeedActivity"/>
@@ -67,6 +68,9 @@
         <meta-data
             android:name="com.google.firebase.components:com.google.firebase.iid.Registrar"
             android:value="com.google.firebase.components.ComponentRegistrar" />
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="@string/kakao_app_key" />
     </application>
 
 </manifest>

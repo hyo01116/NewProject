@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.newproject"
-        minSdkVersion 21
+        minSdkVersion 29
         //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 30
         versionCode 1
@@ -35,6 +35,9 @@ android {
     repositories {
         mavenCentral()
         maven{ url 'https://navercorp.bintray.com/maps'}
+        maven{ url 'https://maven.google.com'}
+        maven{ url 'http://devrepo.kakao.com:8088/nexus/content/groups/public/'}
+
     }
 
 
@@ -63,6 +66,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    implementation group: project.KAKAO_SDK_GROUP, name: 'usermgmt', version: project.KAKAO_SDK_VERSION
     implementation 'com.google.firebase:firebase-analytics:17.5.0'
     implementation 'com.google.firebase:firebase-auth:19.4.0'
     implementation fileTree(include: ['*.jar'], dir: 'libs')
