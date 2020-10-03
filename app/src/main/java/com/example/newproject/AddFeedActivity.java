@@ -1,9 +1,14 @@
 package com.example.newproject;
 
+import android.Manifest;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.view.MenuItem;
@@ -16,6 +21,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.newproject.Activity.LocalUserActivity;
@@ -38,6 +45,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -68,6 +78,9 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
 
     private TextView user_name, user_address;
 
+    private static final int REQUEST_EXTERNAL_STORAGE_CODE = 1;
+    boolean permissionCheck = false;
+
     private String user_level = "1";
 
     MyApplication myApplication;
@@ -78,8 +91,11 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
 
         findViewById(R.id.imageView).setOnClickListener(onClickListener);
         findViewById(R.id.btn_gallery).setOnClickListener(onClickListener);
-        findViewById(R.id.kakaolink).setOnClickListener(onClickListener);
         findViewById(R.id.btn_delete).setOnClickListener(onClickListener);
+
+        findViewById(R.id.upload_instagram).setOnClickListener(onClickListener);
+        findViewById(R.id.upload_twitter).setOnClickListener(onClickListener);
+
         imageView = (ImageView)findViewById(R.id.imageView);
         user_name = (TextView)findViewById(R.id.user_name);
         user_address = (TextView)findViewById(R.id.user_address);
@@ -127,14 +143,19 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
                 case R.id.btn_delete:
                     delete_picture();
                     break;
-                case R.id.kakaolink:
-                    share_kakao();
+                case R.id.upload_twitter:
+                    share_twitter();
+                    break;
+                case R.id.upload_instagram:
+                    System.out.println("insta");
+                    share_instagram();
                     break;
             }
         }
     };
-    public void share_kakao(){
-        /*FeedTemplate params = FeedTemplate
+    public void share_twitter(){
+        /*카카오링크 실패
+        FeedTemplate params = FeedTemplate
                 .newBuilder(ContentObject.newBuilder("슬봄",
                         "http://mud-kage.kakao.co.kr/dn/NTmhS/btqfEUdFAUf/FjKzkZsnoeE4o19klTOVI1/openlink_640x640s.jpg",
                         LinkObject.newBuilder().setWebUrl("https://developers.kakao.com")
@@ -176,6 +197,89 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
 
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(strLink));
         startActivity(intent);
+    }
+    public void share_instagram(){
+        onRequestPermission();
+
+        if(permissionCheck){
+            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.avatar);
+            String storage = Environment.getExternalStorageDirectory().getAbsolutePath();
+            String fileName = "이미지명.png";
+
+            String folderName = "/폴더명/";
+            String fullPath = storage + folderName;
+            File filePath;
+
+            try{
+                filePath = new File(fullPath);
+                if(!filePath.isDirectory()){
+                    filePath.mkdirs();
+                }
+                FileOutputStream fos = new FileOutputStream(fullPath + fileName);
+                bm.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                fos.flush();
+                fos.close();
+            }
+            catch(FileNotFoundException e){
+                e.printStackTrace();
+            }
+            catch (IOException e){
+                e.printStackTrace();
+            }
+            Intent share = new Intent(Intent.ACTION_SEND);
+            share.setType("image/*");
+            Uri uri = Uri.fromFile(new File(fullPath, fileName));
+            try{
+                share.putExtra(Intent.EXTRA_STREAM, uri);
+                share.putExtra(Intent.EXTRA_TEXT, "텍스트는 지원하지않음!");
+                share.setPackage("com.instagram.android");
+                startActivity(share);
+            }
+            catch(ActivityNotFoundException e){
+                Toast.makeText(this, "인스타그램이 설치되어있지 않습니다.", Toast.LENGTH_SHORT).show();
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void onRequestPermission(){
+        int permissionReadStorage = ContextCompat.checkSelfPermission(getApplicationContext(),
+                Manifest.permission.READ_EXTERNAL_STORAGE);
+        int permissionWriteStorage = ContextCompat.checkSelfPermission(getApplicationContext(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if(permissionReadStorage == PackageManager.PERMISSION_DENIED || permissionWriteStorage == PackageManager.PERMISSION_DENIED){
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_EXTERNAL_STORAGE_CODE);
+        }
+        else{
+            permissionCheck = true;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_EXTERNAL_STORAGE_CODE:
+                for (int i = 0; i < permissions.length; i++) {
+                    String permission = permissions[i];
+                    int grantResult = grantResults[i];
+                    if(permission.equals(Manifest.permission.READ_EXTERNAL_STORAGE)){
+                        if(grantResult == PackageManager.PERMISSION_GRANTED){
+                            Toast.makeText(this, "허용했으니 가능", Toast.LENGTH_LONG).show();
+                            permissionCheck = true;
+                        }
+                        else{
+                            Toast.makeText(this, "허용하지 않으면 공유 불가능", Toast.LENGTH_LONG).show();
+                            permissionCheck = false;
+                        }
+                    }
+                }
+                break;
+        }
     }
 
     public void findgeneraluserinfo(){
