@@ -43,7 +43,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class LocalUserRegisterActivity extends AppCompatActivity {
+public class LocalUserRegisterActivity extends BaseActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private FirebaseFirestore db;

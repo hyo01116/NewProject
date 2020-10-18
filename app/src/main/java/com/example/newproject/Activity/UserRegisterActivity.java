@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.newproject.R;
 
-public class UserRegisterActivity extends AppCompatActivity {
+public class UserRegisterActivity extends BaseActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         //오버라이드 해온 oncreate메소드를 super를 통해 초기화 또는 재정의 해줌

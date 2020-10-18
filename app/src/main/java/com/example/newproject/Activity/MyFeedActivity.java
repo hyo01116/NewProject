@@ -31,7 +31,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
-public class MyFeedActivity extends AppCompatActivity implements MyFeedAdapter.OnItemClickListener {    //마이페이지에서 피드관리 + 피드 작성
+public class MyFeedActivity extends BaseActivity implements MyFeedAdapter.OnItemClickListener {    //마이페이지에서 피드관리 + 피드 작성
     //피드 작성시 write -> userid -> feed에 작성한 피드 저장
     //write에서 글의 key 받아서 feeddb에서 first,second, third로 들어가서 내용 찾기 (수정으로 바꾸기) + 글 쓰는 버튼 추가
     private RecyclerView recyclerView;

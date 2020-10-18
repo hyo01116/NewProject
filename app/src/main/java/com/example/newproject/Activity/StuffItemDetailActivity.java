@@ -1,38 +1,27 @@
 package com.example.newproject.Activity;
 
-import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Point;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
 import com.example.newproject.ChatActivity;
 import com.example.newproject.Class.StuffItemInfo;
-import com.example.newproject.GeneralPageActivity;
-import com.example.newproject.MyChatListActivity;
 import com.example.newproject.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.LocationTrackingMode;
@@ -41,15 +30,12 @@ import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.util.FusedLocationSource;
-
-import net.daum.android.map.MapController;
-
 import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.List;
 
-public class StuffItemDetailActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class StuffItemDetailActivity extends BaseActivity implements OnMapReadyCallback {
     public FirebaseUser user;
     public FirebaseDatabase database;
     public DatabaseReference databaseReference;

@@ -14,7 +14,7 @@ import com.example.newproject.MyChatListActivity;
 import com.example.newproject.MyPageActivity;
 import com.example.newproject.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-public class LocalUserActivity extends AppCompatActivity{    //작성자 사용화면
+public class LocalUserActivity extends BaseActivity{    //작성자 사용화면
     private BottomNavigationView bottomNavigationView;
     private CardView cardView;
     @Override

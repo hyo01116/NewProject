@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -13,6 +14,8 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,6 +28,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
+import com.example.newproject.Activity.BaseActivity;
 import com.example.newproject.Activity.LocalUserActivity;
 import com.example.newproject.Class.FeedInfo;
 import com.example.newproject.Class.GeneralUserInfo;
@@ -34,6 +38,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -51,19 +56,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
 
-import com.kakao.kakaolink.v2.KakaoLinkResponse;
-import com.kakao.kakaolink.v2.KakaoLinkService;
-import com.kakao.message.template.ButtonObject;
-import com.kakao.message.template.ContentObject;
-import com.kakao.message.template.FeedTemplate;
-import com.kakao.message.template.LinkObject;
-import com.kakao.network.ErrorResult;
-import com.kakao.network.callback.ResponseCallback;
-
-public class AddFeedActivity extends AppCompatActivity {     //피드 작성
+public class AddFeedActivity extends BaseActivity {     //피드 작성
     //피드 작성후에 자동으로 feedactivity가 실행되게함 (2초 후)
 
     private FirebaseUser user;
@@ -72,7 +66,7 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
 
     private Uri filePath, basicPath;
     private BottomNavigationView bottomNavigationView;
-    ImageView imageView, imageView2;
+    ImageView imageView, imageView2, new_imageView;
 
     private CardView cardView;
 
@@ -84,6 +78,11 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
     private String user_level = "1";
 
     MyApplication myApplication;
+
+    private Animation fab_open, fab_close;
+    private Boolean isFabOpen = false;
+    private FloatingActionButton btn_share, btn_twitter, btn_instagram, btn_facebook;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,10 +92,8 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
         findViewById(R.id.btn_gallery).setOnClickListener(onClickListener);
         findViewById(R.id.btn_delete).setOnClickListener(onClickListener);
 
-        findViewById(R.id.upload_instagram).setOnClickListener(onClickListener);
-        findViewById(R.id.upload_twitter).setOnClickListener(onClickListener);
-
         imageView = (ImageView)findViewById(R.id.imageView);
+        new_imageView = (ImageView)findViewById(R.id.new_imageView);
         user_name = (TextView)findViewById(R.id.user_name);
         user_address = (TextView)findViewById(R.id.user_address);
         imageView2 = (ImageView)findViewById(R.id.imageView2);
@@ -104,6 +101,14 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
         myApplication = (MyApplication) getApplicationContext();
         user_level = myApplication.getUser_level();
         System.out.println(user_level);
+
+        fab_open  = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
+        fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
+
+        /*btn_share = (FloatingActionButton) findViewById(R.id.btn_share);
+        btn_twitter = (FloatingActionButton)findViewById(R.id.btn_twitter);
+        btn_instagram = (FloatingActionButton) findViewById(R.id.btn_instagram);
+        btn_facebook = (FloatingActionButton)findViewById(R.id.btn_facebook);*/
 
         bottomNavigationView = findViewById(R.id.btn_navi);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -124,6 +129,44 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
         });
         setuserinfo();
     }
+
+    /*@Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch (id){
+            case R.id.btn_share:
+                anim();
+                break;
+            case R.id.btn_twitter:
+                share_twitter();
+                break;
+            case R.id.btn_instagram:
+                share_instagram();
+                break;
+            case R.id.btn_facebook:
+                break;
+        }
+    }*/
+    public void anim(){
+        if(isFabOpen){
+            btn_twitter.startAnimation(fab_close);
+            btn_facebook.startAnimation(fab_close);
+            btn_instagram.startAnimation(fab_close);
+            btn_twitter.setClickable(false);
+            btn_instagram.setClickable(false);
+            btn_facebook.setClickable(false);
+            isFabOpen = false;
+        }
+        else{
+            btn_facebook.startAnimation(fab_open);
+            btn_instagram.startAnimation(fab_open);
+            btn_twitter.startAnimation(fab_open);
+            btn_facebook.setClickable(true);
+            btn_instagram.setClickable(true);
+            btn_twitter.setClickable(true);
+            isFabOpen = true;
+        }
+    }
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -142,13 +185,6 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
                     break;
                 case R.id.btn_delete:
                     delete_picture();
-                    break;
-                case R.id.upload_twitter:
-                    share_twitter();
-                    break;
-                case R.id.upload_instagram:
-                    System.out.println("insta");
-                    share_instagram();
                     break;
             }
         }
@@ -345,6 +381,62 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
             }
         });
     }
+    /*<com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_alignParentBottom="true"
+            android:id="@+id/btn_facebook"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="340dp"
+            android:background="@drawable/ic_baseline_share_24"
+            android:backgroundTint="@color/toolbarcolor"
+            android:tint="@color/toolbarcolor"
+            android:visibility="invisible"
+            app:borderWidth="0dp"
+            app:fabSize="normal" />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_alignParentBottom="true"
+            android:id="@+id/btn_instagram"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="340dp"
+            android:background="@drawable/ic_baseline_share_24"
+            android:backgroundTint="@color/toolbarcolor"
+            android:tint="@color/toolbarcolor"
+            android:visibility="invisible"
+            app:borderWidth="0dp"
+            app:fabSize="normal" />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_alignParentBottom="true"
+            android:id="@+id/btn_twitter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="340dp"
+            android:background="@drawable/ic_baseline_share_24"
+            android:backgroundTint="@color/toolbarcolor"
+            android:tint="@color/toolbarcolor"
+            android:visibility="invisible"
+            app:borderWidth="0dp"
+            app:fabSize="normal" />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_alignParentBottom="true"
+            android:id="@+id/btn_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="340dp"
+            android:src="@drawable/ic_baseline_share_24"
+            android:backgroundTint="@color/toolbarcolor"
+            android:tint="@color/toolbarcolor"
+            android:visibility="visible"
+            app:borderWidth="0dp"
+            app:fabSize="normal" />*/
     public void setuserinfo(){
         final String[] picture = new String[1];
         final String[] name = new String[1];
@@ -500,8 +592,8 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
                 }
                 this.getContentResolver().takePersistableUriPermission(filePath, takeFlags);
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                imageView.setImageBitmap(bitmap);
-                imageView.setVisibility(View.VISIBLE);
+                new_imageView.setImageBitmap(bitmap);
+                new_imageView.setVisibility(View.VISIBLE);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -510,7 +602,7 @@ public class AddFeedActivity extends AppCompatActivity {     //피드 작성
     public void delete_picture(){
         filePath = null;
         //이미지 삭제시 사라지게 하는법
-        imageView.setVisibility(View.INVISIBLE);
+        new_imageView.setVisibility(View.INVISIBLE);
     }
     public void startActivity(Class c){
         Intent intent = new Intent(this, c);

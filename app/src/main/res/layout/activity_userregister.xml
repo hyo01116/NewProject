@@ -8,9 +8,9 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/top_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@color/toolbarcolor">
+        android:layout_height="60dp">
         <TextView
+            android:fontFamily="@font/font1"
             android:textStyle="bold"
             android:textColor="@android:color/black"
             android:layout_width="wrap_content"
@@ -26,19 +26,21 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <Button
+            android:fontFamily="@font/font1"
             android:id="@+id/btn_generaluser"
             android:backgroundTint="#FFFFEB3B"
             android:layout_width="330dp"
-            android:layout_height="80dp"
+            android:layout_height="72dp"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
             android:textColor="#000000"
             android:text="일반인 회원가입" />
         <Button
+            android:fontFamily="@font/font1"
             android:id="@+id/btn_localuser"
             android:backgroundTint="#FFFFEB3B"
             android:layout_width="330dp"
-            android:layout_height="80dp"
+            android:layout_height="72dp"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
             android:textColor="#000000"

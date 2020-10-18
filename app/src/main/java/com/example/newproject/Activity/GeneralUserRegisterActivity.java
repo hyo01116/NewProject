@@ -36,7 +36,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class GeneralUserRegisterActivity extends AppCompatActivity {
+public class GeneralUserRegisterActivity extends BaseActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private FirebaseFirestore db;

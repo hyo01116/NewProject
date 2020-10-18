@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import com.bumptech.glide.Glide;
+import com.example.newproject.Activity.BaseActivity;
 import com.example.newproject.Activity.MyFeedActivity;
 import com.example.newproject.Class.FeedInfo;
 import com.example.newproject.Class.LocalUserInfo;
@@ -39,7 +40,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.io.File;
 import java.io.IOException;
 
-public class MyFeedDetailActivity extends AppCompatActivity {
+public class MyFeedDetailActivity extends BaseActivity {
     private FirebaseUser user;
     private FirebaseDatabase database, second_database;
     private DatabaseReference databaseReference, second_databaseReference;

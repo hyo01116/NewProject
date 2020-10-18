@@ -8,7 +8,7 @@ import android.view.View;
 
 import com.example.newproject.R;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     @Override
     //부모클래스의 oncreate를 상속받아 사용하는 것이기 때문에 재정의 해줘야함

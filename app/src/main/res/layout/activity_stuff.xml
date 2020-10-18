@@ -4,11 +4,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
     <LinearLayout
+        android:background="@color/toolbarcolor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -27,11 +31,12 @@
                 android:layout_height="20dp"
                 app:srcCompat="@drawable/ic_baseline_notifications_active_24"/>
     <TextView
+        android:fontFamily="@font/font1"
         android:layout_marginLeft="2dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/colorPrimary"
-        android:textSize="15dp"
+        android:textSize="18dp"
         android:textStyle="bold"
         android:text="긴급"/>
                 <ImageView
@@ -43,13 +48,13 @@
             </LinearLayout>
         </LinearLayout>
         <androidx.recyclerview.widget.RecyclerView
-            android:layout_margin="5dp"
+            android:padding="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/recyclerView_noti"/>
     </LinearLayout>
     <LinearLayout
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -57,59 +62,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         <TextView
+            android:fontFamily="@font/font1"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="10dp"
             android:textColor="@color/colorPrimary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="15dp"
+            android:textSize="18dp"
             android:textStyle="bold"
             android:text="지역 알림"/>
         </LinearLayout>
-        <LinearLayout
-            android:layout_gravity="center"
-            android:layout_margin="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <Button
-                android:id="@+id/btn_food"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="식품"
-                android:textColor="@color/colorPrimary"
-                android:backgroundTint="@color/toolbarcolor"/>
-            <Button
-                android:id="@+id/btn_wear"
-                android:layout_marginLeft="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="의류"
-                android:textColor="@color/colorPrimary"
-                android:backgroundTint="@color/toolbarcolor"/>
-            <Button
-                android:id="@+id/btn_item"
-                android:layout_marginLeft="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="생활용품"
-                android:textColor="@color/colorPrimary"
-                android:backgroundTint="@color/toolbarcolor"/>
-            <Button
-                android:id="@+id/btn_etc"
-                android:layout_marginLeft="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="기타"
-                android:textColor="@color/colorPrimary"
-                android:backgroundTint="@color/toolbarcolor"/>
-        </LinearLayout>
         <androidx.recyclerview.widget.RecyclerView
-            android:layout_margin="5dp"
+            android:padding="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/recyclerView"/>
     </LinearLayout>
     </LinearLayout>
+    </RelativeLayout>
 </ScrollView>

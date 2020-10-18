@@ -43,7 +43,7 @@ import net.daum.android.map.MapController;
 import java.io.IOException;
 import java.util.List;
 
-public class ServiceItemDetailActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class ServiceItemDetailActivity extends BaseActivity implements OnMapReadyCallback {
     public FirebaseUser user;
     public FirebaseDatabase database;
     public DatabaseReference databaseReference;

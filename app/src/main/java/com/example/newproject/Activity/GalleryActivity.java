@@ -20,7 +20,7 @@ import com.example.newproject.R;
 
 import java.util.ArrayList;
 
-public class GalleryActivity extends AppCompatActivity {
+public class GalleryActivity extends BaseActivity {
     /*private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;*/

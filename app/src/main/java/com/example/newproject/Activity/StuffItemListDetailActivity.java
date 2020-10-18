@@ -39,7 +39,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class StuffItemListDetailActivity extends AppCompatActivity {
+public class StuffItemListDetailActivity extends BaseActivity {
 
     private String itemkey, secondkey;
     private ImageView imageView;

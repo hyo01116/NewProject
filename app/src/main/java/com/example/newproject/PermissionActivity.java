@@ -20,13 +20,14 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.newproject.Activity.BaseActivity;
 import com.example.newproject.Activity.LoginActivity;
 
 import java.security.AllPermission;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PermissionActivity extends AppCompatActivity {
+public class PermissionActivity extends BaseActivity {
     private static final int PERMISSION_MULTI_CODE = 100;
 
     @RequiresApi(api = Build.VERSION_CODES.R)

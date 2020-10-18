@@ -13,7 +13,7 @@ import com.example.newproject.MyChatListActivity;
 import com.example.newproject.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class GeneralUserActivity extends AppCompatActivity {    //일반사용자 사용화면
+public class GeneralUserActivity extends BaseActivity {    //일반사용자 사용화면
     private BottomNavigationView generalbottom;
 
     @Override

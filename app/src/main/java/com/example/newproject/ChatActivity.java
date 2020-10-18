@@ -1,5 +1,6 @@
 package com.example.newproject;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,7 +14,12 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.newproject.Activity.BaseActivity;
 import com.example.newproject.Class.ChatInfo;
+import com.example.newproject.Class.GeneralUserInfo;
+import com.example.newproject.Class.LocalUserInfo;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -21,18 +27,23 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends BaseActivity {
     private FirebaseUser user;
     private DatabaseReference chat_databaseReference;
     private DatabaseReference chat_secondary_databseReference;
 
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
+    private ChatAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
     private ArrayList<ChatInfo> chatInfoArrayList;
@@ -40,7 +51,9 @@ public class ChatActivity extends AppCompatActivity {
     private EditText et_textsend;
     private ImageView btn_send;
 
-    private String chat_userid, my_userid, nickname;
+    private String chat_userid, my_userid, user_level, day;
+
+    MyApplication myApplication;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,6 +69,11 @@ public class ChatActivity extends AppCompatActivity {
         chat_userid = getIntent().getStringExtra("chat_userid");    //상대방 id
         my_userid = user.getUid();
 
+        myApplication = (MyApplication) getApplicationContext();
+        user_level = myApplication.getUser_level();
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         chat_databaseReference = FirebaseDatabase.getInstance("https://newproject-ab6cb-chat.firebaseio.com/").getReference(my_userid).child(chat_userid);
         chat_secondary_databseReference = FirebaseDatabase.getInstance("https://newproject-ab6cb-chat.firebaseio.com/").getReference(chat_userid).child(my_userid);
@@ -72,12 +90,55 @@ public class ChatActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String msg = et_textsend.getText().toString();
                 if (msg != null) {
-                    ChatInfo chat = new ChatInfo();
-                    chat.setData(msg);
-                    chat.setUid(my_userid);
-                    et_textsend.setText("");
-                    chat_databaseReference.push().setValue(chat);
-                    chat_secondary_databseReference.push().setValue(chat);
+                    Date currentTime = Calendar.getInstance().getTime();
+                    SimpleDateFormat year = new SimpleDateFormat("yyyy", Locale.getDefault());
+                    SimpleDateFormat month = new SimpleDateFormat("MM", Locale.getDefault());
+                    SimpleDateFormat date = new SimpleDateFormat("dd", Locale.getDefault());
+                    day = year.format(currentTime) + "/"+ month.format(currentTime) +"/"+date.format(currentTime);
+                    if(user_level.equals("1")) {      //일반사용자라면 general로 firestore받아오기
+                        final DocumentReference documentReference = db.collection("Users").document(user.getUid());    //현재 로그인한 사람의 주소
+                        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot documentSnapshot = task.getResult();
+                                    if (documentSnapshot.exists()) {
+                                        GeneralUserInfo generalUserInfo = documentSnapshot.toObject(GeneralUserInfo.class);
+                                        ChatInfo chat = new ChatInfo();
+                                        chat.setData(msg);
+                                        chat.setUid(my_userid);
+                                        chat.setDate(day);
+                                        chat.setProfile(generalUserInfo.getImageurl());
+                                        et_textsend.setText("");
+                                        chat_databaseReference.push().setValue(chat);
+                                        chat_secondary_databseReference.push().setValue(chat);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                    else if(user_level.equals("2")){     //지역사용자라면 local로 받아오기
+                        final DocumentReference documentReference = db.collection("Users").document(user.getUid());    //현재 로그인한 사람의 주소
+                        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot documentSnapshot = task.getResult();
+                                    if (documentSnapshot.exists()) {
+                                        LocalUserInfo localUserInfo = documentSnapshot.toObject(LocalUserInfo.class);
+                                        ChatInfo chat = new ChatInfo();
+                                        chat.setData(msg);
+                                        chat.setUid(my_userid);
+                                        chat.setDate(day);
+                                        chat.setProfile(localUserInfo.getImageurl());
+                                        et_textsend.setText("");
+                                        chat_databaseReference.push().setValue(chat);
+                                        chat_secondary_databseReference.push().setValue(chat);
+                                    }
+                                }
+                            }
+                        });
+                    }
                 }
             }
         });

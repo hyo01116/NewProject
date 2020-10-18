@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 
+import com.bumptech.glide.Glide;
+import com.example.newproject.AddFeedActivity;
+import com.example.newproject.Class.GeneralUserInfo;
 import com.example.newproject.Class.LocalUserInfo;
 import com.example.newproject.Class.ServiceItemInfo;
 import com.example.newproject.R;
@@ -44,7 +48,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class AddServiceItemActivity extends AppCompatActivity {
+public class AddServiceItemActivity extends BaseActivity {
     private FirebaseUser user;
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
@@ -58,6 +62,8 @@ public class AddServiceItemActivity extends AppCompatActivity {
     ImageView imageView;
     private CardView cardView;
     private Uri filePath, basicPath, localurl;
+    private TextView user_name, user_address;
+    private ImageView imageView2;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -65,6 +71,9 @@ public class AddServiceItemActivity extends AppCompatActivity {
         setContentView(R.layout.activity_addserviceitem);
 
         imageView = (ImageView)findViewById(R.id.imageView);
+        user_name = (TextView)findViewById(R.id.user_name);
+        user_address = (TextView)findViewById(R.id.user_address);
+        imageView2 = (ImageView)findViewById(R.id.imageView2);
         findViewById(R.id.imageView).setOnClickListener(onClickListener);   //아직 사진 안넣음
 
         noti = "0";
@@ -102,6 +111,7 @@ public class AddServiceItemActivity extends AppCompatActivity {
                 return true;
             }
         });
+        setuserinfo();
     }
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -145,6 +155,32 @@ public class AddServiceItemActivity extends AppCompatActivity {
             }
         }
     };
+    public void setuserinfo(){
+        final String[] picture = new String[1];
+        final String[] name = new String[1];
+        final String[] address = new String[1];
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final DocumentReference documentReference = db.collection("Users").document(user.getUid());    //현재 로그인한 사람의 주소
+        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot documentSnapshot = task.getResult();
+                    if (documentSnapshot.exists()) {
+                        LocalUserInfo localUserInfo = documentSnapshot.toObject(LocalUserInfo.class);
+                        picture[0] = localUserInfo.getImageurl();
+                        name[0] = localUserInfo.getName();
+                        address[0] = localUserInfo.getAddress();
+                        Glide.with(AddServiceItemActivity.this).load(picture[0]).into(imageView2);
+                        user_name.setText(name[0]);
+                        user_address.setText(address[0]);
+                    }
+                }
+            }
+        });
+    }
+
     public void addservice(){
         final String[] first = new String[1];
         final String[] second = new String[1];

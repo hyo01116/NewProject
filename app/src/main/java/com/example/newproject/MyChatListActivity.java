@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.newproject.Class.ChatProfile;
 import com.example.newproject.Class.LocalUserInfo;
+import com.example.newproject.Interface.OnMyChatClickListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -30,9 +31,9 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
 
-public class MyChatListActivity extends Fragment implements MyChatAdapter.OnListItemSelectedInterface{
+public class MyChatListActivity extends Fragment implements MyChatAdapter.OnItemClickListener{
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
+    private MyChatAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
     private FirebaseUser user;
@@ -72,6 +73,8 @@ public class MyChatListActivity extends Fragment implements MyChatAdapter.OnList
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     arrayList_key.add(dataSnapshot.getKey());
                 }
+                adapter = new MyChatAdapter(arrayList, getContext());
+                recyclerView.setAdapter(adapter);
                 for(int i = 0; i < arrayList_key.size(); i++){
                     key[0] = arrayList_key.get(i);
                     documentReference[0] = db[0].collection("Users").document(key[0]);
@@ -82,8 +85,17 @@ public class MyChatListActivity extends Fragment implements MyChatAdapter.OnList
                             LocalUserInfo localUserInfo = documentSnapshot.toObject(LocalUserInfo.class);
                             chatProfile.setProfile(localUserInfo.getImageurl());
                             arrayList.add(chatProfile);
-                            adapter = new MyChatAdapter(arrayList, getContext(), MyChatListActivity.this);
+                            adapter = new MyChatAdapter(arrayList, getContext());
                             recyclerView.setAdapter(adapter);
+                            adapter.setOnItemClickListener(new OnMyChatClickListener() {
+                                @Override
+                                public void onItemClick(MyChatAdapter.MyChatViewHolder holder, View view, int position) {
+                                    MyChatAdapter.MyChatViewHolder viewHolder = (MyChatAdapter.MyChatViewHolder)recyclerView.findViewHolderForAdapterPosition(position);
+                                    Intent intent = new Intent(getContext(), ChatActivity.class);
+                                    intent.putExtra("chat_userid", arrayList_key.get(position));
+                                    startActivity(intent);
+                                }
+                            });
                         }
                     });
                 }
@@ -94,13 +106,7 @@ public class MyChatListActivity extends Fragment implements MyChatAdapter.OnList
             }
         });
     }
+    public void onItemClick(MyChatAdapter.MyChatViewHolder myChatViewHolder, View v, int position){
 
-    @Override
-    public void onItemSelected(View v, int position) {
-        MyChatAdapter.MyChatViewHolder viewHolder = (MyChatAdapter.MyChatViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
-        Intent intent = new Intent(getContext(), ChatActivity.class);
-        String id = arrayList_key.get(position);      //클릭한 위치의 채팅 상대의 id
-        intent.putExtra("chat_userid", id);
-        startActivity(intent);
     }
 }

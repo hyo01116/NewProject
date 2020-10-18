@@ -15,15 +15,14 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.newproject.Adapter.StuffItemAdapter;
+import com.example.newproject.Adapter.ServiceNotiItemAdapter;
 import com.example.newproject.Class.GeneralUserInfo;
-import com.example.newproject.Class.StuffItemInfo;
+import com.example.newproject.Interface.OnServiceNotiItemClickListener;
+import com.example.newproject.Interface.OnStuffNotiItemClickListener;
 import com.example.newproject.Interface.OnServiceItemClickListener;
-import com.example.newproject.Interface.OnStuffItemClickListener;
 import com.example.newproject.R;
 import com.example.newproject.Adapter.ServiceItemAdapter;
 import com.example.newproject.Class.ServiceItemInfo;
-import com.example.newproject.Class.UserLocationInfo;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,9 +44,11 @@ public class ServiceActivity extends Fragment implements ServiceItemAdapter.OnIt
     //그래서 다중상속을 사용할 수 없어서 intent로 아이템 키 값을 넘기고 다시 데이터베이스에 접근해서 아이템을 찾아오는 방식으로 세부사항 구현
     private RecyclerView recyclerView;
     private ServiceItemAdapter adapter;
-    private RecyclerView recyclerView_noti;
-    private ServiceItemAdapter adapter_noti;
     private RecyclerView.LayoutManager layoutManager;
+
+    private RecyclerView recyclerView_noti;
+    private ServiceNotiItemAdapter adapter_noti;
+    private RecyclerView.LayoutManager layoutManager_noti;
 
     ArrayList<ServiceItemInfo> arrayList = new ArrayList<ServiceItemInfo>();
     ArrayList<ServiceItemInfo> arrayList_noti = new ArrayList<ServiceItemInfo>();
@@ -61,6 +62,47 @@ public class ServiceActivity extends Fragment implements ServiceItemAdapter.OnIt
     TextView et_phone;
 
     Button btn_med, btn_emer, btn_loc, btn_etc;
+    /*
+    <LinearLayout
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/btn_med"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="보건의료"
+                    android:textColor="@color/colorPrimary"
+                    android:backgroundTint="@color/toolbarcolor"/>
+                <Button
+                    android:id="@+id/btn_emer"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="재해/재난"
+                    android:textColor="@color/colorPrimary"
+                    android:backgroundTint="@color/toolbarcolor"/>
+                <Button
+                    android:id="@+id/btn_loc"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="농/어촌"
+                    android:textColor="@color/colorPrimary"
+                    android:backgroundTint="@color/toolbarcolor"/>
+                <Button
+                    android:id="@+id/btn_etc"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="기타"
+                    android:textColor="@color/colorPrimary"
+                    android:backgroundTint="@color/toolbarcolor"/>
+            </LinearLayout>
+            */
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container, @NonNull Bundle savedInstanceState) {
@@ -77,11 +119,11 @@ public class ServiceActivity extends Fragment implements ServiceItemAdapter.OnIt
 
         recyclerView_noti = (RecyclerView) view.findViewById(R.id.recyclerView_noti);
         recyclerView_noti.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(getContext());
-        recyclerView_noti.setLayoutManager(layoutManager);
-        recyclerView_noti.addItemDecoration(dividerItemDecoration);
+        layoutManager_noti = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
+        recyclerView_noti.setLayoutManager(layoutManager_noti);
 
-        btn_med = (Button) view.findViewById(R.id.btn_med);
+
+        /*btn_med = (Button) view.findViewById(R.id.btn_med);
         btn_med.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,7 +154,7 @@ public class ServiceActivity extends Fragment implements ServiceItemAdapter.OnIt
                 findLocationinfo("0");
                 System.out.println("etc");
             }
-        });
+        });*/
         findLocationinfo("-1");
 
         return view;
@@ -166,12 +208,12 @@ public class ServiceActivity extends Fragment implements ServiceItemAdapter.OnIt
                         }
                     }
                 }
-                adapter_noti = new ServiceItemAdapter(arrayList_noti, getContext());
+                adapter_noti = new ServiceNotiItemAdapter(arrayList_noti, getContext());
                 recyclerView_noti.setAdapter(adapter_noti);
-                adapter_noti.setOnItemClickListener(new OnServiceItemClickListener() {
+                adapter_noti.setOnItemClickListener(new OnServiceNotiItemClickListener() {
                     @Override
-                    public void onItemClick(ServiceItemAdapter.ServiceItemViewHolder holder, View view, int position) {
-                        ServiceItemAdapter.ServiceItemViewHolder viewHolder = (ServiceItemAdapter.ServiceItemViewHolder) recyclerView_noti.findViewHolderForAdapterPosition(position);
+                    public void onItemClick(ServiceNotiItemAdapter.ServiceNotiItemViewHolder holder, View view, int position) {
+                        ServiceNotiItemAdapter.ServiceNotiItemViewHolder viewHolder = (ServiceNotiItemAdapter.ServiceNotiItemViewHolder) recyclerView_noti.findViewHolderForAdapterPosition(position);
                         Intent intent = new Intent(getContext(), ServiceItemDetailActivity.class);
                         intent.putExtra("parcel", arrayList_noti.get(position));
                         intent.putExtra("name", name);
@@ -234,6 +276,10 @@ public class ServiceActivity extends Fragment implements ServiceItemAdapter.OnIt
                 //사용자가 데이터를 읽을 권한이 없는 경우
             }
         });
+    }
+    public void startActivity(Class c){
+        Intent intent = new Intent(getActivity(), c);
+        startActivityForResult(intent, 0);
     }
 
     @Override

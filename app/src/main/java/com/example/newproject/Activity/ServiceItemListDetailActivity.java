@@ -44,7 +44,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class ServiceItemListDetailActivity extends AppCompatActivity {
+public class ServiceItemListDetailActivity extends BaseActivity {
 
     private String itemkey, secondkey;
     private ImageView imageView;

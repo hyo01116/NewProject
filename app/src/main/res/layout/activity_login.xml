@@ -24,6 +24,7 @@
             app:srcCompat="@drawable/icon" />
 
         <TextView
+            android:fontFamily="@font/font1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -34,6 +35,7 @@
             android:textStyle="bold" />
 
         <EditText
+            android:fontFamily="@font/font1"
             android:id="@+id/et_email"
             android:layout_width="330dp"
             android:layout_height="wrap_content"
@@ -42,10 +44,11 @@
             android:autofillHints=""
             android:hint="이메일"
             android:inputType="textEmailAddress"
-            android:padding="15dp"
+            android:padding="13dp"
             android:textColorHint="@color/textInputOutlineColor"
             android:textStyle="bold" />
         <EditText
+            android:fontFamily="@font/font1"
             android:id="@+id/et_password"
             android:layout_width="330dp"
             android:layout_height="wrap_content"
@@ -54,14 +57,15 @@
             android:drawablePadding="10dp"
             android:hint="비밀번호"
             android:inputType="textPassword"
-            android:padding="15dp"
+            android:padding="13dp"
             android:textColorHint="@color/textInputOutlineColor"
             android:textStyle="bold"
             android:autofillHints="" />
 
         <Button
+            android:fontFamily="@font/font1"
             android:id="@+id/btn_login"
-            android:backgroundTint="#FFFFEB3B"
+            android:backgroundTint="@color/toolbarcolor"
             android:layout_width="330dp"
             android:layout_height="60dp"
             android:layout_gravity="center"
@@ -77,6 +81,7 @@
             android:layout_marginTop="10dp"/>
     </LinearLayout>
     <Button
+        android:fontFamily="@font/font1"
         android:backgroundTint="#FFFFFF"
         android:id="@+id/btn_register"
         android:layout_width="match_parent"

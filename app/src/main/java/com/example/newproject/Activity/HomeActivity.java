@@ -19,6 +19,7 @@ import com.example.newproject.FindMapActivity;
 import com.example.newproject.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,6 +33,7 @@ public class HomeActivity extends Fragment {
     TextView toolbar_title;
 
     private String first, second, third;
+    private FloatingActionButton btn_data;
 
     //봉사와 기부를 두개의 탭으로 나눠서 각각의 탭 클릭시 해당 페이지가 실행되도록 함
     //프래그먼트 내에서 화면 전환이 일어나게 하기 위해 viewpager사용
@@ -56,6 +58,15 @@ public class HomeActivity extends Fragment {
         final MyPagerAdapter myPagerAdapter = new MyPagerAdapter(getChildFragmentManager(), tabs.getTabCount());
         viewPager.setAdapter(myPagerAdapter);
 
+        btn_data = (FloatingActionButton)view.findViewById(R.id.btn_data);
+        btn_data.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), NowDataActivity.class);
+                intent.putExtra("name", third);
+                startActivity(intent);
+            }
+        });
         toolbar = (Toolbar)view.findViewById(R.id.top_toolbar);
         toolbar_title = (TextView)view.findViewById(R.id.toolbar_title);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {

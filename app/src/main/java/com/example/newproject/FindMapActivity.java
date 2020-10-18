@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.newproject.Activity.BaseActivity;
 import com.example.newproject.Class.LocalUserInfo;
 import com.example.newproject.Class.ServiceItemInfo;
 import com.example.newproject.Class.StuffItemInfo;
@@ -43,7 +44,7 @@ import net.daum.mf.map.api.MapView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FindMapActivity extends AppCompatActivity  implements MapView.CurrentLocationEventListener, MapReverseGeoCoder.ReverseGeoCodingResultListener{
+public class FindMapActivity extends BaseActivity implements MapView.CurrentLocationEventListener, MapReverseGeoCoder.ReverseGeoCodingResultListener{
     //first, second, third의 정보를 넘겨받음
     //해당 db의 stuff, service의 글들의 사용자 정보를 받아옴(cloud firestore에서 좌표 받아옴)
     //좌표를 map에 표시

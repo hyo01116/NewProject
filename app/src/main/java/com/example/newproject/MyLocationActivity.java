@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.newproject.Activity.BaseActivity;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.LocationTrackingMode;
@@ -27,7 +28,7 @@ import com.naver.maps.map.util.FusedLocationSource;
 import java.io.IOException;
 import java.util.List;
 
-public class MyLocationActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MyLocationActivity extends BaseActivity implements OnMapReadyCallback {
 
     private FusedLocationSource mLocationSource;
     private MapView mapView;

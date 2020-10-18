@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:title="문의전화"
+        android:icon="@drawable/ic_baseline_phone_24"
+        android:id="@+id/btn_phone"/>
+    <item
+        android:title="모금하기"
+        android:icon="@drawable/ic_baseline_attach_money_24"
+        android:id="@+id/btn_money"/>
+</menu>

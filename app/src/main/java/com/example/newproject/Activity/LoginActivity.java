@@ -53,7 +53,7 @@ import com.kakao.util.helper.log.Logger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity{
     //카카오톡, 페이스북, sns연동 로그인
     private FirebaseAuth mAuth;
     private FirebaseUser user;

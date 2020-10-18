@@ -11,18 +11,23 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.newproject.Class.ChatInfo;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 import static android.view.View.TEXT_ALIGNMENT_TEXT_END;
+import static android.view.View.TEXT_ALIGNMENT_TEXT_START;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder>{
     private ArrayList<ChatInfo> mDataset;
     public String userid;
     private Context context;
+    private int cnt = 0;
 
     @NonNull
     @Override
@@ -33,21 +38,35 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     }
     public ChatAdapter(ArrayList<ChatInfo> chatInfo, Context context, String userid){
         mDataset = chatInfo;
-        this.context = context;
         this.userid = userid;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ChatAdapter.ChatViewHolder holder, int position) {
         ChatInfo chat = mDataset.get(position);
+        holder.et_data.setText(chat.getData());
         if(chat.getUid().equals(userid)){
             System.out.println("same");
-            holder.et_data.setTextAlignment(TEXT_ALIGNMENT_TEXT_END);
-            holder.et_data.setText(chat.getData());
+            holder.et_data.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
         }
         else{
-            holder.et_data.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
-            holder.et_data.setText(chat.getData());
+            System.out.println("not same");
+            System.out.println(cnt);
+            if(cnt == 0 || !(chat.getDate().equals(mDataset.get(position - 1).getDate()))){
+                System.out.println("first");
+                Glide.with(holder.itemView)
+                        .load(mDataset.get(position).getProfile())
+                        .into(holder.profile);
+                holder.et_data.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+                cnt++;
+            }
+            else{
+                cnt++;
+                System.out.println("second");
+                if(chat.getDate().equals(mDataset.get(position - 1).getDate())){
+                    holder.et_data.setTextAlignment(TEXT_ALIGNMENT_TEXT_START);
+                }
+            }
         }
     }
     @Override
@@ -56,10 +75,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     }
 
     public class ChatViewHolder extends RecyclerView.ViewHolder {
-        public TextView et_data;
+        TextView et_data;
+        ImageView profile;
+
         public ChatViewHolder(@NonNull View itemView) {
             super(itemView);
             this.et_data = itemView.findViewById(R.id.et_data);
+            this.profile = itemView.findViewById(R.id.profile);
         }
     }
     public void addChat(ChatInfo chat){

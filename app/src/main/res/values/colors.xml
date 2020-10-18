@@ -3,11 +3,12 @@
     <color name="textInputOutlineColor">#FBB8AC</color>
     <color name="colorPrimary">#000000</color>
     <color name="colorPrimaryDark">#E8E1E1</color>
-    <color name="gray">#FFE8E1E1</color>
+    <color name="gray">#A3A1A1</color>
+    <color name="new_gray">#ECE8E8</color>
     <color name="colorAccent">#FEDBD0</color>
     <color name="textColorPrimary">#FEDBD0</color>
     <color name="toolbarIconColor">@color/textColorPrimary</color>
     <color name="loginPageBackgroundColor">#FFFFFF</color>
     <color name="productGridBackgroundColor">#FFFFFF</color>
-    <color name="toolbarcolor">#FFFFEB3B</color>
+    <color name="toolbarcolor">#FBF087</color>
 </resources>

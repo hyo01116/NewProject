@@ -1,8 +1,6 @@
 package com.example.newproject;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,18 +12,32 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.newproject.Class.ChatProfile;
-
-import java.io.InputStream;
+import com.example.newproject.Interface.OnMyChatClickListener;
 import java.util.ArrayList;
 
-public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatViewHolder> {
+public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatViewHolder> implements OnMyChatClickListener{
     private ArrayList<ChatProfile> mDataset;
     private Context context;
+    private OnMyChatClickListener listener;
 
-    public interface OnListItemSelectedInterface{
-        void onItemSelected(View v, int position);
+    public interface OnItemClickListener{
+        void onItemClick(MyChatAdapter.MyChatViewHolder myChatViewHolder, View v, int position);
     }
-    private MyChatAdapter.OnListItemSelectedInterface mListener;
+    public void setOnItemClickListener(OnMyChatClickListener listener) {
+        this.listener = listener;
+    }
+    @Override
+    public void onItemClick(MyChatAdapter.MyChatViewHolder holder, View view, int position){
+        if(listener != null){
+            listener.onItemClick(holder, view, position);
+        }
+    }
+
+    public MyChatAdapter(ArrayList<ChatProfile> mychat, Context context){
+        mDataset = mychat;
+        this.context = context;
+    }
+
     @NonNull
     @Override
     public MyChatAdapter.MyChatViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -33,12 +45,6 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
         MyChatAdapter.MyChatViewHolder holder = new MyChatAdapter.MyChatViewHolder(v);
         return holder;
     }
-
-    public MyChatAdapter(ArrayList<ChatProfile> mychat, Context context, OnListItemSelectedInterface listener){
-        mDataset = mychat;
-        this.mListener = listener;
-    }
-
 
     @Override
     public void onBindViewHolder(@NonNull MyChatAdapter.MyChatViewHolder holder, int position) {
@@ -70,7 +76,9 @@ public class MyChatAdapter extends RecyclerView.Adapter<MyChatAdapter.MyChatView
                 @Override
                 public void onClick(View v){
                     int position = getAdapterPosition();
-                    mListener.onItemSelected(v, getAdapterPosition());    //클릭시에 해당 채팅으로 이동
+                    if(listener != null){
+                        listener.onItemClick(MyChatViewHolder.this, v, position);
+                    }
                 }
             });
         }
