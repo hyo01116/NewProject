@@ -28,64 +28,73 @@
                 android:textStyle="bold"/>
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
-    <LinearLayout
-        android:layout_marginTop="10dp"
-        android:padding="10dp"
-        android:layout_width="match_parent"
+    <ScrollView
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-    <TextView
-        android:layout_marginLeft="12dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="17dp"
-        android:textColor="@color/colorPrimary"
-        android:fontFamily="@font/font1"
-        android:text="[물품 기부]"/>
-    <com.github.mikephil.charting.charts.PieChart
-        android:id="@+id/stuff"
-        android:layout_gravity="center"
-        android:layout_width="220dp"
-        android:layout_height="220dp"
-        android:layout_marginTop="20dp"/>
-        <TextView
-            android:textColor="@color/colorPrimary"
-            android:layout_marginTop="18dp"
-            android:layout_gravity="center"
-            android:fontFamily="@font/font1"
-            android:layout_width="wrap_content"
+        android:layout_width="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="18dp"
-            android:text="현재 우리지역은 생활용품이 부족합니다."/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_marginTop="30dp"
-        android:padding="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <TextView
-            android:layout_marginLeft="15dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="17dp"
-            android:textColor="@color/colorPrimary"
-            android:fontFamily="@font/font1"
-            android:text="[봉사활동]"/>
-        <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/service"
-            android:layout_gravity="center"
-            android:layout_width="220dp"
-            android:layout_height="220dp"
-            android:layout_marginTop="20dp"/>
-        <TextView
-            android:textColor="@color/colorPrimary"
-            android:layout_marginTop="18dp"
-            android:layout_gravity="center"
-            android:fontFamily="@font/font1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18dp"
-            android:text="현재 우리지역은 보건/의료 인력이 부족합니다."/>
-    </LinearLayout>
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_marginLeft="12dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="17dp"
+                    android:textColor="@color/colorPrimary"
+                    android:fontFamily="@font/font1"
+                    android:text="[물품 기부]"/>
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/stuff"
+                    android:layout_gravity="center"
+                    android:layout_width="220dp"
+                    android:layout_height="220dp"
+                    android:layout_marginTop="20dp"/>
+                <TextView
+                    android:textColor="@color/colorPrimary"
+                    android:layout_marginTop="18dp"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/font1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18dp"
+                    android:text="현재 우리지역은 생활용품이 부족합니다."/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_marginTop="30dp"
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_marginLeft="15dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="17dp"
+                    android:textColor="@color/colorPrimary"
+                    android:fontFamily="@font/font1"
+                    android:text="[봉사활동]"/>
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/service"
+                    android:layout_gravity="center"
+                    android:layout_width="220dp"
+                    android:layout_height="220dp"
+                    android:layout_marginTop="20dp"/>
+                <TextView
+                    android:textColor="@color/colorPrimary"
+                    android:layout_marginTop="18dp"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/font1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18dp"
+                    android:text="현재 우리지역은 보건/의료 인력이 부족합니다."/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

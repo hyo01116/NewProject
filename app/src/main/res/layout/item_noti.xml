@@ -27,6 +27,7 @@
                 android:scaleType="centerCrop"/>
                 <TextView
                     android:layout_marginLeft="10dp"
+                    android:layout_marginRight="20dp"
                     android:layout_gravity="center"
                     android:fontFamily="@font/font1"
                     android:id="@+id/user_name"

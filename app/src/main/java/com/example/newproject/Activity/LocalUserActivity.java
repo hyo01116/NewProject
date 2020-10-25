@@ -23,8 +23,8 @@ public class LocalUserActivity extends BaseActivity{    //작성자 사용화면
         setContentView(R.layout.activity_localuser);
 
         FragmentTransaction feedtransaction = getSupportFragmentManager().beginTransaction();
-        FeedActivity feedActivity = new FeedActivity();
-        feedtransaction.replace(R.id.frame, feedActivity);
+        HomeActivity homeActivity = new HomeActivity();
+        feedtransaction.replace(R.id.frame, homeActivity);
         feedtransaction.addToBackStack(null);
         feedtransaction.commit();
 

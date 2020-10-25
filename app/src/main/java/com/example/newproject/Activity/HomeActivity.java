@@ -47,7 +47,7 @@ public class HomeActivity extends Fragment {
         };
 
         TabLayout tabs = (TabLayout) view.findViewById(R.id.tabs);
-        tabs.addTab(tabs.newTab().setText("물품").setIcon(ICONS[0]));
+        tabs.addTab(tabs.newTab().setText("기부").setIcon(ICONS[0]));
         tabs.addTab(tabs.newTab().setText("봉사활동").setIcon(ICONS[1]));
 
         tabs.setTabGravity(tabs.GRAVITY_FILL);

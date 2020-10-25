@@ -22,8 +22,8 @@ public class GeneralUserActivity extends BaseActivity {    //일반사용자 사
         setContentView(R.layout.activity_generaluser);
 
         FragmentTransaction feedtransaction = getSupportFragmentManager().beginTransaction();
-        FeedActivity feedActivity = new FeedActivity();
-        feedtransaction.replace(R.id.frame, feedActivity);
+        HomeActivity homeActivity = new HomeActivity();
+        feedtransaction.replace(R.id.frame, homeActivity);
         feedtransaction.addToBackStack(null);
         feedtransaction.commit();
 

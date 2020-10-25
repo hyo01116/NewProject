@@ -1,48 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/top_toolbar"
         android:layout_width="match_parent"
         android:layout_height="60dp">
+
         <RelativeLayout
-            android:gravity="center"
             android:layout_width="380dp"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
             <ImageView
                 android:id="@+id/find"
-                app:srcCompat="@drawable/ic_baseline_location_on_24"
                 android:layout_width="22dp"
-                android:layout_height="22dp" />
+                android:layout_height="22dp"
+                app:srcCompat="@drawable/ic_baseline_location_on_24" />
+
             <TextView
-                android:layout_toRightOf="@+id/find"
-                android:fontFamily="@font/font1"
                 android:id="@+id/toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/find"
+                android:fontFamily="@font/font1"
                 android:textColor="@android:color/black"
                 android:textSize="22sp"
                 android:textStyle="bold" />
         </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>
+
     <com.google.android.material.tabs.TabLayout
+        android:layout_below="@id/top_toolbar"
         android:id="@+id/tabs"
-        app:tabSelectedTextColor="@color/colorPrimary"
-        app:tabIndicatorColor="@color/toolbarcolor"
         android:layout_width="match_parent"
         android:layout_height="60dp"
+        app:tabIndicatorColor="@color/toolbarcolor"
+        app:tabSelectedTextColor="@color/colorPrimary"
         app:tabTextColor="@android:color/darker_gray" />
+
     <RelativeLayout
+        android:layout_below="@id/tabs"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/view_pager"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#FBFBFA"></androidx.viewpager.widget.ViewPager>
+        android:layout_height="match_parent">
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FBFBFA"></androidx.viewpager.widget.ViewPager>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btn_data"
@@ -51,12 +60,12 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
             android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
             android:backgroundTint="@color/toolbarcolor"
-            android:layout_marginBottom="100dp"
-            app:srcCompat="@drawable/ic_baseline_location_on_24"
             android:tint="@color/toolbarcolor"
             android:visibility="visible"
             app:borderWidth="0dp"
-            app:fabSize="normal" />
+            app:fabSize="normal"
+            app:srcCompat="@drawable/ic_baseline_notifications_active_24" />
     </RelativeLayout>
-</LinearLayout>
+</RelativeLayout>

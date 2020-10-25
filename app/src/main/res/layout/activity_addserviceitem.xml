@@ -189,6 +189,7 @@
                         android:layout_marginTop="10dp"
                         android:id="@+id/extratext"
                         android:textSize="15dp"
+                        android:lineSpacingExtra="5dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColorHint="@color/gray"
